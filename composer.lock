@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "fd94a1c4da47c8cd1d04a3b70a70bd1b",
+    "packages": [
+        {
+            "name": "dejurin/php-table-generate",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dejurin/php-table-generate.git",
+                "reference": "28376d52aa677d496ffd54e4e3b02170944d275d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dejurin/php-table-generate/zipball/28376d52aa677d496ffd54e4e3b02170944d275d",
+                "reference": "28376d52aa677d496ffd54e4e3b02170944d275d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dejurin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple PHP HTML table generator by CodeIgniter.",
+            "homepage": "https://github.com/dejurin/php-table-generate",
+            "keywords": [
+                "codeigniter",
+                "generator",
+                "html",
+                "table"
+            ],
+            "support": {
+                "issues": "https://github.com/dejurin/php-table-generate/issues",
+                "source": "https://github.com/dejurin/php-table-generate/releases"
+            },
+            "time": "2022-06-04T21:34:12+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

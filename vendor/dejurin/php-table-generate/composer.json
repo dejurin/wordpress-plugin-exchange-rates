@@ -1,0 +1,29 @@
+{
+    "name": "dejurin/php-table-generate",
+    "description": "Simple PHP HTML table generator by CodeIgniter.",
+    "version": "1.0.0",
+    "keywords": [
+        "codeigniter",
+        "table",
+        "generator",
+        "html"
+    ],
+    "homepage": "https://github.com/dejurin/php-table-generate",
+    "license": "MIT",
+    "support":
+    {
+        "issues": "https://github.com/dejurin/php-table-generate/issues",
+        "source": "https://github.com/dejurin/php-table-generate/releases"
+    },
+    "require":
+    {
+        "php": ">=5.4"
+    },
+    "autoload":
+    {
+        "psr-4":
+        {
+            "Dejurin\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "packages": [
+        {
+            "name": "dejurin/php-table-generate",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dejurin/php-table-generate.git",
+                "reference": "28376d52aa677d496ffd54e4e3b02170944d275d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dejurin/php-table-generate/zipball/28376d52aa677d496ffd54e4e3b02170944d275d",
+                "reference": "28376d52aa677d496ffd54e4e3b02170944d275d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "time": "2022-06-04T21:34:12+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Dejurin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple PHP HTML table generator by CodeIgniter.",
+            "homepage": "https://github.com/dejurin/php-table-generate",
+            "keywords": [
+                "codeigniter",
+                "generator",
+                "html",
+                "table"
+            ],
+            "support": {
+                "issues": "https://github.com/dejurin/php-table-generate/issues",
+                "source": "https://github.com/dejurin/php-table-generate/releases"
+            },
+            "install-path": "../dejurin/php-table-generate"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

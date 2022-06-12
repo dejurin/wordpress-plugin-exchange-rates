@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Dejurin\\ExchangeRates\\": "src"
+        }
+    },
+    "require": {
+        "dejurin/php-table-generate": "^1.0"
+    }
+}

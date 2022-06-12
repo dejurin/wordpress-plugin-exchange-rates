@@ -1,0 +1,87 @@
+:root {
+    --bs-red: #dc3545;
+    --bs-green: #198754;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.025);
+    --bs-gray-400: #ced4da;
+}
+
+.widget-exchange-rates-table .w-100 {
+    width: 100%;
+}
+.widget-exchange-rates-table .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.widget-exchange-rates-table caption {
+    caption-side: bottom;
+    font-weight: normal;
+}
+.widget-exchange-rates-table table {
+    margin: 0;
+    width: auto;
+}
+.widget-exchange-rates-table table thead {
+    background-color: var(--bs-table-striped-bg);
+}
+.widget-exchange-rates-table div {
+    line-height: 15px;
+}
+.widget-exchange-rates-table img {
+    height: fit-content;
+}
+.widget-exchange-rates-table .small {
+    color:var(--bs-gray-400);
+    font-size: small;
+}
+.widget-exchange-rates-table .break {
+	width: 100%;
+}
+.widget-exchange-rates-table .text-element {
+    display: table;
+    table-layout: fixed;
+}
+.widget-exchange-rates-table .text-truncate {
+    display: table-cell;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.widget-exchange-rates-table .d-flex {
+    display: flex;
+    align-items: center;
+}
+.widget-exchange-rates-table .d-flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+.widget-exchange-rates-table .text-center {
+    text-align: center;
+}
+.widget-exchange-rates-table .table-danger {
+    color: var(--bs-red);
+}
+.widget-exchange-rates-table .table-success {
+    color: var(--bs-green);
+}
+.widget-exchange-rates-table table td {
+    white-space: nowrap;
+}
+.widget-exchange-rates-table .active {
+    background-color: var(--bs-table-striped-bg);
+}
+.widget-exchange-rates-table input {
+    font-size: large;
+    border: 0;
+    padding: 0;
+    background-color: transparent !important;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    width: 100%;
+}
+.widget-exchange-rates-table input:focus {
+    outline: none;
+}
+.widget-exchange-rates-table .sign {
+    font-size: small;
+    margin-top: 15px;
+}
