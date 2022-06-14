@@ -31,7 +31,6 @@ class CurrencyTable
         $get_currencies = Currencies::get_currencies();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
 
-
         foreach ($get_currencies as $key => $value) {
             if (isset($rates['data'][0]['rates'][$key])) {
                 $table->add_row([
@@ -47,6 +46,6 @@ class CurrencyTable
 
         $html = $table->generate();
 
-        echo $html,'<p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
+        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
     }
 }

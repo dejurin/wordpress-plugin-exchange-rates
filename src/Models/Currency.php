@@ -46,10 +46,18 @@ class Currency
         return rtrim(rtrim(number_format($value, $decimals, $fmt['decimal_point'], $fmt['thousands_sep']), '0'), '.');
     }
 
+    public function get_date()
+    {
+        return [
+            'local_time' => $this->rates['data'][0]['local_time'],
+            'put_time' => $this->rates['data'][0]['put_time'],
+        ];
+    }
+
     public function get_rate($index = 0)
     {
-        $currency_rate = $this->rates['rates'][$index]['data'][$this->currency];
-        $base_rate = $this->rates['rates'][$index]['data'][$this->base_currency];
+        $currency_rate = $this->rates['data'][$index]['rates'][$this->currency];
+        $base_rate = $this->rates['data'][$index]['rates'][$this->base_currency];
 
         if ($this->base_currency_source === $this->base_currency) {
             return ($this->parameters['inverse']) ? $currency_rate : $base_rate / $currency_rate;
@@ -76,18 +84,17 @@ class Currency
             $pre = '';
             $decimal = 0;
             $value = (100 - ((100 * $this->get_rate(1)) / $this->get_rate(0)));
+            $value_abs = abs($value);
 
-            if ($value >= 100) {
+            if ($value_abs > 99) {
                 $decimal = 0;
-            } elseif ($value >= 10) {
+            } elseif ($value_abs > 9) {
                 $decimal = 1;
-            } elseif ($value > 0) {
+            } elseif ($value_abs > 0) {
                 $decimal = 2;
             }
 
-            if (1 === $this->get_trend()) {
-                $pre = '+';
-            }
+            $pre = (1 === $this->get_trend()) ? '+' : '';
 
             return $pre.self::for_format($value, $this->parameters, $decimal);
         }
@@ -112,9 +119,9 @@ class Currency
     {
         return
             $this->rates
-            && isset($this->rates['rates'][0]['data'][$this->currency])
-            && isset($this->rates['rates'][1]['data'][$this->currency])
-            && isset($this->rates['rates'][0]['data'][$this->base_currency])
-            && isset($this->rates['rates'][1]['data'][$this->base_currency]);
+            && isset($this->rates['data'][0]['rates'][$this->currency])
+            && isset($this->rates['data'][1]['rates'][$this->currency])
+            && isset($this->rates['data'][0]['rates'][$this->base_currency])
+            && isset($this->rates['data'][1]['rates'][$this->base_currency]);
     }
 }

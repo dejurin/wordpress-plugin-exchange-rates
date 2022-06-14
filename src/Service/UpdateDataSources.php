@@ -4,8 +4,8 @@ namespace Dejurin\ExchangeRates\Service;
 
 use Dejurin\ExchangeRates\Models\DataSources;
 use Dejurin\ExchangeRates\Models\Settings;
-use Dejurin\ExchangeRates\Request\Request;
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Request\Request;
 
 class UpdateDataSources
 {
@@ -26,6 +26,7 @@ class UpdateDataSources
 
         if (self::$req_rates['status']) {
             update_option(Plugin::PLUGIN_SLUG.'_rates', self::$req_rates['data']);
+            // $settings['base_currency'] = self::$req_rates['data']['base'];
             $settings['rates_available'] = true;
         }
 

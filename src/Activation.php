@@ -2,8 +2,6 @@
 
 namespace Dejurin\ExchangeRates;
 
-use Dejurin\ExchangeRates\Plugin;
-
 class Activation
 {
     public static function run()
@@ -16,6 +14,4 @@ class Activation
 
         Service\UpdateDataSources::update();
     }
-
-    
 }

@@ -29,8 +29,10 @@ class Plugin
         }
     }
 
-    public function hide_example_widget( $widget_types ) {
+    public function hide_example_widget($widget_types)
+    {
         $widget_types[] = Plugin::PLUGIN_SLUG;
+
         return $widget_types;
     }
 

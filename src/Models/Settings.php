@@ -13,6 +13,7 @@ class Settings
     {
         return [
             'source_id' => 'ua-nbu',
+            'base_currency' => 'USD',
             'rates_available' => false,
         ];
     }

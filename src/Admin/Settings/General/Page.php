@@ -2,10 +2,9 @@
 
 namespace Dejurin\ExchangeRates\Admin\Settings\General;
 
-
-use Dejurin\ExchangeRates\Service\UpdateDataSources;
 use Dejurin\ExchangeRates\Models\Sources;
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Service\UpdateDataSources;
 
 class Page
 {
@@ -14,33 +13,10 @@ class Page
         Sections\SourceSelect::init();
     }
 
-    public static function aj()
-    {
-        ?><script>
-		jQuery(document).ready(function($) {
-			jQuery('#test').on("click", function() {
-				jQuery.post(ajaxurl, {
-					'action': 'my_action',
-					'whatever': 1234
-				}, function(response) {
-					console.log(response);
-				});
-			});
-		});
-		</script><?php
-    }
-
-    public static function ajx()
-    {
-        global $wpdb;
-        echo UpdateDataSources::update();
-        wp_die();
-    }
-
     public static function render()
     {
-		$get_sources = Sources::get_sources();
-        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');  ?>
+        $get_sources = Sources::get_sources();
+        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
 		<div class="wrap">
 
 		
@@ -52,14 +28,13 @@ class Page
 			<form action="options.php" method="post">
 				<?php
                 settings_fields(Plugin::PLUGIN_SLUG.'-general');
-				do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
-				submit_button(); 
-				?>
+        do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
+        submit_button(__('Save', Plugin::PLUGIN_SLUG)); ?>
 			</form></div>
 			<div class="col">
 		
 			
-				<h3><?php _e('Source', Plugin::PLUGIN_SLUG); ?></b>: <?php echo $get_sources[$rates['source']]['name']; ?></h3>
+				<h3><?php echo $get_sources[$rates['source']]['name']; ?></h3>
 
 				<div class="row">
 				<div class="col p-0">
@@ -77,8 +52,7 @@ class Page
 				<li><b><?php _e('Local Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][1]['local_time'], 'Y-m-d H:i:s'); ?></li>
 			</ul></div></div>
 			
-			<p class="m-0"><button class="button" id="test"><?php _e('UPDATE', Plugin::PLUGIN_SLUG); ?></button>
-			<label for="test"><?php _e('Force the update of exchange rates.', Plugin::PLUGIN_SLUG); ?></label></p>
+			<p class="m-0"><b><?php _e('If you want to force an update, click on the button "Save".', Plugin::PLUGIN_SLUG); ?></b></p>
 	
 			</div></div>
 
@@ -104,13 +78,10 @@ class Page
 		<?php
     }
 
-	public static function update_rates_on_load($some) {
-		// Настройки страницы обновляются
-		// Значит нужно попробоывать получить ответ от API
-		if( !empty( $_GET['settings-updated'] ) && $_GET['settings-updated'] === 'true' ) {
-			\Dejurin\ExchangeRates\Service\UpdateDataSources::update();
-		}
-	}
+    public static function update_rates_on_load($some)
+    {
+        if (!empty($_GET['settings-updated']) && 'true' === $_GET['settings-updated']) {
+            UpdateDataSources::update();
+        }
+    }
 }
-
-

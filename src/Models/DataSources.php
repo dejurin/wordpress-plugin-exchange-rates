@@ -2,8 +2,8 @@
 
 namespace Dejurin\ExchangeRates\Models;
 
-use Dejurin\ExchangeRates\Request\Request;
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Request\Request;
 
 class DataSources
 {
@@ -38,11 +38,27 @@ class DataSources
     {
         $this->sources_data = get_transient($this->transient_sources);
 
-        $this->fetch_source_data();
-
-        set_transient($this->transient_sources, $this->sources_data, 24 * HOUR_IN_SECONDS);
+        if (!$this->validate_sources_data() || empty($this->sources_data)) {
+            $this->fetch_source_data();
+            set_transient($this->transient_sources, $this->sources_data, HOUR_IN_SECONDS);
+        }
 
         return $this->sources_data;
+    }
+
+    private function validate_sources_data()
+    {
+        if (
+            isset($this->sources_data['status'])
+            &&
+            true === $this->sources_data['status']
+            &&
+            !empty($this->sources_data['data'])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     private function fetch_source_data()

@@ -15,7 +15,7 @@ class Request
 
     public function data()
     {
-        $response = wp_remote_get($this->api_url, ['timeout' => 5]);
+        $response = wp_remote_get($this->api_url, ['timeout' => 15]);
         $error = is_wp_error($response);
         $body = null;
         $error_message = null;

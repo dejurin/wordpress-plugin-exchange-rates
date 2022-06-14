@@ -18,10 +18,7 @@ class Table extends \WP_Widget
             [
                 'classname' => 'widget-'.Plugin::PLUGIN_SLUG.'-table',
                 'description' => __('A table with currency rates.', Plugin::PLUGIN_SLUG),
-                'show_instance_in_rest' => true,
             ]
-
-            
         );
 
         add_action('wp_enqueue_scripts', [$this, 'wp_enqueue_script_style']);
@@ -65,7 +62,7 @@ class Table extends \WP_Widget
                         'table_headers_previous_close_show' => (bool) $instance['table_headers_previous_close_show'],
                         'table_headers_changes_show' => (bool) $instance['table_headers_changes_show'],
                     ];
-                    echo $table->get_table();
+                    echo $table->get_table($this->number);
                 }
             }
         }
@@ -122,11 +119,13 @@ class Table extends \WP_Widget
                 value="<?php echo esc_attr($instance['amount']); ?>"
                 type="text">
     </p>
+ 
 		<p class="description"><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></p>
 		<p><label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
 		<select class="plugin__currency__select-autocomplete" id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
-                $base_currency_list = array_keys($rates['rates'][0]['data']);
+                $base_currency_list = array_keys($rates['data'][0]['rates']);
+
         foreach ($base_currency_list as $value) {
             printf(
                         '<option value="%s"%s>%s</option>',
@@ -151,7 +150,6 @@ class Table extends \WP_Widget
 		<p class="description"><?php _e('The currencies which will be displayed in table. Separate by commas.', Plugin::PLUGIN_SLUG); ?></p>
     </fieldset>
 
-        
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Formatting', Plugin::PLUGIN_SLUG); ?></legend>
         

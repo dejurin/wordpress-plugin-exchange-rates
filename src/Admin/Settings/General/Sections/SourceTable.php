@@ -24,14 +24,13 @@ class SourceTable
             ['data' => '', 'width' => '1%'],
             __('Item', Plugin::PLUGIN_SLUG),
             __('ID', Plugin::PLUGIN_SLUG),
-            __('Base Currency', Plugin::PLUGIN_SLUG),
+            __('Base', Plugin::PLUGIN_SLUG),
             __('Last Update', Plugin::PLUGIN_SLUG),
         ]);
 
         $get_sources = Sources::get_sources();
-
-        $prov = DataSources::getInstance();
-        $sources = $prov->get_sources_data();
+        $data_sources = DataSources::getInstance();
+        $sources = $data_sources->get_sources_data();
 
         foreach ($sources['data'] as $key => $value) {
             $table->add_row([
@@ -43,9 +42,8 @@ class SourceTable
             ]);
         }
 
-
         $html = $table->generate();
 
-        echo $html,'<p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
+        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
     }
 }

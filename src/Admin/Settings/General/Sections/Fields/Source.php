@@ -2,6 +2,7 @@
 
 namespace Dejurin\ExchangeRates\Admin\Settings\General\Sections\Fields;
 
+use Dejurin\ExchangeRates\Models\DataSources;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Models\Sources;
 use Dejurin\ExchangeRates\Plugin;
@@ -26,8 +27,12 @@ class Source
         $settings = wp_parse_args($settings, Settings::get_defaults());
 
         $get_sources = Sources::get_sources();
- 
-        $sources = get_transient(Plugin::PLUGIN_SLUG.'_sources'); ?>
+
+        $prov = DataSources::getInstance();
+        $sources = $prov->get_sources_data(); ?>
+
+
+
 		<select id="<?php echo Plugin::PLUGIN_SLUG; ?>__[source_id]" name="<?php echo Plugin::PLUGIN_SLUG; ?>[source_id]">
 
         <?php foreach ($sources['data'] as $value) {
