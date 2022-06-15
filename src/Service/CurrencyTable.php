@@ -4,19 +4,24 @@ namespace Dejurin\ExchangeRates\Service;
 
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
-use Dejurin\ExchangeRates\Models\Dev;
-use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Models\Sources;
+use Dejurin\ExchangeRates\Models\Emoji;
+use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\PHPTableGenerate;
 
 class CurrencyTable
 {
     public $parameters;
+    public $settings;
     public $table;
 
     public function get_table($widget_number)
     {
+
+        $settings = get_option(Settings::$option_name, []);
+        $this->settings = wp_parse_args($settings, Settings::get_defaults());
+
         $this->table = new PHPTableGenerate();
 
         // Header
@@ -28,14 +33,17 @@ class CurrencyTable
                 $heading[1] = $this->parameters['table_headers_code'];
             }
 
-            $heading[2] = $this->parameters['table_headers_mid'].($this->parameters['inverse'] ? ' ('.$this->parameters['base_currency'].')' : '');
+            $heading[2]['data'] = $this->parameters['table_headers_mid'].($this->parameters['inverse'] ? ' ('.$this->parameters['base_currency'].')' : '');
+            $heading[2]['class'] = 'text-right';
 
             if ($this->parameters['table_headers_previous_close_show']) {
-                $heading[3] = $this->parameters['table_headers_previous_close'];
+                $heading[3]['data'] = $this->parameters['table_headers_previous_close'];
+                $heading[3]['class'] = 'text-right';
             }
 
             if ($this->parameters['table_headers_changes_show']) {
-                $heading[4] = $this->parameters['table_headers_changes'];
+                $heading[4]['data'] = $this->parameters['table_headers_changes'];
+                $heading[4]['class'] = 'text-right';
             }
 
             $this->table->set_heading($heading);
@@ -181,7 +189,7 @@ class CurrencyTable
             $amount_template = $this->parameters['amount_active'] ? '<input value="%1$s" />' : '%1$s';
 
             $output_data[2] = [
-                'data' => sprintf($amount_template, Currency::for_format(1 * $this->parameters['amount'], $this->parameters, $this->parameters['decimals'])),
+                'data' => sprintf($amount_template, $currency_obj->get_amount()),
                 'class' => 'text-right active',
             ];
 
@@ -199,20 +207,17 @@ class CurrencyTable
             $this->table->add_row($output_data);
         }
 
-        $fmt = Currency::get_fmt($this->parameters['currency_format']);
+        $fmt = Currency::get_fmt($this->settings['currency_format']);
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="table-responsive"><table'.(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->parameters['decimals'].'" data-decimal-point="'.$fmt['decimal_point'].'" data-thousands-sep="'.$fmt['thousands_sep'].'">',
+            'table_open' => '<div class="table-responsive"><table'.(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->settings['decimals'].'" data-decimal-point="'.$fmt['decimal_point'].'" data-thousands-sep="'.$fmt['thousands_sep'].'">',
             'table_close' => '</table></div>',
         ];
 
         $get_sources = Sources::get_sources();
 
-        $settings = get_option(Settings::$option_name, []);
-        $settings = wp_parse_args($settings, Settings::get_defaults());
-
-        $source = $get_sources[$settings['source_id']];
+        $source = $get_sources[$this->settings['source_id']];
 
         $this->table->set_template($template);
         $this->table->set_caption(Dev::caption(

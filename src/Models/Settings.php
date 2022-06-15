@@ -14,6 +14,8 @@ class Settings
         return [
             'source_id' => 'currencyrate',
             'base_currency' => 'USD',
+            'currency_format' => 3,
+            'decimals' => 4,
             'rates_available' => false,
         ];
     }

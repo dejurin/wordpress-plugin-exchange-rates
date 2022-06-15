@@ -2,24 +2,23 @@
 
 namespace Dejurin\ExchangeRates\Admin\Settings\General\Sections\Fields;
 
-use Dejurin\ExchangeRates\Models\DataSources;
+use Dejurin\ExchangeRates\Models\CurrencyFormat;
 use Dejurin\ExchangeRates\Models\Settings;
-use Dejurin\ExchangeRates\Models\Sources;
 use Dejurin\ExchangeRates\Plugin;
 
-class Source
+class Format
 {
     public static function register()
     {
         add_settings_field(
-            'source_id',
-            '<a href="#source-table">'.__('Sources', Plugin::PLUGIN_SLUG).'</a>',
+            'currency_format',
+            __('Formatting', Plugin::PLUGIN_SLUG),
             [__CLASS__, 'render'],
             Plugin::PLUGIN_SLUG.'-general',
-            'source_id',
+            'currency_format',
             [
-                'id' => 'source_id',
-                'label_for' => Plugin::PLUGIN_SLUG.'[source_id]'
+                'id' => 'currency_format',
+                'label_for' => Plugin::PLUGIN_SLUG.'[currency_format]'
             ]
         );
     }
@@ -28,19 +27,15 @@ class Source
     {
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults());
-
-        $get_sources = Sources::get_sources();
-
-        $data_cources = DataSources::getInstance();
-        $sources = $data_cources->get_sources_data(); ?>
+        ?>
 
 		<select id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
-        <?php foreach ($sources['data'] as $value) {
+        <?php foreach (CurrencyFormat::get_list() as $key => $value) {
             printf(
             '<option value="%1$s" %2$s>%3$s</option>',
-            esc_attr($value['source']),
-            selected($value['source'], $settings[$args['id']], false),
-            (isset($get_sources[$value['source']])) ? $get_sources[$value['source']]['name'] : esc_html($value['source'])
+            esc_attr($key),
+            selected($key, $settings[$args['id']], false),
+            esc_html($value['name'])
         );
         } ?>
 		</select>

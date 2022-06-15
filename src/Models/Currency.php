@@ -7,6 +7,7 @@
 
 namespace Dejurin\ExchangeRates\Models;
 
+use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Plugin;
 
 class Currency
@@ -18,8 +19,31 @@ class Currency
 
     public function __construct($parameters, $currency)
     {
+        $this->settings = get_option(Settings::$option_name, []);
         $this->parameters = $parameters;
         $this->set_currencies($parameters['base_currency'], $currency);
+    }
+
+    public static function get_fmt($currency_format)
+    {
+        if (!is_array($currency_format)) {
+            return CurrencyFormat::get_list()[$currency_format];
+        }
+    }
+
+    public static function for_format($value, $currency_format, $decimals)
+    {
+        $fmt = self::get_fmt($currency_format);
+
+        return rtrim(
+            rtrim(
+                number_format(
+                    $value,
+                    $decimals,
+                    $fmt['decimal_point'],
+                    $fmt['thousands_sep']),
+                '0'),
+            '.');
     }
 
     public function set_currencies($base_currency, $currency)
@@ -32,18 +56,6 @@ class Currency
         }
 
         $this->base_currency_source = $this->rates['base'];
-    }
-
-    public static function get_fmt($currency_format)
-    {
-        return CurrencyFormat::get_list()[$currency_format];
-    }
-
-    public static function for_format($value, $parameters, $decimals)
-    {
-        $fmt = self::get_fmt($parameters['currency_format']);
-
-        return rtrim(rtrim(number_format($value, $decimals, $fmt['decimal_point'], $fmt['thousands_sep']), '0'), '.');
     }
 
     public function get_date()
@@ -68,7 +80,18 @@ class Currency
 
     public function get_rate_format($index = 0, $amount = true)
     {
-        return self::for_format($this->get_rate($index) * ($amount ? $this->parameters['amount'] : 1), $this->parameters, $this->parameters['decimals']);
+        return self::for_format(
+            $this->get_rate($index) * ($amount ? $this->parameters['amount'] : 1),
+            $this->settings['currency_format'],
+            $this->settings['decimals']);
+    }
+
+    public function get_amount() {
+        return self::for_format(
+            $this->parameters['amount'],
+            $this->settings['currency_format'],
+            $this->settings['decimals']
+        );
     }
 
     public function get_change()
@@ -76,8 +99,8 @@ class Currency
         if ($this->currency !== $this->base_currency) {
             $result = self::for_format(
                 (($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount']),
-                $this->parameters,
-                $this->parameters['decimals']
+                $this->settings['currency_format'],
+                $this->settings['decimals']
             );
             if ('0' !== $result) {
                 return $result;
@@ -102,7 +125,7 @@ class Currency
             }
 
             $pre = (1 === $this->get_trend()) ? '+' : '';
-            $result = self::for_format($value, $this->parameters, $decimal);
+            $result = self::for_format($value, $this->settings['currency_format'], $decimal);
 
             if ('0' !== $result) {
                 return $pre.$result;

@@ -3,7 +3,7 @@
 namespace Dejurin\ExchangeRates;
 
 use Dejurin\ExchangeRates\Admin\Admin;
-
+use Dejurin\ExchangeRates\Shortcodes\Badge;
 class Plugin
 {
     public const VERSION = '0.0.1';
@@ -23,6 +23,9 @@ class Plugin
         add_action('admin_enqueue_scripts', [$this, 'registerAdminScriptStyle']);
         add_action('wp_enqueue_scripts', [$this, 'registerPublicScriptStyle']);
         add_action('widgets_init', ['Dejurin\ExchangeRates\Widgets', 'register']);
+
+        new Badge();
+
 
         if (is_admin()) {
             Admin::run();

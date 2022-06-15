@@ -40,7 +40,7 @@ class DataSources
 
         if (!$this->validate_sources_data() || empty($this->sources_data)) {
             $this->fetch_source_data();
-            set_transient($this->transient_sources, $this->sources_data, HOUR_IN_SECONDS);
+            set_transient($this->transient_sources, $this->sources_data, HOUR_IN_SECONDS * 24);
         }
 
         return $this->sources_data;

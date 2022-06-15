@@ -10,7 +10,7 @@ class Page
 {
     public static function init()
     {
-        Sections\SourceSelect::init();
+        Sections\Settings::init();
     }
 
     public static function render()
@@ -18,19 +18,22 @@ class Page
         $get_sources = Sources::get_sources();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
 		<div class="wrap">
-
-		
 			<h1><?php echo Plugin::NAME; ?></h1>
 			<hr>
-
 			<div class="row">
-<div class="col">
+			<div class="col">
 			<form action="options.php" method="post">
+			<p><?php _e('If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', Plugin::PLUGIN_SLUG); ?></p>
 				<?php
                 settings_fields(Plugin::PLUGIN_SLUG.'-general');
         do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
         submit_button(__('Save', Plugin::PLUGIN_SLUG)); ?>
-			</form></div>
+
+
+			</form>
+
+
+		</div>
 			<div class="col">
 		
 			

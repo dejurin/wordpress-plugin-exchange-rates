@@ -135,3 +135,34 @@
 .widget-exchange-rates-table .info-caption p:last-child {
     margin-bottom: 0;
 }
+
+
+
+.widget-exchange-rates-shortcode-badge .badge-leaders {
+  max-width: 40em;
+  padding: 0;
+  overflow-x: hidden;
+    background-color:#712cf9;
+    border-radius: 5px;
+    color:#fff;
+    margin-bottom: 5px;
+}
+.widget-exchange-rates-shortcode-badge .badge-leaders:before {
+  float: left;
+  width: 0;
+  white-space: nowrap;
+  content:
+  ". . . . . . . . . . . . . . . . . . . . "
+  ". . . . . . . . . . . . . . . . . . . . "
+  ". . . . . . . . . . . . . . . . . . . . "
+  ". . . . . . . . . . . . . . . . . . . . "
+  }
+  .widget-exchange-rates-shortcode-badge .badge-leaders span:first-child {
+    background-color:#712cf9;
+    padding:0 5px;
+  }
+  .widget-exchange-rates-shortcode-badge .badge-leaders span + span {
+  float: right;
+    background-color:#712cf9;
+    padding:0 5px;
+  }

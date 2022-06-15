@@ -2,10 +2,10 @@
 
 namespace Dejurin\ExchangeRates\Widgets;
 
-use Dejurin\ExchangeRates\Models\Checkbox;
+use Dejurin\ExchangeRates\Models\CurrencyFormat;
 use Dejurin\ExchangeRates\Models\ColumnRate;
 use Dejurin\ExchangeRates\Models\Currencies;
-use Dejurin\ExchangeRates\Models\CurrencyFormat;
+use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\Flags;
 use Dejurin\ExchangeRates\Plugin;
 
@@ -173,16 +173,6 @@ class Table extends \WP_Widget
                     } ?>
             </select>
         </p>
-        <p><label for="<?php echo $this->get_field_id('decimals'); ?>"><?php _e('Decimals:', Plugin::PLUGIN_SLUG); ?></label>
-        <input 
-        id="<?php echo $this->get_field_id('decimals'); ?>"
-        name="<?php echo $this->get_field_name('decimals'); ?>"
-        type="range"
-        step="1"
-        min="0"
-        max="7"
-        value="<?php echo esc_attr($instance['decimals']); ?>">
-        <span id="<?php echo $this->get_field_id('decimals'); ?>-show"><?php echo esc_attr($instance['decimals']); ?></span></p>
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Flag', Plugin::PLUGIN_SLUG); ?></legend>

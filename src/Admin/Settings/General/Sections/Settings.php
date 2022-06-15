@@ -4,7 +4,7 @@ namespace Dejurin\ExchangeRates\Admin\Settings\General\Sections;
 
 use Dejurin\ExchangeRates\Plugin;
 
-class SourceSelect
+class Settings
 {
     public static function init()
     {
@@ -25,8 +25,20 @@ class SourceSelect
     public static function register_sections()
     {
         add_settings_section(
-            'data_source',
-            __('Settings', Plugin::PLUGIN_SLUG),
+            'source_id',
+            null,
+            null,
+            Plugin::PLUGIN_SLUG.'-general'
+        );
+        add_settings_section(
+            'currency_format',
+            null,
+            null,
+            Plugin::PLUGIN_SLUG.'-general'
+        );
+        add_settings_section(
+            'decimals',
+            null,
             null,
             Plugin::PLUGIN_SLUG.'-general'
         );
@@ -35,30 +47,17 @@ class SourceSelect
     public static function register_fields()
     {
         Fields\Source::register();
+        Fields\Format::register();
+        Fields\Decimals::register();
     }
 
     public static function sanitize($values)
     {
-        /**
-         * Идея фикс.
-         * 1) Получаем опции из БД (какие есть).
-         * 2) Мерджим их с дефолтными (тем самым дополняя к бдшным те, что появились в новой версии плагина и т п).
-         * 3) Мерджим отфильтрованные опции с теми, что получили в пункте 2).
-         *
-         * Проблема: если мы не выполняем сохранение настроек, то при обновлении структуры опций есть шанс опять иметь в БД не все дефолтные настройки.
-         */
-
-        // Получаем настройки из бд и добавляем к ним дефолтные
         $current_options = get_option(\Dejurin\ExchangeRates\Models\Settings::$option_name, []);
         $current_options = wp_parse_args($current_options, \Dejurin\ExchangeRates\Models\Settings::get_defaults());
 
-        if (isset($values['data_source'])) {
-            $providers = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_providers();
-
-            if (!array_key_exists($values['data_source'], $providers)) {
-                $values['data_source'] = $current_options['data_source'];
-                // $filtered_values['data_provider_name'] = sanitize_text_field( $values['data_provider_name'] );
-            }
+        if (isset($values['source_id'])) {
+            \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data();
         }
 
         // Соединяем дефолотные + текущие с теми, что были введены сейчас
