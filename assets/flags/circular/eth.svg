@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="501px" viewBox="0 0 512 501" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>eth</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="eth" transform="translate(0.000000, 0.000000)">
+            <ellipse id="Oval" fill="#EEEEEE" cx="256" cy="250.467583" rx="256" ry="250.467583"></ellipse>
+            <g id="Group" transform="translate(106.000000, 6.000000)" fill="#010101" fill-rule="nonzero">
+                <polygon id="Path" opacity="0.6" points="149.970811 182.66847 8.2960486e-14 250.971025 149.970811 339.698671 299.881784 250.971025"></polygon>
+                <polygon id="Path" opacity="0.45" points="4.1480243e-14 250.50108 150.075892 339.697211 150.075892 0"></polygon>
+                <polygon id="Path" opacity="0.8" points="149.970811 0 149.970811 339.697211 299.881784 250.499621"></polygon>
+                <polygon id="Path" opacity="0.45" points="4.1480243e-14 277.474751 150.075892 490.199264 150.075892 366.684018"></polygon>
+                <polygon id="Path" opacity="0.8" points="149.970811 366.684018 149.970811 490.199264 300 277.474751"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

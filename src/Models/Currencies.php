@@ -926,7 +926,7 @@ class Currencies
             ],
             'XAG' => [
                 'flag' => 'XAG',
-                'name' => __('Gold (ounce)', Plugin::PLUGIN_SLUG),
+                'name' => __('Silver (ounce)', Plugin::PLUGIN_SLUG),
                 'region' => __('&ndash;', Plugin::PLUGIN_SLUG),
             ],
             'XPD' => [
@@ -950,7 +950,7 @@ class Currencies
                 'region' => __('West African States', Plugin::PLUGIN_SLUG),
             ],
             'XDR' => [
-                'flag' => 'XX',
+                'flag' => 'XDR',
                 'name' => __('Special Drawing Rights', Plugin::PLUGIN_SLUG),
                 'region' => __('IMF', Plugin::PLUGIN_SLUG),
             ],
@@ -985,7 +985,7 @@ class Currencies
                 'region' => __('Zimbabwe', Plugin::PLUGIN_SLUG),
             ],
             'WAUA' => [
-                'flag' => false,
+                'flag' => 'WAUA',
                 'name' => __('W-African Unit of Account', Plugin::PLUGIN_SLUG),
                 'region' => __('ECOWAS', Plugin::PLUGIN_SLUG),
             ],

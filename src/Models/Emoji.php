@@ -7,7 +7,6 @@ class Emoji
     public static function get_list()
     {
         $emoji_flags = [];
-
         $emoji_flags['EU'] = "\u{1F4B6}";
         $emoji_flags['GB'] = "\u{1F4B7}";
         $emoji_flags['US'] = "\u{1F4B5}";
@@ -260,7 +259,38 @@ class Emoji
         $emoji_flags['ZA'] = "\u{1F1FF}\u{1F1E6}";
         $emoji_flags['ZM'] = "\u{1F1FF}\u{1F1F2}";
         $emoji_flags['ZW'] = "\u{1F1FF}\u{1F1FC}";
-
+        $emoji_flags['LTC'] = "\u{1FA99}";
+        $emoji_flags['NMC'] = "\u{1FA99}";
+        $emoji_flags['PPC'] = "\u{1FA99}";
+        $emoji_flags['NVC'] = "\u{1FA99}";
+        $emoji_flags['XPM'] = "\u{1FA99}";
+        $emoji_flags['EAC'] = "\u{1FA99}";
+        $emoji_flags['VTC'] = "\u{1FA99}";
+        $emoji_flags['EMC'] = "\u{1FA99}";
+        $emoji_flags['FCT'] = "\u{1FA99}";
+        $emoji_flags['XRP'] = "\u{1FA99}";
+        $emoji_flags['XMR'] = "\u{1FA99}";
+        $emoji_flags['BTS'] = "\u{1FA99}";
+        $emoji_flags['DASH'] = "\u{1FA99}";
+        $emoji_flags['DOGE'] = "\u{1FA99}";
+        $emoji_flags['ETH'] = "\u{1FA99}";
+        $emoji_flags['NXT'] = "\u{1FA99}";
+        $emoji_flags['STR'] = "\u{1FA99}";
+        $emoji_flags['LD'] = "\u{1F3AE}";
+        $emoji_flags['XAU'] = "\u{1FA99}";
+        $emoji_flags['XAG'] = "\u{1FA99}";
+        $emoji_flags['XPD'] = "\u{1F48E}";
+        $emoji_flags['XPT'] = "\u{1F48E}";
+        $emoji_flags['XDR'] = "\u{1F310}";
+        $emoji_flags['AN'] = "\u{1F1F3}\u{1F1F1}";
+        $emoji_flags['XPF'] = "\u{1F3E6}";
+        $emoji_flags['XCD'] = "\u{1F3E6}";
+        $emoji_flags['XOF'] = "\u{1F3E6}";
+        $emoji_flags['RUP'] = "\u{1F3F4}";
+        $emoji_flags['RUB'] = "\u{1F3F4}";
+        $emoji_flags['RUR'] = "\u{1F3F4}";
+        $emoji_flags['XX'] = "\u{1F47D}";
+        $emoji_flags['WAUA'] = "\u{1F47D}";
         return $emoji_flags;
     }
 }
