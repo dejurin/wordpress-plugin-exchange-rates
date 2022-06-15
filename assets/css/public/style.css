@@ -27,8 +27,25 @@
     background-color: var(--bs-table-striped-bg);
 }
 .widget-exchange-rates-table table td,
-.widget-exchange-rates-table table th  {
+.widget-exchange-rates-table table th,
+.widget-exchange-rates-table table caption {
     padding: 8px !important;
+}
+.widget-exchange-rates-table table caption {
+    background-color: transparent !important;
+}
+.widget-exchange-rates-table table img {
+    display: inline-block !important;
+}
+.widget-exchange-rates-table table tr {
+    border-bottom: solid var(--bs-table-striped-bg) 1px !important;
+}
+.widget-exchange-rates-table table td,
+.widget-exchange-rates-table table th {
+    border: solid var(--bs-table-striped-bg) 1px !important;
+}
+.widget-exchange-rates-table table.table-border {
+    border: solid var(--bs-table-striped-bg) 2px;
 }
 .widget-exchange-rates-table div {
     line-height: 15px !important;
@@ -91,14 +108,15 @@
 .widget-exchange-rates-table input:focus {
     outline: none;
 }
-.widget-exchange-rates-table p.sign {
+
+.widget-exchange-rates-table caption div.sign {
     padding: 0;
     margin: 0;
     font-size: 15px !important;
     justify-content:flex-end;
 }
 
-.widget-exchange-rates-table p.sign span.info {
+.widget-exchange-rates-table caption div.sign span.info {
     cursor: pointer;
 }
 .widget-exchange-rates-table a {
@@ -111,6 +129,8 @@
     display: none;
     border-radius: 5px !important;
     z-index: 99999;
+    text-align: left;
+    margin-top: 8px;
 }
 .widget-exchange-rates-table .info-caption p:last-child {
     margin-bottom: 0;

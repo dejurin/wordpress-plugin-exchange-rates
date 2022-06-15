@@ -44,7 +44,9 @@ p.submit {
     }
   }
 
-
+.resize-both {
+  resize: both;
+}
   fieldset {
     padding: 5px 15px;
     margin-bottom: 15px;

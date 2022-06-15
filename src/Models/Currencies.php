@@ -11,7 +11,7 @@ class Currencies
         return [
             'AED' => [
                 'flag' => 'AE',
-                'name' => __('United Arab Emirates Dirham', Plugin::PLUGIN_SLUG),
+                'name' => __('UAE Dirham', Plugin::PLUGIN_SLUG),
                 'region' => __('UAE', Plugin::PLUGIN_SLUG),
             ],
             'AFN' => [
@@ -31,7 +31,7 @@ class Currencies
             ],
             'ANG' => [
                 'flag' => 'AN',
-                'name' => __('Netherlands Antillean Guilder', Plugin::PLUGIN_SLUG),
+                'name' => __('Guilder', Plugin::PLUGIN_SLUG),
                 'region' => __('Netherlands Antilles', Plugin::PLUGIN_SLUG),
             ],
             'AOA' => [
@@ -62,7 +62,7 @@ class Currencies
             'BAM' => [
                 'flag' => 'BA',
                 'name' => __('Convertible Mark', Plugin::PLUGIN_SLUG),
-                'region' => __('Bosnia and Herzegovina', Plugin::PLUGIN_SLUG),
+                'region' => __('Bosnia & Herzegovina', Plugin::PLUGIN_SLUG),
             ],
             'BBD' => [
                 'flag' => 'BB',
@@ -102,7 +102,7 @@ class Currencies
             'BOB' => [
                 'flag' => 'BO',
                 'name' => __('Boliviano', Plugin::PLUGIN_SLUG),
-                'region' => __('Plurinational State of Bolivia', Plugin::PLUGIN_SLUG),
+                'region' => __('Bolivia', Plugin::PLUGIN_SLUG),
             ],
             'BRL' => [
                 'flag' => 'BR',
@@ -115,9 +115,89 @@ class Currencies
                 'region' => __('The Bahamas', Plugin::PLUGIN_SLUG),
             ],
             'BTC' => [
-                'flag' => '',
+                'flag' => 'BTC',
                 'name' => __('Bitcoin', Plugin::PLUGIN_SLUG),
-                'region' => __('Crypto-currency', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'ETH' => [
+                'flag' => 'ETH',
+                'name' => __('Ethereum', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'LTC' => [
+                'flag' => 'LTC',
+                'name' => __('Litecoin', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'DOGE' => [
+                'flag' => 'DOGE',
+                'name' => __('Doge', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'DASH' => [
+                'flag' => 'DASH',
+                'name' => __('Dash', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'NXT' => [
+                'flag' => 'NXT',
+                'name' => __('NXT', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'STR' => [
+                'flag' => 'STR',
+                'name' => __('STR', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'XRP' => [
+                'flag' => 'XRP',
+                'name' => __('Ripple', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'XMR' => [
+                'flag' => 'XMR',
+                'name' => __('Monero', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'NMC' => [
+                'flag' => 'NMC',
+                'name' => __('NMC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'PPC' => [
+                'flag' => 'PPC',
+                'name' => __('PPC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'NVC' => [
+                'flag' => 'NVC',
+                'name' => __('NVC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'XPM' => [
+                'flag' => 'XPM',
+                'name' => __('XPM', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'EAC' => [
+                'flag' => 'EAC',
+                'name' => __('EAC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'VTC' => [
+                'flag' => 'VTC',
+                'name' => __('VTC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'EMC' => [
+                'flag' => 'EMC',
+                'name' => __('EMC', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+            ],
+            'FCT' => [
+                'flag' => 'FCT',
+                'name' => __('FCT', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
             ],
             'BTN' => [
                 'flag' => 'BT',
@@ -128,6 +208,16 @@ class Currencies
                 'flag' => 'BW',
                 'name' => __('Botswana Pula', Plugin::PLUGIN_SLUG),
                 'region' => __('Botswana', Plugin::PLUGIN_SLUG),
+            ],
+            'BYN' => [
+                'flag' => 'BY',
+                'name' => __('Belarusian ruble', Plugin::PLUGIN_SLUG),
+                'region' => __('Belarus', Plugin::PLUGIN_SLUG),
+            ],
+            'BTS' => [
+                'flag' => 'BTS',
+                'name' => __('BitShares', Plugin::PLUGIN_SLUG),
+                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
             ],
             'BYR' => [
                 'flag' => 'BY',
@@ -159,9 +249,19 @@ class Currencies
                 'name' => __('Chilean Peso', Plugin::PLUGIN_SLUG),
                 'region' => __('Chile', Plugin::PLUGIN_SLUG),
             ],
+            'CLF' => [
+                'flag' => 'CL',
+                'name' => __('Chilean Unit of Account', Plugin::PLUGIN_SLUG),
+                'region' => __('Chile', Plugin::PLUGIN_SLUG),
+            ],
             'CNY' => [
                 'flag' => 'CN',
-                'name' => __('Chinese Yuan', Plugin::PLUGIN_SLUG),
+                'name' => __('Renminbi', Plugin::PLUGIN_SLUG),
+                'region' => __('China', Plugin::PLUGIN_SLUG),
+            ],
+            'CNH' => [
+                'flag' => 'CN',
+                'name' => __('Chinese Yuan (offshore)', Plugin::PLUGIN_SLUG),
                 'region' => __('China', Plugin::PLUGIN_SLUG),
             ],
             'COP' => [
@@ -177,6 +277,11 @@ class Currencies
             'CUP' => [
                 'flag' => 'CU',
                 'name' => __('Cuban Peso', Plugin::PLUGIN_SLUG),
+                'region' => __('Cuba', Plugin::PLUGIN_SLUG),
+            ],
+            'CUC' => [
+                'flag' => 'CU',
+                'name' => __('Convertible peso', Plugin::PLUGIN_SLUG),
                 'region' => __('Cuba', Plugin::PLUGIN_SLUG),
             ],
             'CVE' => [
@@ -243,6 +348,11 @@ class Currencies
                 'flag' => 'GB',
                 'name' => __('British Pound', Plugin::PLUGIN_SLUG),
                 'region' => __('United Kingdom', Plugin::PLUGIN_SLUG),
+            ],
+            'IMP' => [
+                'flag' => 'IM',
+                'name' => __('Manx pound', Plugin::PLUGIN_SLUG),
+                'region' => __('Isle of Man', Plugin::PLUGIN_SLUG),
             ],
             'GEL' => [
                 'flag' => 'GE',
@@ -474,6 +584,11 @@ class Currencies
                 'name' => __('Mauritanian Ouguiya', Plugin::PLUGIN_SLUG),
                 'region' => __('Mauritania', Plugin::PLUGIN_SLUG),
             ],
+            'MRU' => [
+                'flag' => 'MR',
+                'name' => __('Mauritanian Ouguiya', Plugin::PLUGIN_SLUG),
+                'region' => __('Mauritania', Plugin::PLUGIN_SLUG),
+            ],
             'MUR' => [
                 'flag' => 'MU',
                 'name' => __('Mauritius Rupee', Plugin::PLUGIN_SLUG),
@@ -594,6 +709,16 @@ class Currencies
                 'name' => __('Russian Ruble', Plugin::PLUGIN_SLUG),
                 'region' => __('Russia', Plugin::PLUGIN_SLUG),
             ],
+            'PRB' => [
+                'flag' => 'XX',
+                'name' => __('Transnistrian ruble', Plugin::PLUGIN_SLUG),
+                'region' => __('Transnistria', Plugin::PLUGIN_SLUG),
+            ],
+            'RUR' => [
+                'flag' => 'XX',
+                'name' => __('USSR Ruble', Plugin::PLUGIN_SLUG),
+                'region' => __('USSR', Plugin::PLUGIN_SLUG),
+            ],
             'RWF' => [
                 'flag' => 'RW',
                 'name' => __('Rwanda Franc', Plugin::PLUGIN_SLUG),
@@ -632,7 +757,7 @@ class Currencies
             'SHP' => [
                 'flag' => 'SH',
                 'name' => __('Saint Helena Pound', Plugin::PLUGIN_SLUG),
-                'region' => __('Saint Helena, Ascension And Tristan Da Cunha', Plugin::PLUGIN_SLUG),
+                'region' => __('Saint Helena', Plugin::PLUGIN_SLUG),
             ],
             'SLL' => [
                 'flag' => 'SL',
@@ -654,6 +779,11 @@ class Currencies
                 'name' => __('Sao Tomean Dobra', Plugin::PLUGIN_SLUG),
                 'region' => __('Sao Tome And Principe', Plugin::PLUGIN_SLUG),
             ],
+            'STN' => [
+                'flag' => 'ST',
+                'name' => __('Sao Tomean Dobra', Plugin::PLUGIN_SLUG),
+                'region' => __('Sao Tome And Principe', Plugin::PLUGIN_SLUG),
+            ],
             'SVC' => [
                 'flag' => 'SV',
                 'name' => __('El Salvador Colon', Plugin::PLUGIN_SLUG),
@@ -663,6 +793,11 @@ class Currencies
                 'flag' => 'SY',
                 'name' => __('Syrian Pound', Plugin::PLUGIN_SLUG),
                 'region' => __('Syrian Arab Republic', Plugin::PLUGIN_SLUG),
+            ],
+            'SSP' => [
+                'flag' => 'SS',
+                'name' => __('South Sudanese Pound', Plugin::PLUGIN_SLUG),
+                'region' => __('South Sudan,', Plugin::PLUGIN_SLUG),
             ],
             'SZL' => [
                 'flag' => 'SZ',
@@ -744,6 +879,26 @@ class Currencies
                 'name' => __('Venezuelan Bolivar', Plugin::PLUGIN_SLUG),
                 'region' => __('Venezuela', Plugin::PLUGIN_SLUG),
             ],
+            'VES' => [
+                'flag' => 'VE',
+                'name' => __('Venezuelan Bolivar', Plugin::PLUGIN_SLUG),
+                'region' => __('Venezuela', Plugin::PLUGIN_SLUG),
+            ],
+            'VEF_DIPRO' => [
+                'flag' => 'VE',
+                'name' => __('VEF DIPRO', Plugin::PLUGIN_SLUG),
+                'region' => __('Venezuela', Plugin::PLUGIN_SLUG),
+            ],
+            'VEF_DICOM' => [
+                'flag' => 'VE',
+                'name' => __('VEF DICOM', Plugin::PLUGIN_SLUG),
+                'region' => __('Venezuela', Plugin::PLUGIN_SLUG),
+            ],
+            'VEF_BLKMKT' => [
+                'flag' => 'VE',
+                'name' => __('VEF BLKMKT', Plugin::PLUGIN_SLUG),
+                'region' => __('Venezuela', Plugin::PLUGIN_SLUG),
+            ],
             'VND' => [
                 'flag' => 'VN',
                 'name' => __('Vietnamese Dong', Plugin::PLUGIN_SLUG),
@@ -762,20 +917,50 @@ class Currencies
             'XAF' => [
                 'flag' => 'CF',
                 'name' => __('CFA Franc BEAC', Plugin::PLUGIN_SLUG),
-                'region' => __('Bank of Central African States', Plugin::PLUGIN_SLUG),
+                'region' => __('Central African States', Plugin::PLUGIN_SLUG),
+            ],
+            'XAU' => [
+                'flag' => 'XAU',
+                'name' => __('Gold (ounce)', Plugin::PLUGIN_SLUG),
+                'region' => __('&ndash;', Plugin::PLUGIN_SLUG),
+            ],
+            'XAG' => [
+                'flag' => 'XAG',
+                'name' => __('Gold (ounce)', Plugin::PLUGIN_SLUG),
+                'region' => __('&ndash;', Plugin::PLUGIN_SLUG),
+            ],
+            'XPD' => [
+                'flag' => 'XPD',
+                'name' => __('Palladium (ounce)', Plugin::PLUGIN_SLUG),
+                'region' => __('&ndash;', Plugin::PLUGIN_SLUG),
+            ],
+            'XPT' => [
+                'flag' => 'XPT',
+                'name' => __('Platinum (ounce)', Plugin::PLUGIN_SLUG),
+                'region' => __('&ndash;', Plugin::PLUGIN_SLUG),
             ],
             'XCD' => [
-                'flag' => false,
+                'flag' => 'XCD',
                 'name' => __('East Caribbean Dollar', Plugin::PLUGIN_SLUG),
-                'region' => __('Organisation of Eastern Caribbean States', Plugin::PLUGIN_SLUG),
+                'region' => __('Eastern Caribbean States', Plugin::PLUGIN_SLUG),
             ],
             'XOF' => [
-                'flag' => false,
+                'flag' => 'XOF',
                 'name' => __('CFA Franc BCEAO', Plugin::PLUGIN_SLUG),
-                'region' => __('Central Bank of West African States', Plugin::PLUGIN_SLUG),
+                'region' => __('West African States', Plugin::PLUGIN_SLUG),
+            ],
+            'XDR' => [
+                'flag' => 'XX',
+                'name' => __('Special Drawing Rights', Plugin::PLUGIN_SLUG),
+                'region' => __('IMF', Plugin::PLUGIN_SLUG),
+            ],
+            'LD' => [
+                'flag' => 'LD',
+                'name' => __('Linden Dollar', Plugin::PLUGIN_SLUG),
+                'region' => __('Second Life', Plugin::PLUGIN_SLUG),
             ],
             'XPF' => [
-                'flag' => false,
+                'flag' => 'XX',
                 'name' => __('CFP Franc', Plugin::PLUGIN_SLUG),
                 'region' => __('IEOM', Plugin::PLUGIN_SLUG),
             ],
@@ -787,7 +972,7 @@ class Currencies
             'ZAR' => [
                 'flag' => 'ZA',
                 'name' => __('South African Rand', Plugin::PLUGIN_SLUG),
-                'region' => __('Republic of South Africa', Plugin::PLUGIN_SLUG),
+                'region' => __('South Africa', Plugin::PLUGIN_SLUG),
             ],
             'ZMW' => [
                 'flag' => 'ZM',
@@ -798,6 +983,11 @@ class Currencies
                 'flag' => 'ZW',
                 'name' => __('Zimbabwean Dollar', Plugin::PLUGIN_SLUG),
                 'region' => __('Zimbabwe', Plugin::PLUGIN_SLUG),
+            ],
+            'WAUA' => [
+                'flag' => false,
+                'name' => __('W-African Unit of Account', Plugin::PLUGIN_SLUG),
+                'region' => __('ECOWAS', Plugin::PLUGIN_SLUG),
             ],
         ];
     }

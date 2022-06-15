@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="flag-icons-mm" viewBox="0 0 640 480">
-  <defs>
-    <path id="a" fill="#fff" d="m0-.5.2.5h-.4z" transform="scale(8.844)"/>
-    <g id="b">
-      <use xlink:href="#a" width="18" height="12" transform="rotate(-144)"/>
-      <use xlink:href="#a" width="18" height="12" transform="rotate(-72)"/>
-      <use xlink:href="#a" width="18" height="12"/>
-      <use xlink:href="#a" width="18" height="12" transform="rotate(72)"/>
-      <use xlink:href="#a" width="18" height="12" transform="rotate(144)"/>
-    </g>
-  </defs>
-  <path fill="#fecb00" d="M0-.1h640V160H0z"/>
-  <path fill="#ea2839" d="M0 320h640v160H0z"/>
-  <path fill="#34b233" d="M0 160h640v160H0z"/>
-  <use xlink:href="#b" width="18" height="12" x="9" y="6.4" transform="matrix(40 0 0 40 -40 0)"/>
-</svg>
+<svg viewBox="0 88 512 334" xmlns="http://www.w3.org/2000/svg"><path d="M0 311.908h512v102.988a8.829 8.829 0 01-8.828 8.828H8.828A8.829 8.829 0 010 414.896z" fill="#ff4b55"/><path d="M8.828 88.276h494.345a8.829 8.829 0 018.828 8.828v102.988H0V97.103a8.828 8.828 0 018.828-8.827z" fill="#ffe15a"/><path d="M261.032 144.959l26.435 79.263 83.552.648c5.097.04 7.21 6.543 3.111 9.571l-67.214 49.635 25.203 79.663c1.537 4.86-3.996 8.879-8.142 5.916L256 321.068l-67.976 48.587c-4.147 2.964-9.679-1.056-8.142-5.916l25.203-79.663-67.214-49.635c-4.1-3.028-1.987-9.533 3.111-9.571l83.552-.648 26.435-79.263c1.611-4.835 8.451-4.835 10.063 0z" fill="#f5f5f5"/><path d="M0 200.09h512V311.9H0z" fill="#73af00"/></svg>

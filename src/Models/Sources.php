@@ -9,6 +9,8 @@ class Sources
     public static function get_sources()
     {
         return [
+            'currencyrate' => ['name' => __('CurrencyRate.Today', Plugin::PLUGIN_SLUG), 'country' => 'xx', 'source_url' => 'https://currencyrate.today/'],
+            'ba-cbbh' => ['name' => __('The Central Bank of Bosnia and Herzegovina', Plugin::PLUGIN_SLUG), 'country' => 'ba', 'source_url' => 'https://www.cbbh.ba/'],
             'eg-cbe' => ['name' => __('Central Bank of Egypt', Plugin::PLUGIN_SLUG), 'country' => 'eg', 'source_url' => 'https://www.cbe.org.eg/'],
             'bd-bb' => ['name' => __('Bangladesh Bank', Plugin::PLUGIN_SLUG), 'country' => 'bd', 'source_url' => 'https://bb.org.bd/'],
             'bh-cbb' => ['name' => __('Central Bank of Bahrain', Plugin::PLUGIN_SLUG), 'country' => 'bh', 'source_url' => 'https://www.cbb.gov.bh/'],
@@ -26,8 +28,8 @@ class Sources
             'np-nrb' => ['name' => __('Nepal Rastra bank', Plugin::PLUGIN_SLUG), 'country' => 'np', 'source_url' => 'https://www.nrb.org.np/'],
             'mx-banxico-fix' => ['name' => __('Bank of Mexico (FIX)', Plugin::PLUGIN_SLUG), 'country' => 'mx', 'source_url' => 'https://www.banxico.org.mx/tipcamb/tipCamMIAction.do'],
             'is-cb' => ['name' => __('Central Bank of Iceland', Plugin::PLUGIN_SLUG), 'country' => 'is', 'source_url' => 'https://www.cb.is/'],
-            'tn-bct' => ['name' => __('Central Bank of Tunisia', Plugin::PLUGIN_SLUG), 'country' => 'tn', 'source_url' => 'https://www.hkma.gov.hk/'],
-            'pmr-cb' => ['name' => __('Transnistrian Republican Bank', Plugin::PLUGIN_SLUG), 'country' => 'pmr', 'source_url' => 'https://www.hkma.gov.hk/'],
+            'tn-bct' => ['name' => __('Central Bank of Tunisia', Plugin::PLUGIN_SLUG), 'country' => 'tn', 'source_url' => 'https://www.bct.gov.tn'],
+            'pmr-cb' => ['name' => __('Transnistrian Republican Bank', Plugin::PLUGIN_SLUG), 'country' => 'xx', 'source_url' => 'https://cbpmr.net/'],
             'bg-bnb' => ['name' => __('Bulgarian National Bank', Plugin::PLUGIN_SLUG), 'country' => 'bg', 'source_url' => 'https://www.bnb.bg/'],
             'eu-ecb' => ['name' => __('European Central Bank', Plugin::PLUGIN_SLUG), 'country' => 'eu', 'source_url' => 'https://www.ecb.europa.eu/'],
             'ae-cbae' => ['name' => __('Central Bank of the UAE', Plugin::PLUGIN_SLUG), 'country' => 'ae', 'source_url' => 'https://centralbank.ae/'],

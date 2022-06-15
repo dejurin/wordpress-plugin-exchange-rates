@@ -74,7 +74,14 @@ class Currency
     public function get_change()
     {
         if ($this->currency !== $this->base_currency) {
-            return self::for_format((($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount']), $this->parameters, $this->parameters['decimals']);
+            $result = self::for_format(
+                (($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount']),
+                $this->parameters,
+                $this->parameters['decimals']
+            );
+            if ('0' !== $result) {
+                return $result;
+            }
         }
     }
 
@@ -95,11 +102,12 @@ class Currency
             }
 
             $pre = (1 === $this->get_trend()) ? '+' : '';
+            $result = self::for_format($value, $this->parameters, $decimal);
 
-            return $pre.self::for_format($value, $this->parameters, $decimal);
+            if ('0' !== $result) {
+                return $pre.$result;
+            }
         }
-
-        return false;
     }
 
     public function get_trend()

@@ -12,43 +12,6 @@ jQuery(document).ready(function() {
             }
         });
     }
-    function split(val) {
-        return val.split(/,\s*/);
-    }
-    function extractLast(term) {
-        return split(term).pop();
-    }
-    jQuery(document).on("keydown", '.plugin__currency__autocomplete', function(event) {
-        if (event.keyCode === jQuery.ui.keyCode.TAB && jQuery(this).autocomplete("instance").menu.active) {
-            event.preventDefault();
-        }
-
-        jQuery(this).autocomplete({
-            minLength: 0,
-            source: function(request, response) {
-                response(
-                    jQuery.ui.autocomplete.filter(
-                        jQuery('.plugin__currency__autocomplete').data('autocomplete').split(','),
-                        extractLast(request.term)
-                    )
-                );
-            },
-            focus: function() {
-                return false;
-            },
-            select: function(event, ui) {
-                var terms = split(this.value);
-                terms.pop();
-                terms.push(ui.item.value);
-                terms.push("");
-                var _term = terms.join(", ");
-                console.log(_term);
-                console.log(_term.replace(/,\s*jQuery/, ""));
-                this.value = _term.replace(/,\s*jQuery/, "");
-                return false;
-            }
-        });
-    });
     jQuery(document).on('input', 'input[type="range"]', function() {
         jQuery("#" + jQuery(this).attr('id') + '-show').text(jQuery(this).val());
     });

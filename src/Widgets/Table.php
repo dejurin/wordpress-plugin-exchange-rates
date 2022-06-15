@@ -4,6 +4,7 @@ namespace Dejurin\ExchangeRates\Widgets;
 
 use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\ColumnRate;
+use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\CurrencyFormat;
 use Dejurin\ExchangeRates\Models\Flags;
 use Dejurin\ExchangeRates\Plugin;
@@ -32,13 +33,14 @@ class Table extends \WP_Widget
          * Table
          */
         if (!empty($instance['currency_list'])) {
-            $instance['currency_list'] = str_replace(' ', '', $instance['currency_list']);
-            $instance['currency_list'] = explode(',', trim($instance['currency_list'], ',')); // add trim comma
+            // var_dump($this->parameters['currency_list']);
 
-            if (!empty($instance['currency_list'])) {
-                if (!empty($instance['base_currency'])) {
-                    $table = new \Dejurin\ExchangeRates\Service\CurrencyTable();
-                    $table->parameters = [
+            // $instance['currency_list'] = str_replace(' ', '', $instance['currency_list']);
+            // $instance['currency_list'] = explode(',', trim($instance['currency_list'], ',')); // add trim comma
+
+            if (!empty($instance['base_currency'])) {
+                $table = new \Dejurin\ExchangeRates\Service\CurrencyTable();
+                $table->parameters = [
                         'amount' => (float) $instance['amount'],
                         'base_currency' => (string) $instance['base_currency'],
                         'currency_list' => (array) $instance['currency_list'],
@@ -52,6 +54,7 @@ class Table extends \WP_Widget
                         'full_width' => (bool) $instance['full_width'],
                         'amount_active' => (bool) $instance['amount_active'],
                         'base_show' => (bool) $instance['base_show'],
+                        'border' => (bool) $instance['border'],
                         'table_headers_show' => (bool) $instance['table_headers_show'],
                         'table_headers_name' => (string) $instance['table_headers_name'],
                         'table_headers_code' => (string) $instance['table_headers_code'],
@@ -62,8 +65,7 @@ class Table extends \WP_Widget
                         'table_headers_previous_close_show' => (bool) $instance['table_headers_previous_close_show'],
                         'table_headers_changes_show' => (bool) $instance['table_headers_changes_show'],
                     ];
-                    echo $table->get_table($this->number);
-                }
+                echo $table->get_table($this->number);
             }
         }
 
@@ -75,7 +77,7 @@ class Table extends \WP_Widget
         $instance = $this->_merge_instance_with_default_instance($new_instance);
         $instance_to_save['amount'] = (float) sanitize_text_field($instance['amount']);
         $instance_to_save['base_currency'] = (string) strtoupper(sanitize_text_field($instance['base_currency']));
-        $instance_to_save['currency_list'] = (string) strtoupper(sanitize_text_field($instance['currency_list']));
+        $instance_to_save['currency_list'] = (array) $instance['currency_list'];
         $instance_to_save['decimals'] = (int) sanitize_text_field($instance['decimals']);
         $instance_to_save['flag_size'] = (int) sanitize_text_field($instance['flag_size']);
         $instance_to_save['flag_type'] = (string) sanitize_text_field($instance['flag_type']);
@@ -86,6 +88,7 @@ class Table extends \WP_Widget
         $instance_to_save['full_width'] = (bool) sanitize_text_field($instance['full_width']);
         $instance_to_save['amount_active'] = (bool) sanitize_text_field($instance['amount_active']);
         $instance_to_save['base_show'] = true === (bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show']) ? false : true;
+        $instance_to_save['border'] = true === (bool) sanitize_text_field($instance['border']) && !isset($new_instance['border']) ? false : true;
         // Table headers
         $instance_to_save['table_headers_name'] = (string) sanitize_text_field($instance['table_headers_name']);
         $instance_to_save['table_headers_code'] = (string) sanitize_text_field($instance['table_headers_code']);
@@ -102,12 +105,11 @@ class Table extends \WP_Widget
 
     public function form($instance)
     {
-        static $first = true;
-
+        $get_currencies = Currencies::get_currencies();
         $instance = $this->_merge_instance_with_default_instance($instance);
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
     
-    <fieldset style="padding:5px 15px;margin-bottom:15px">
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
         <p>
 			<label for="<?php echo $this->get_field_id('amount'); ?>">
@@ -118,11 +120,10 @@ class Table extends \WP_Widget
                 name="<?php echo $this->get_field_name('amount'); ?>"
                 value="<?php echo esc_attr($instance['amount']); ?>"
                 type="text">
-    </p>
- 
-		<p class="description"><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></p>
+        </p>
+		<p><small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small></p>
 		<p><label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
-		<select class="plugin__currency__select-autocomplete" id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
+		<select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
                 $base_currency_list = array_keys($rates['data'][0]['rates']);
 
@@ -131,28 +132,33 @@ class Table extends \WP_Widget
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
                         selected($value, $instance['base_currency'], false),
-                        esc_html($value)
+                        esc_html($value.' - '.$get_currencies[$value]['name'])
                     );
         } ?>
 		</select>
             </p>
-		<p class="description"><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></p>
+		<p><small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small></p>
 		<p>
             <label for="<?php echo $this->get_field_id('currency_list'); ?>"><?php _e('Currencies list:', Plugin::PLUGIN_SLUG); ?></label>
-		    <input
-                class="plugin__currency__autocomplete"
-                data-autocomplete='<?php echo implode(',', $base_currency_list); ?>'
-                id="<?php echo $this->get_field_id('currency_list'); ?>"
-                name="<?php echo $this->get_field_name('currency_list'); ?>" 
-                value="<?php echo esc_attr($instance['currency_list']); ?>"
-                type="text">
-            </p>
-		<p class="description"><?php _e('The currencies which will be displayed in table. Separate by commas.', Plugin::PLUGIN_SLUG); ?></p>
-    </fieldset>
-
+            <select 
+            multiple="multiple"
+            class="resize-both"
+            size="10"
+            id="<?php echo $this->get_field_id('currency_list'); ?>"
+            name="<?php echo $this->get_field_name('currency_list'); ?>[]">
+        <?php foreach ($base_currency_list as $value) {
+            printf(
+                '<option value="%s"%s>%s</option>',
+                esc_attr($value),
+                selected($value, in_array($value, $instance['currency_list']) ? $value : null, false),
+                esc_html($value.' - '.$get_currencies[$value]['name'])
+            );} ?>
+            </select>
+        </p>
+		<p><small><?php _e('The currencies which will be displayed in table. Separate by commas.', Plugin::PLUGIN_SLUG); ?></small></p>
+        </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Formatting', Plugin::PLUGIN_SLUG); ?></legend>
-        
         <p>
             <label for="<?php echo $this->get_field_id('currency_format'); ?>"><?php _e('Currency format:', Plugin::PLUGIN_SLUG); ?></label>
             <select id="<?php echo $this->get_field_id('currency_format'); ?>" name="<?php echo $this->get_field_name('currency_format'); ?>">
@@ -167,10 +173,8 @@ class Table extends \WP_Widget
                     } ?>
             </select>
         </p>
-
         <p><label for="<?php echo $this->get_field_id('decimals'); ?>"><?php _e('Decimals:', Plugin::PLUGIN_SLUG); ?></label>
-
-<input 
+        <input 
         id="<?php echo $this->get_field_id('decimals'); ?>"
         name="<?php echo $this->get_field_name('decimals'); ?>"
         type="range"
@@ -179,11 +183,8 @@ class Table extends \WP_Widget
         max="7"
         value="<?php echo esc_attr($instance['decimals']); ?>">
         <span id="<?php echo $this->get_field_id('decimals'); ?>-show"><?php echo esc_attr($instance['decimals']); ?></span></p>
-
-
         </fieldset>
-
-<fieldset style="padding:5px 15px;margin-bottom:15px">
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Flag', Plugin::PLUGIN_SLUG); ?></legend>
         <p>
             <label for="<?php echo $this->get_field_id('flag_size'); ?>"><?php _e('Flag size:', Plugin::PLUGIN_SLUG); ?></label>
@@ -244,11 +245,7 @@ class Table extends \WP_Widget
                 $value,
                 (!isset($instance['table_headers_'.$key.'_show'])) ? 'disabled checked readonly' : ''); ?>
             </td>
-   
-
-
             <td>
-
                 <input 
                     id="<?php echo $this->get_field_id('table_headers_'.$key); ?>"
                     name="<?php echo $this->get_field_name('table_headers_'.$key); ?>"
@@ -263,7 +260,7 @@ class Table extends \WP_Widget
         </table>
         </fieldset>
 
-		<?php $first = false;
+		<?php
     }
 
     private function _merge_instance_with_default_instance($instance)
@@ -271,7 +268,7 @@ class Table extends \WP_Widget
         $settings = [
             'amount' => 1,
             'base_currency' => 'USD',
-            'currency_list' => 'EUR, GBP, CAD, AUD, JPY',
+            'currency_list' => ['EUR', 'GBP', 'AUD', 'JPY', 'BRL'],
             'flag_size' => 16,
             'flag_type' => 'rectangular',
             'decimals' => 4,
@@ -282,6 +279,7 @@ class Table extends \WP_Widget
             'full_width' => false,
             'amount_active' => false,
             'base_show' => true,
+            'border' => true,
             'table_headers_show' => true,
             'table_headers_name' => __('Currency', Plugin::PLUGIN_SLUG),
             'table_headers_code' => __('Code', Plugin::PLUGIN_SLUG),

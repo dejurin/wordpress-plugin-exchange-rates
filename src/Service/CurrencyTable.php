@@ -62,27 +62,22 @@ class CurrencyTable
 
         foreach ($this->parameters['currency_list'] as $currency_code) {
             $currency_obj = new Currency($this->parameters, $currency_code);
-
             if ($currency_obj->is_available()) {
                 $currency_name = $get_currencies[$currency_code]['name'];
                 $currency_region = $get_currencies[$currency_code]['region'];
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
-                $class_trend = '';
 
+                $class_trend = '';
                 $svg_trend = '<img src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.png">';
 
                 if (1 === $currency_obj->get_trend()) {
                     $svg_trend = sprintf($svg_trend, 'up');
-                } elseif (-1 === $currency_obj->get_trend()) {
-                    $svg_trend = sprintf($svg_trend, 'down');
-                } else {
-                    $svg_trend = '';
-                }
-
-                if (1 === $currency_obj->get_trend()) {
                     $class_trend = ' table-success';
                 } elseif (-1 === $currency_obj->get_trend()) {
+                    $svg_trend = sprintf($svg_trend, 'down');
                     $class_trend = ' table-danger';
+                } else {
+                    $svg_trend = '';
                 }
 
                 $text_changes = sprintf('%1$s&percnt;', $currency_obj->get_change_percentage());
@@ -118,9 +113,10 @@ class CurrencyTable
                 $output_data[2] = [
                     'data' => $currency_obj->get_rate_format(0, true).$svg_trend,
                     'data-rate' => $currency_obj->get_rate(0),
+                    'class' => 'text-right',
                 ];
 
-                if (0 !== $currency_obj->get_trend()) {
+                if (null !== $currency_obj->get_change_percentage()) {
                     $output_data[2]['title'] = $text_changes;
                 }
 
@@ -134,8 +130,8 @@ class CurrencyTable
 
                 if ($this->parameters['table_headers_changes_show']) {
                     $output_data[4] = [
-                        'data' => (0 === $currency_obj->get_trend()) ? '&mdash;' : $text_changes,
-                        'class' => 'text-right'.$class_trend,
+                        'data' => (null === $currency_obj->get_change_percentage()) ? '&mdash;' : $text_changes,
+                        'class' => 'text-right'.((null === $currency_obj->get_change_percentage()) ? '' : $class_trend),
                         'title' => $currency_obj->get_change(),
                     ];
                 }
@@ -188,11 +184,16 @@ class CurrencyTable
                 'data' => sprintf($amount_template, Currency::for_format(1 * $this->parameters['amount'], $this->parameters, $this->parameters['decimals'])),
                 'class' => 'text-right active',
             ];
-            $output_data[3] = [
-                'data' => '',
-                'colspan' => 2,
-                'class' => 'active',
-            ];
+
+            $t = count($output_data);
+
+            if ($t > 2) {
+                $output_data[3] = [
+                    'data' => '',
+                    'colspan' => $t - ($this->parameters['code']) ? 3 : 2,
+                    'class' => 'active',
+                ];
+            }
 
             unset($output_data[4]);
             $this->table->add_row($output_data);
@@ -202,7 +203,7 @@ class CurrencyTable
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="table-responsive"><table data-decimals="'.$this->parameters['decimals'].'" data-decimal-point="'.$fmt['decimal_point'].'" data-thousands-sep="'.$fmt['thousands_sep'].'">',
+            'table_open' => '<div class="table-responsive"><table'.(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->parameters['decimals'].'" data-decimal-point="'.$fmt['decimal_point'].'" data-thousands-sep="'.$fmt['thousands_sep'].'">',
             'table_close' => '</table></div>',
         ];
 
@@ -211,16 +212,18 @@ class CurrencyTable
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults());
 
-        $source_title = $get_sources[$settings['source_id']];
+        $source = $get_sources[$settings['source_id']];
 
         $this->table->set_template($template);
-        $html = $this->table->generate();
-        $html .= Dev::caption(
+        $this->table->set_caption(Dev::caption(
             $this->parameters,
-            $source_title['name'],
+            $source['name'],
             $currency_obj->get_date(),
-            $widget_number
-        );
+            $widget_number,
+            $source['source_url'],
+        ));
+
+        $html = $this->table->generate();
 
         return $html;
     }

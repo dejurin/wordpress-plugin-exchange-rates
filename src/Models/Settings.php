@@ -12,7 +12,7 @@ class Settings
     public static function get_defaults()
     {
         return [
-            'source_id' => 'ua-nbu',
+            'source_id' => 'currencyrate',
             'base_currency' => 'USD',
             'rates_available' => false,
         ];
