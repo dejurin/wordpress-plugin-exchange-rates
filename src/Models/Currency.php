@@ -16,6 +16,7 @@ class Currency
     private $base_currency;
     private $currency;
     private $rates = null;
+    private $zero_symbol = '&ndash;';
 
     public function __construct($parameters, $currency)
     {
@@ -68,22 +69,28 @@ class Currency
 
     public function get_rate($index = 0)
     {
-        $currency_rate = $this->rates['data'][$index]['rates'][$this->currency];
-        $base_rate = $this->rates['data'][$index]['rates'][$this->base_currency];
+        if (isset($this->rates['data'][$index])) {
+            $currency_rate = $this->rates['data'][$index]['rates'][$this->currency];
+            $base_rate = $this->rates['data'][$index]['rates'][$this->base_currency];
 
-        if ($this->base_currency_source === $this->base_currency) {
-            return ($this->parameters['inverse']) ? $currency_rate : $base_rate / $currency_rate;
+            if ($this->base_currency_source === $this->base_currency) {
+                return ($this->parameters['inverse']) ? $currency_rate : $base_rate / $currency_rate;
+            } else {
+                return ($this->parameters['inverse']) ? $currency_rate * 1 / $base_rate : (1 / $currency_rate) * $base_rate;
+            }
         } else {
-            return ($this->parameters['inverse']) ? $currency_rate * 1 / $base_rate : (1 / $currency_rate) * $base_rate;
+            return 0;
         }
     }
 
-    public function get_rate_format($index = 0, $amount = true)
+    public function get_rate_format($index = 0, $amount = true, $decimals = false)
     {
-        return self::for_format(
+        $result = self::for_format(
             $this->get_rate($index) * ($amount ? $this->parameters['amount'] : 1),
             $this->settings['currency_format'],
-            $this->settings['decimals']);
+            ($decimals) ? $this->parameters['decimals'] : $this->settings['decimals']
+        );
+        return strcmp($result, '0') ? $result : $this->zero_symbol;
     }
 
     public function get_amount() {
@@ -96,21 +103,30 @@ class Currency
 
     public function get_change()
     {
+        if ($this->currency !== $this->base_currency && 
+            $this->get_rate(0) !== 0 && $this->get_rate(1) !== 0) {
+            return ($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount'];
+        } else {
+            return 0;
+        }
+    }
+
+    public function get_change_format()
+    {
         if ($this->currency !== $this->base_currency) {
             $result = self::for_format(
-                (($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount']),
+                $this->get_change(),
                 $this->settings['currency_format'],
                 $this->settings['decimals']
             );
-            if ('0' !== $result) {
-                return $result;
-            }
+            return strcmp($result, '0') ? $result : $this->zero_symbol;
         }
     }
 
     public function get_change_percentage()
     {
-        if ($this->currency !== $this->base_currency) {
+        if ($this->currency !== $this->base_currency && 
+            $this->get_rate(0) !== 0 && $this->get_rate(1) !== 0) {
             $pre = '';
             $decimal = 0;
             $value = (100 - ((100 * $this->get_rate(1)) / $this->get_rate(0)));
@@ -127,17 +143,17 @@ class Currency
             $pre = (1 === $this->get_trend()) ? '+' : '';
             $result = self::for_format($value, $this->settings['currency_format'], $decimal);
 
-            if ('0' !== $result) {
-                return $pre.$result;
-            }
+            return $pre.$result.'&percnt;';
+        } else {
+            return '&ndash;';
         }
     }
 
     public function get_trend()
     {
-        if ($this->get_rate(0) > $this->get_rate(1)) {
+        if ($this->get_rate(0) > $this->get_rate(1) && $this->get_rate(1) !== 0) {
             return 1;
-        } elseif ($this->get_rate(0) === $this->get_rate(1)) {
+        } elseif ($this->get_rate(0) === $this->get_rate(1) || $this->get_rate(1) === 0) {
             return 0;
         } else {
             return -1;
@@ -150,9 +166,7 @@ class Currency
     {
         return
             $this->rates
-            && isset($this->rates['data'][0]['rates'][$this->currency])
-            && isset($this->rates['data'][1]['rates'][$this->currency])
-            && isset($this->rates['data'][0]['rates'][$this->base_currency])
-            && isset($this->rates['data'][1]['rates'][$this->base_currency]);
+            && isset($this->rates['data'][0]['rates'][$this->currency]) // && isset($this->rates['data'][1]['rates'][$this->currency])
+            && isset($this->rates['data'][0]['rates'][$this->base_currency]); // && isset($this->rates['data'][1]['rates'][$this->base_currency]);
     }
 }

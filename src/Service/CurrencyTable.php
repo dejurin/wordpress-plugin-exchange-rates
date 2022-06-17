@@ -88,8 +88,6 @@ class CurrencyTable
                     $svg_trend = '';
                 }
 
-                $text_changes = sprintf('%1$s&percnt;', $currency_obj->get_change_percentage());
-
                 $output_data[0]['data'] = $start_template;
 
                 if ('emoji' === $this->parameters['flag_type']) {
@@ -124,8 +122,8 @@ class CurrencyTable
                     'class' => 'text-right',
                 ];
 
-                if (null !== $currency_obj->get_change_percentage()) {
-                    $output_data[2]['title'] = $text_changes;
+                if (0 !== $currency_obj->get_change()) {
+                    $output_data[2]['title'] = $currency_obj->get_change_percentage();
                 }
 
                 if ($this->parameters['table_headers_previous_close_show']) {
@@ -138,12 +136,14 @@ class CurrencyTable
 
                 if ($this->parameters['table_headers_changes_show']) {
                     $output_data[4] = [
-                        'data' => (null === $currency_obj->get_change_percentage()) ? '&mdash;' : $text_changes,
-                        'class' => 'text-right'.((null === $currency_obj->get_change_percentage()) ? '' : $class_trend),
-                        'title' => $currency_obj->get_change(),
+                        'data' => $currency_obj->get_change_percentage(),
+                        'class' => 'text-right'.((0 === $currency_obj->get_change()) ? '' : $class_trend),
                     ];
+                    if (0 !== $currency_obj->get_change()) {
+                        $output_data[4]['title'] = $currency_obj->get_change_format();
+                    }
                 }
-
+                
                 $this->table->add_row($output_data);
             }
         }

@@ -31,6 +31,8 @@ class CurrencyTable
         $get_currencies = Currencies::get_currencies();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
 
+        $close = isset($rates['data'][1]);
+
         foreach ($get_currencies as $key => $value) {
             if (isset($rates['data'][0]['rates'][$key])) {
                 $table->add_row([
@@ -38,7 +40,7 @@ class CurrencyTable
                     $value['name'],
                     '<code>'.$key.'</code>',
                     $rates['data'][0]['rates'][$key],
-                    $rates['data'][1]['rates'][$key],
+                    $close ? $rates['data'][1]['rates'][$key] : '&ndash;',
                     $value['region'],
                 ]);
             }

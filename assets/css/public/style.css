@@ -142,9 +142,9 @@
   max-width: 40em;
   padding: 0;
   overflow-x: hidden;
-    background-color:#712cf9;
+    background-color:#eee;
     border-radius: 5px;
-    color:#fff;
+    color:#333;
     margin-bottom: 5px;
 }
 .widget-exchange-rates-shortcode-badge .badge-leaders:before {
@@ -158,11 +158,11 @@
   ". . . . . . . . . . . . . . . . . . . . "
   }
   .widget-exchange-rates-shortcode-badge .badge-leaders span:first-child {
-    background-color:#712cf9;
+    background-color:#eee;
     padding:0 5px;
   }
   .widget-exchange-rates-shortcode-badge .badge-leaders span + span {
   float: right;
-    background-color:#712cf9;
+    background-color:#eee;
     padding:0 5px;
   }

@@ -107,7 +107,8 @@ class Table extends \WP_Widget
     {
         $get_currencies = Currencies::get_currencies();
         $instance = $this->_merge_instance_with_default_instance($instance);
-        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
+        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
+        ?>
     
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
@@ -158,23 +159,6 @@ class Table extends \WP_Widget
 		<p><small><?php _e('The currencies which will be displayed in table. Separate by commas.', Plugin::PLUGIN_SLUG); ?></small></p>
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
-        <legend><?php _e('Formatting', Plugin::PLUGIN_SLUG); ?></legend>
-        <p>
-            <label for="<?php echo $this->get_field_id('currency_format'); ?>"><?php _e('Currency format:', Plugin::PLUGIN_SLUG); ?></label>
-            <select id="<?php echo $this->get_field_id('currency_format'); ?>" name="<?php echo $this->get_field_name('currency_format'); ?>">
-                <?php
-                    foreach (CurrencyFormat::get_list() as $key => $value) {
-                        printf(
-                            '<option value="%s"%s>%s</option>',
-                            esc_attr($key),
-                            selected($key, $instance['currency_format'], false),
-                            esc_html($value['name'])
-                        );
-                    } ?>
-            </select>
-        </p>
-        </fieldset>
-        <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Flag', Plugin::PLUGIN_SLUG); ?></legend>
         <p>
             <label for="<?php echo $this->get_field_id('flag_size'); ?>"><?php _e('Flag size:', Plugin::PLUGIN_SLUG); ?></label>
@@ -191,7 +175,7 @@ class Table extends \WP_Widget
         <p>
             <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label> 
             <?php foreach (Flags::get_types() as $item) {
-                        echo sprintf('<input type="radio" id="flag-types-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-types-%1$s">%4$s</label>&nbsp;',
+                        echo sprintf('<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
                 esc_attr($item['value']),
                 checked($item['value'], $instance['flag_type'], false),
                 $this->get_field_name('flag_type'),

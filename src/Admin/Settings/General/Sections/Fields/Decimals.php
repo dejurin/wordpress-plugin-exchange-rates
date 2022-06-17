@@ -36,7 +36,7 @@ class Decimals
         min="0"
         max="7"
         value="<?php echo $settings[$args['id']]; ?>">
-        <span id="<?php echo Plugin::PLUGIN_SLUG; ?>[decimals]-show"><?php echo $settings[$args['id']]; ?></span></p>
+        <span id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]-show"><?php echo $settings[$args['id']]; ?></span></p>
 
 
 		<?php
