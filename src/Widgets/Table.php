@@ -2,10 +2,9 @@
 
 namespace Dejurin\ExchangeRates\Widgets;
 
-use Dejurin\ExchangeRates\Models\CurrencyFormat;
+use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\ColumnRate;
 use Dejurin\ExchangeRates\Models\Currencies;
-use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\Flags;
 use Dejurin\ExchangeRates\Plugin;
 
@@ -107,8 +106,7 @@ class Table extends \WP_Widget
     {
         $get_currencies = Currencies::get_currencies();
         $instance = $this->_merge_instance_with_default_instance($instance);
-        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
-        ?>
+        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
     
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
@@ -153,7 +151,8 @@ class Table extends \WP_Widget
                 esc_attr($value),
                 selected($value, in_array($value, $instance['currency_list']) ? $value : null, false),
                 esc_html($value.' - '.$get_currencies[$value]['name'])
-            );} ?>
+            );
+        } ?>
             </select>
         </p>
 		<p><small><?php _e('The currencies which will be displayed in table. Separate by commas.', Plugin::PLUGIN_SLUG); ?></small></p>
@@ -175,23 +174,23 @@ class Table extends \WP_Widget
         <p>
             <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label> 
             <?php foreach (Flags::get_types() as $item) {
-                        echo sprintf('<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
+            echo sprintf('<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
                 esc_attr($item['value']),
                 checked($item['value'], $instance['flag_type'], false),
                 $this->get_field_name('flag_type'),
                 $item['name']);
-                    } ?>
+        } ?>
         </p>
 </fieldset>
 <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
         <?php foreach (Checkbox::get_list() as $key => $value) {
-                        echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+            echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
                 esc_attr($key),
                 checked(true, $instance[$key], false),
                 $this->get_field_name($key),
                 $value);
-                    } ?>
+        } ?>
 </fieldset>
 
 		

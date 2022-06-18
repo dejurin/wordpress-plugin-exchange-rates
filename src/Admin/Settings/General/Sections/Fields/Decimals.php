@@ -17,7 +17,7 @@ class Decimals
             'decimals',
             [
                 'id' => 'decimals',
-                'label_for' => Plugin::PLUGIN_SLUG.'[decimals]'
+                'label_for' => Plugin::PLUGIN_SLUG.'[decimals]',
             ]
         );
     }
@@ -25,8 +25,7 @@ class Decimals
     public static function render($args)
     {
         $settings = get_option(Settings::$option_name, []);
-        $settings = wp_parse_args($settings, Settings::get_defaults());
-        ?>
+        $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
 
         <p><input 
         id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]"

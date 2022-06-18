@@ -4,10 +4,9 @@ namespace Dejurin\ExchangeRates\Service;
 
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
-use Dejurin\ExchangeRates\Models\Settings;
-use Dejurin\ExchangeRates\Models\Sources;
-use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Dev;
+use Dejurin\ExchangeRates\Models\Emoji;
+use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\PHPTableGenerate;
 
 class CurrencyTable
@@ -18,7 +17,6 @@ class CurrencyTable
 
     public function get_table($widget_number)
     {
-
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
 
@@ -69,8 +67,8 @@ class CurrencyTable
         $img_src_template = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$this->parameters['flag_type'].'/%1$s.svg';
 
         foreach ($this->parameters['currency_list'] as $currency_code) {
-            $currency_obj = new Currency($this->parameters, $currency_code);
-            if ($currency_obj->is_available()) {
+            $currency = new Currency($this->parameters, $currency_code);
+            if ($currency->is_available()) {
                 $currency_name = $get_currencies[$currency_code]['name'];
                 $currency_region = $get_currencies[$currency_code]['region'];
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
@@ -78,10 +76,10 @@ class CurrencyTable
                 $class_trend = '';
                 $svg_trend = '<img src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.png">';
 
-                if (1 === $currency_obj->get_trend()) {
+                if (1 === $currency->get_trend()) {
                     $svg_trend = sprintf($svg_trend, 'up');
                     $class_trend = ' table-success';
-                } elseif (-1 === $currency_obj->get_trend()) {
+                } elseif (-1 === $currency->get_trend()) {
                     $svg_trend = sprintf($svg_trend, 'down');
                     $class_trend = ' table-danger';
                 } else {
@@ -117,33 +115,33 @@ class CurrencyTable
                 }
 
                 $output_data[2] = [
-                    'data' => $currency_obj->get_rate_format(0, true).$svg_trend,
-                    'data-rate' => $currency_obj->get_rate(0),
+                    'data' => $currency->get_rate_format(0, true).$svg_trend,
+                    'data-rate' => $currency->get_rate(0),
                     'class' => 'text-right',
                 ];
 
-                if (0 !== $currency_obj->get_change()) {
-                    $output_data[2]['title'] = $currency_obj->get_change_percentage();
+                if ($currency->get_change()) {
+                    $output_data[2]['title'] = $currency->get_change_percentage();
                 }
 
                 if ($this->parameters['table_headers_previous_close_show']) {
                     $output_data[3] = [
-                        'data' => $currency_obj->get_rate_format(1, true),
-                        'data-rate' => $currency_obj->get_rate(1),
+                        'data' => $currency->get_rate_format(1, true),
+                        'data-rate' => $currency->get_rate(1),
                         'class' => 'text-right',
                     ];
                 }
 
                 if ($this->parameters['table_headers_changes_show']) {
                     $output_data[4] = [
-                        'data' => $currency_obj->get_change_percentage(),
-                        'class' => 'text-right'.((0 === $currency_obj->get_change()) ? '' : $class_trend),
+                        'data' => $currency->get_change_percentage(),
+                        'class' => 'text-right'.((0 === $currency->get_change()) ? '' : $class_trend),
                     ];
-                    if (0 !== $currency_obj->get_change()) {
-                        $output_data[4]['title'] = $currency_obj->get_change_format();
+                    if ($currency->get_change()) {
+                        $output_data[4]['title'] = $currency->get_change_format();
                     }
                 }
-                
+
                 $this->table->add_row($output_data);
             }
         }
@@ -189,7 +187,7 @@ class CurrencyTable
             $amount_template = $this->parameters['amount_active'] ? '<input value="%1$s" />' : '%1$s';
 
             $output_data[2] = [
-                'data' => sprintf($amount_template, $currency_obj->get_amount()),
+                'data' => sprintf($amount_template, $currency->get_amount()),
                 'class' => 'text-right active',
             ];
 
@@ -215,17 +213,12 @@ class CurrencyTable
             'table_close' => '</table></div>',
         ];
 
-        $get_sources = Sources::get_sources();
-
-        $source = $get_sources[$this->settings['source_id']];
-
         $this->table->set_template($template);
         $this->table->set_caption(Dev::caption(
             $this->parameters,
-            $source['name'],
-            $currency_obj->get_date(),
+            $currency->get_date(),
             $widget_number,
-            $source['source_url'],
+            $this->settings['source_id']
         ));
 
         $html = $this->table->generate();

@@ -259,6 +259,7 @@ class Emoji
         $emoji_flags['ZA'] = "\u{1F1FF}\u{1F1E6}";
         $emoji_flags['ZM'] = "\u{1F1FF}\u{1F1F2}";
         $emoji_flags['ZW'] = "\u{1F1FF}\u{1F1FC}";
+        $emoji_flags['AN'] = "\u{1F1F3}\u{1F1F1}";
         $emoji_flags['LTC'] = "\u{1FA99}";
         $emoji_flags['NMC'] = "\u{1FA99}";
         $emoji_flags['PPC'] = "\u{1FA99}";
@@ -282,7 +283,6 @@ class Emoji
         $emoji_flags['XPD'] = "\u{1F48E}";
         $emoji_flags['XPT'] = "\u{1F48E}";
         $emoji_flags['XDR'] = "\u{1F310}";
-        $emoji_flags['AN'] = "\u{1F1F3}\u{1F1F1}";
         $emoji_flags['XPF'] = "\u{1F3E6}";
         $emoji_flags['XCD'] = "\u{1F3E6}";
         $emoji_flags['XOF'] = "\u{1F3E6}";
@@ -291,6 +291,7 @@ class Emoji
         $emoji_flags['RUR'] = "\u{1F3F4}";
         $emoji_flags['XX'] = "\u{1F47D}";
         $emoji_flags['WAUA'] = "\u{1F47D}";
+
         return $emoji_flags;
     }
 }

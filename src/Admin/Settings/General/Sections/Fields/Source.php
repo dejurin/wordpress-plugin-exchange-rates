@@ -19,7 +19,7 @@ class Source
             'source_id',
             [
                 'id' => 'source_id',
-                'label_for' => Plugin::PLUGIN_SLUG.'[source_id]'
+                'label_for' => Plugin::PLUGIN_SLUG.'[source_id]',
             ]
         );
     }

@@ -18,7 +18,7 @@ class Format
             'currency_format',
             [
                 'id' => 'currency_format',
-                'label_for' => Plugin::PLUGIN_SLUG.'[currency_format]'
+                'label_for' => Plugin::PLUGIN_SLUG.'[currency_format]',
             ]
         );
     }
@@ -26,8 +26,7 @@ class Format
     public static function render($args)
     {
         $settings = get_option(Settings::$option_name, []);
-        $settings = wp_parse_args($settings, Settings::get_defaults());
-        ?>
+        $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
 
 		<select id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
         <?php foreach (CurrencyFormat::get_list() as $key => $value) {

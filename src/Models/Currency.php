@@ -7,7 +7,6 @@
 
 namespace Dejurin\ExchangeRates\Models;
 
-use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Plugin;
 
 class Currency
@@ -67,6 +66,11 @@ class Currency
         ];
     }
 
+    public function get_source_id()
+    {
+        return $this->rates['source'];
+    }
+
     public function get_rate($index = 0)
     {
         if (isset($this->rates['data'][$index])) {
@@ -90,10 +94,12 @@ class Currency
             $this->settings['currency_format'],
             ($decimals) ? $this->parameters['decimals'] : $this->settings['decimals']
         );
+
         return strcmp($result, '0') ? $result : $this->zero_symbol;
     }
 
-    public function get_amount() {
+    public function get_amount()
+    {
         return self::for_format(
             $this->parameters['amount'],
             $this->settings['currency_format'],
@@ -103,11 +109,10 @@ class Currency
 
     public function get_change()
     {
-        if ($this->currency !== $this->base_currency && 
-            $this->get_rate(0) !== 0 && $this->get_rate(1) !== 0) {
+        if ($this->currency !== $this->base_currency &&
+            $this->get_rate(0) > 0 && $this->get_rate(1) > 0 &&
+            $this->get_rate(0) !== $this->get_rate(1)) {
             return ($this->get_rate(0) - $this->get_rate(1)) * $this->parameters['amount'];
-        } else {
-            return 0;
         }
     }
 
@@ -119,17 +124,19 @@ class Currency
                 $this->settings['currency_format'],
                 $this->settings['decimals']
             );
+
             return strcmp($result, '0') ? $result : $this->zero_symbol;
         }
     }
 
     public function get_change_percentage()
     {
-        if ($this->currency !== $this->base_currency && 
-            $this->get_rate(0) !== 0 && $this->get_rate(1) !== 0) {
+        if ($this->currency !== $this->base_currency &&
+            0 !== $this->get_rate(0) && 0 !== $this->get_rate(1)) {
             $pre = '';
             $decimal = 0;
             $value = (100 - ((100 * $this->get_rate(1)) / $this->get_rate(0)));
+
             $value_abs = abs($value);
 
             if ($value_abs > 99) {
@@ -138,6 +145,8 @@ class Currency
                 $decimal = 1;
             } elseif ($value_abs > 0) {
                 $decimal = 2;
+            } else {
+                return '&ndash;';
             }
 
             $pre = (1 === $this->get_trend()) ? '+' : '';
@@ -151,9 +160,9 @@ class Currency
 
     public function get_trend()
     {
-        if ($this->get_rate(0) > $this->get_rate(1) && $this->get_rate(1) !== 0) {
+        if ($this->get_rate(0) > $this->get_rate(1) && 0 !== $this->get_rate(1)) {
             return 1;
-        } elseif ($this->get_rate(0) === $this->get_rate(1) || $this->get_rate(1) === 0) {
+        } elseif ($this->get_rate(0) === $this->get_rate(1) || 0 === $this->get_rate(1)) {
             return 0;
         } else {
             return -1;

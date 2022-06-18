@@ -17,7 +17,7 @@ jQuery(document).ready(function() {
         return t.join(ts) + (n[1]? dp + n[1] : '');
     }
 
-    jQuery('.widget-exchange-rates-table .caption-button').on('click', function(event) {
+    jQuery('.exchange-rates-caption-button').on('click', function(event) {
         if (jQuery('#' + jQuery(this).data('caption-id')).css('display') === 'none') {
             jQuery(jQuery(this).find('svg')[0]).css('display','none');
             jQuery(jQuery(this).find('svg')[1]).css('display','block');

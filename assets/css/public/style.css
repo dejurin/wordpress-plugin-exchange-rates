@@ -70,7 +70,8 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.widget-exchange-rates-table .d-flex {
+.widget-exchange-rates-table .d-flex,
+.widget-exchange-rates-shortcode-badge .d-flex {
     display: flex;
     align-items: center;
 }
@@ -109,20 +110,21 @@
     outline: none;
 }
 
-.widget-exchange-rates-table caption div.sign {
+.exchange-rates-sign {
     padding: 0;
     margin: 0;
     font-size: 15px !important;
     justify-content:flex-end;
 }
 
-.widget-exchange-rates-table caption div.sign span.info {
+.exchange-rates-caption-button {
     cursor: pointer;
 }
+.widget-exchange-rates-shortcode-badge a,
 .widget-exchange-rates-table a {
     text-decoration: none;
 }
-.widget-exchange-rates-table .info-caption {
+.exchange-rates-info-caption {
     background-color: var(--bs-light);
     padding: 8px !important;
     border: var(--bs-gray-400) solid 1px;
@@ -132,37 +134,35 @@
     text-align: left;
     margin-top: 8px;
 }
-.widget-exchange-rates-table .info-caption p:last-child {
+.exchange-rates-info-caption p:last-child
+{
     margin-bottom: 0;
 }
 
 
-
-.widget-exchange-rates-shortcode-badge .badge-leaders {
-  max-width: 40em;
+.widget-exchange-rates-shortcode-badge 
+.badge-leaders {
   padding: 0;
-  overflow-x: hidden;
-    background-color:#eee;
     border-radius: 5px;
-    color:#333;
     margin-bottom: 5px;
+    display: flex!important;
+    align-items: center;
 }
-.widget-exchange-rates-shortcode-badge .badge-leaders:before {
-  float: left;
-  width: 0;
-  white-space: nowrap;
-  content:
-  ". . . . . . . . . . . . . . . . . . . . "
-  ". . . . . . . . . . . . . . . . . . . . "
-  ". . . . . . . . . . . . . . . . . . . . "
-  ". . . . . . . . . . . . . . . . . . . . "
-  }
+
   .widget-exchange-rates-shortcode-badge .badge-leaders span:first-child {
-    background-color:#eee;
+    display: inline-flex;
     padding:0 5px;
+    text-align: start;
+    flex: 1 1 auto!important;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    align-items: center;
   }
   .widget-exchange-rates-shortcode-badge .badge-leaders span + span {
-  float: right;
-    background-color:#eee;
+
+  text-align: end;
     padding:0 5px;
+    flex: 1 1 auto!important;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
   }

@@ -4,6 +4,7 @@ namespace Dejurin\ExchangeRates;
 
 use Dejurin\ExchangeRates\Admin\Admin;
 use Dejurin\ExchangeRates\Shortcodes\Badge;
+
 class Plugin
 {
     public const VERSION = '0.0.1';
@@ -20,12 +21,11 @@ class Plugin
     {   /*
          * Admin Register Script & Styles
          */
-        add_action('admin_enqueue_scripts', [$this, 'registerAdminScriptStyle']);
-        add_action('wp_enqueue_scripts', [$this, 'registerPublicScriptStyle']);
+        add_action('admin_enqueue_scripts', [$this, 'register_admin_script_style']);
+        add_action('wp_enqueue_scripts', [$this, 'register_public_script_style']);
         add_action('widgets_init', ['Dejurin\ExchangeRates\Widgets', 'register']);
 
         new Badge();
-
 
         if (is_admin()) {
             Admin::run();
@@ -39,7 +39,7 @@ class Plugin
         return $widget_types;
     }
 
-    public function registerPublicScriptStyle()
+    public function register_public_script_style()
     {
         wp_register_style(
             'plugin-'.Plugin::PLUGIN_SLUG.'-widgets',
@@ -58,7 +58,7 @@ class Plugin
         wp_enqueue_style('plugin-'.Plugin::PLUGIN_SLUG.'-widgets');
     }
 
-    public function registerAdminScriptStyle()
+    public function register_admin_script_style()
     {
         // Register all scripts & styles
         wp_register_style(
@@ -76,5 +76,7 @@ class Plugin
         );
         wp_enqueue_style('plugin-'.Plugin::PLUGIN_SLUG.'-widgets-settings');
         wp_enqueue_script('plugin-'.Plugin::PLUGIN_SLUG.'-widgets-admin-common');
+        wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_script('wp-color-picker');
     }
 }
