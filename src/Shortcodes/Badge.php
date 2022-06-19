@@ -5,12 +5,11 @@ namespace Dejurin\ExchangeRates\Shortcodes;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
 use Dejurin\ExchangeRates\Models\CurrencySymbols;
-use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Dev;
+use Dejurin\ExchangeRates\Models\Emoji;
+use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\Color;
 use Dejurin\ExchangeRates\Service\Tools;
-
-use Dejurin\ExchangeRates\Plugin;
 
 class Badge
 {
@@ -68,8 +67,8 @@ class Badge
             $attr = $this->default_attr;
         }
 
-        $attr['base_show'] = $attr['base_show'] !== false;
-        $attr['inverse'] = $attr['inverse'] !== false;
+        $attr['base_show'] = false !== $attr['base_show'];
+        $attr['inverse'] = false !== $attr['inverse'];
 
         $rgb = Color::HTMLToRGB($attr['color']);
         $hsl = Color::RGBToHSL($rgb);
@@ -77,21 +76,20 @@ class Badge
         if (array_key_exists('currency_list', $attr) && !empty($attr['currency_list'])) {
             $currency_list = explode(',', $attr['currency_list']);
             $get_currencies = Currencies::get_currencies();
-            
-         
+
             if (is_array($currency_list) && !empty($currency_list)) {
                 $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'currency_format', 'inverse', 'decimals']);
                 $get_symbols = CurrencySymbols::$get_list;
 
-                    foreach ($currency_list as $code) {
-                        $currency = new Currency($parameters, $code);
-                        if ($currency->is_available()) {
-                            $get_currency = $get_currencies[$code];
-                            $symbol = isset($get_symbols[$code]) ? $get_symbols[$code] : '';
-                            
-                            $base_currency = ($attr['base_show']) ? $attr['base_currency'].'/' : '';
-                            $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s</span></div>';
-                            $result .= sprintf(
+                foreach ($currency_list as $code) {
+                    $currency = new Currency($parameters, $code);
+                    if ($currency->is_available()) {
+                        $get_currency = $get_currencies[$code];
+                        $symbol = isset($get_symbols[$code]) ? $get_symbols[$code] : '';
+
+                        $base_currency = ($attr['base_show']) ? $attr['base_currency'].'/' : '';
+                        $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s</span></div>';
+                        $result .= sprintf(
                                 $template,
                                 $attr['color'],
                                 $hsl->lightness > 200 ? '#333333' : '#ffffff',
@@ -100,13 +98,11 @@ class Badge
                                 $symbol,
                                 $currency->get_rate_format(0, true, true)
                             );
-                            $err = false;
-                        }
-                    
+                        $err = false;
+                    }
                 }
             }
         }
-
 
         if ($currency) {
             $caption = Dev::caption(
@@ -124,6 +120,5 @@ class Badge
         }
 
         return '<div class="widget-exchange-rates-shortcode-badge">'.$result.$caption.'</div>';
-
     }
 }

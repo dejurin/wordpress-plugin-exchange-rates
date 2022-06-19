@@ -38,8 +38,8 @@ class Table extends \WP_Widget
             // $instance['currency_list'] = explode(',', trim($instance['currency_list'], ',')); // add trim comma
 
             if (!empty($instance['base_currency'])) {
-                $table = new \Dejurin\ExchangeRates\Service\CurrencyTable();
-                $table->parameters = [
+                $object = new \Dejurin\ExchangeRates\Service\CurrencyTable();
+                $object->parameters = [
                         'amount' => (float) $instance['amount'],
                         'base_currency' => (string) $instance['base_currency'],
                         'currency_list' => (array) $instance['currency_list'],
@@ -64,7 +64,7 @@ class Table extends \WP_Widget
                         'table_headers_previous_close_show' => (bool) $instance['table_headers_previous_close_show'],
                         'table_headers_changes_show' => (bool) $instance['table_headers_changes_show'],
                     ];
-                echo $table->get_table($this->number);
+                echo $object->get_table($this->number);
             }
         }
 
@@ -86,9 +86,10 @@ class Table extends \WP_Widget
         $instance_to_save['region'] = (bool) sanitize_text_field($instance['region']);
         $instance_to_save['full_width'] = (bool) sanitize_text_field($instance['full_width']);
         $instance_to_save['amount_active'] = (bool) sanitize_text_field($instance['amount_active']);
-        $instance_to_save['base_show'] = true === (bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show']) ? false : true;
-        $instance_to_save['border'] = true === (bool) sanitize_text_field($instance['border']) && !isset($new_instance['border']) ? false : true;
+        $instance_to_save['base_show'] = ((bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show'])) ? false : true;
+        $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
         // Table headers
+        $instance_to_save['table_headers_show'] = ((bool) sanitize_text_field($instance['table_headers_show']) && !isset($new_instance['table_headers_show'])) ? false : true;
         $instance_to_save['table_headers_name'] = (string) sanitize_text_field($instance['table_headers_name']);
         $instance_to_save['table_headers_code'] = (string) sanitize_text_field($instance['table_headers_code']);
         $instance_to_save['table_headers_mid'] = (string) sanitize_text_field($instance['table_headers_mid']);
@@ -97,7 +98,6 @@ class Table extends \WP_Widget
         $instance_to_save['table_headers_previous_close_show'] = (bool) sanitize_text_field($instance['table_headers_previous_close_show']);
         $instance_to_save['table_headers_code_show'] = (bool) sanitize_text_field($instance['table_headers_code_show']);
         $instance_to_save['table_headers_changes_show'] = (bool) sanitize_text_field($instance['table_headers_changes_show']);
-        $instance_to_save['table_headers_show'] = true === (bool) sanitize_text_field($instance['table_headers_show']) && !isset($new_instance['table_headers_show']) ? false : true;
 
         return $instance_to_save;
     }
@@ -181,22 +181,20 @@ class Table extends \WP_Widget
                 $item['name']);
         } ?>
         </p>
-</fieldset>
-<fieldset style="padding:5px 15px;margin-bottom:15px">
-        <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-        <?php foreach (Checkbox::get_list() as $key => $value) {
-            echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
-                esc_attr($key),
-                checked(true, $instance[$key], false),
-                $this->get_field_name($key),
-                $value);
-        } ?>
-</fieldset>
-
-		
+        </fieldset>
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
+                <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
+                <?php foreach (Checkbox::get_list() as $key => $value) {
+                    echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+                        esc_attr($key),
+                        checked(true, $instance[$key], false),
+                        $this->get_field_name($key),
+                        $value
+                    );
+                    } ?>
+        </fieldset>
         <fieldset style="padding:5px 15px">
         <legend><?php _e('Table headers', Plugin::PLUGIN_SLUG); ?></legend>
-
         <table><tbody>
             <tr><td scope="col" colspan="2">
             <?php echo sprintf('<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label>',
@@ -205,34 +203,31 @@ class Table extends \WP_Widget
                 $this->get_field_name('table_headers_show'),
                 __('Show table header', Plugin::PLUGIN_SLUG)); ?>
             </td></tr>
-        
-        <?php $i = 0;
-        foreach (ColumnRate::get_сolumns() as $key => $value) {
-            ++$i; ?>
-        <tr>
-        <td>
-            <?php echo sprintf('<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s><label for="%1$s">%4$s</label>',
-                esc_attr('table_headers_'.$key.'_show'),
-                checked(true, $instance['table_headers_'.$key.'_show'], false),
-                $this->get_field_name('table_headers_'.$key.'_show'),
-                $value,
-                (!isset($instance['table_headers_'.$key.'_show'])) ? 'disabled checked readonly' : ''); ?>
-            </td>
-            <td>
-                <input 
-                    id="<?php echo $this->get_field_id('table_headers_'.$key); ?>"
-                    name="<?php echo $this->get_field_name('table_headers_'.$key); ?>"
-                    value="<?php echo esc_attr($instance['table_headers_'.$key]); ?>"
-                    type="text">
-            </td>
-		</tr>
-
-        <?php
-        } ?>
+        <?php $i = 0; foreach (ColumnRate::get_сolumns() as $key => $value) { ++$i; ?>
+            <tr>
+                <td>
+                    <?php 
+                        echo sprintf('<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s><label for="%1$s">%4$s</label>',
+                        esc_attr('table_headers_'.$key.'_show'),
+                        checked(true, $instance['table_headers_'.$key.'_show'], false),
+                        $this->get_field_name('table_headers_'.$key.'_show'),
+                        $value,
+                        (!isset($instance['table_headers_'.$key.'_show'])) ? 'disabled checked readonly' : ''
+                    ); 
+                    ?>
+                </td>
+                <td>
+                    <input 
+                        id="<?php echo $this->get_field_id('table_headers_'.$key); ?>"
+                        name="<?php echo $this->get_field_name('table_headers_'.$key); ?>"
+                        value="<?php echo esc_attr($instance['table_headers_'.$key]); ?>"
+                        type="text">
+                </td>
+            </tr>
+        <?php } ?>
         </tbody>
         </table>
         </fieldset>
-
 		<?php
     }
 

@@ -6,7 +6,6 @@ class Emoji
 {
     public static function get_list()
     {
-        $emoji_flags = [];
         $emoji_flags['EU'] = "\u{1F4B6}";
         $emoji_flags['GB'] = "\u{1F4B7}";
         $emoji_flags['US'] = "\u{1F4B5}";

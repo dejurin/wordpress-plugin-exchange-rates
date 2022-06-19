@@ -4,18 +4,19 @@ namespace Dejurin\ExchangeRates\Widgets;
 
 use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\Currencies;
-use Dejurin\ExchangeRates\Service\CurrencyConverter;
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Service\CurrencyConverter;
 
 class Converter extends \WP_Widget
 {
+
     public function __construct()
     {
         parent::__construct(
             Plugin::PLUGIN_SLUG.'_currency-converter',
             __('Currency Converter', Plugin::PLUGIN_SLUG),
             [
-                'classname' => 'widget-'.Plugin::PLUGIN_SLUG.'-currency-converter',
+                'classname' => 'unstyle',
                 'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             ]
         );
@@ -26,22 +27,37 @@ class Converter extends \WP_Widget
     public function widget($args, $instance)
     {
         $instance = $this->_merge_instance_with_default_instance($instance);
+
+        $object = new CurrencyConverter();
+        $object->parameters = [
+            'title' => (string) $instance['title'],
+            'amount' => (float) $instance['amount'],
+            'base_currency' => (string) $instance['base_currency'],
+            'quote_currency' => (string) $instance['quote_currency'],
+            'code' => (bool) $instance['code'],
+            'border' => (bool) $instance['border'],
+            'symbol' => (bool) $instance['symbol'],
+            'after' => (bool) $instance['after'],
+        ];
+
         echo $args['before_widget'];
-
-        $cc = new CurrencyConverter();
-        echo $cc->get_currency_converter($this->number);
-
+        echo $object->get_html_widget($this->number);
         echo $args['after_widget'];
     }
 
     public function update($new_instance, $old_instance)
     {
         $instance = $this->_merge_instance_with_default_instance($new_instance);
+
+        $instance_to_save['title'] = (string) sanitize_text_field($instance['title']);
         $instance_to_save['amount'] = (float) sanitize_text_field($instance['amount']);
-        $instance_to_save['code'] = (float) sanitize_text_field($instance['code']);
         $instance_to_save['base_currency'] = (string) strtoupper(sanitize_text_field($instance['base_currency']));
         $instance_to_save['quote_currency'] = (string) strtoupper(sanitize_text_field($instance['quote_currency']));
-    
+        $instance_to_save['code'] = (bool) sanitize_text_field($instance['code']);
+        $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
+        $instance_to_save['symbol'] = ((bool) sanitize_text_field($instance['symbol']) && !isset($new_instance['symbol'])) ? false : true;
+        $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
+
         return $instance_to_save;
     }
 
@@ -50,7 +66,23 @@ class Converter extends \WP_Widget
         $get_currencies = Currencies::get_currencies();
         $instance = $this->_merge_instance_with_default_instance($instance);
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
-    
+
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
+            <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>
+            <p>
+                <label for="<?php echo $this->get_field_id('title'); ?>">
+                    <?php _e('Title:', Plugin::PLUGIN_SLUG); ?>
+                </label>
+                <input 
+                    id="<?php echo $this->get_field_id('title'); ?>"
+                    name="<?php echo $this->get_field_name('title'); ?>"
+                    value="<?php echo esc_attr($instance['title']); ?>"
+                    type="text">
+            </p>
+            <p>
+                <small><?php _e('title', Plugin::PLUGIN_SLUG); ?></small>
+            </p>
+        </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
         <p>
@@ -63,76 +95,71 @@ class Converter extends \WP_Widget
                 value="<?php echo esc_attr($instance['amount']); ?>"
                 type="text">
         </p>
-		<p><small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small></p>
+		<p>
+            <small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small>
+        </p>
 		<p>
             <label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
-		
-        
             <select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
                 $base_currency_list = array_keys($rates['data'][0]['rates']);
-
-        foreach ($base_currency_list as $value) {
-            printf(
+                foreach ($base_currency_list as $value) {
+                    printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
                         selected($value, $instance['base_currency'], false),
                         esc_html($value.' - '.$get_currencies[$value]['name'])
                     );
-        } ?>
-		</select>
-            </p>
-		<p><small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small></p>
-
-
-
-
-
-
+                } ?>
+            </select>
+        </p>
+		<p>
+            <small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small>
+        </p>
         <p>
             <label for="<?php echo $this->get_field_id('quote_currency'); ?>"><?php _e('Quote currency:', Plugin::PLUGIN_SLUG); ?></label>
-		
-        
             <select id="<?php echo $this->get_field_id('quote_currency'); ?>" name="<?php echo $this->get_field_name('quote_currency'); ?>">
-			<?php
-                $base_currency_list = array_keys($rates['data'][0]['rates']);
-
-        foreach ($base_currency_list as $value) {
-            printf(
+            <?php foreach ($base_currency_list as $value) {
+                    printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
                         selected($value, $instance['quote_currency'], false),
                         esc_html($value.' - '.$get_currencies[$value]['name'])
                     );
-        } ?>
-		</select>
-            </p>
-		<p><small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small></p>
-
+                } ?>
+            </select>
+        </p>
+		<p>
+            <small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small>
+        </p>
         </fieldset>
-
-<fieldset style="padding:5px 15px;margin-bottom:15px">
-        <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-        <?php $get_list = array_slice(Checkbox::get_list(), 5,1); foreach ($get_list as $key => $value) {
-            echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
-                esc_attr($key),
-                checked(true, $instance[$key], false),
-                $this->get_field_name($key),
-                $value);
-        } ?>
-</fieldset>
-
-
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
+            <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
+            <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
+            foreach ($get_list as $key => $value) {
+                echo sprintf(
+                    '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+                    esc_attr($key),
+                    checked(true, $instance[$key], false),
+                    $this->get_field_name($key),
+                    $value
+                );
+            } ?>
+        </fieldset>
 		<?php
     }
 
     private function _merge_instance_with_default_instance($instance)
     {
         $settings = [
+            'title' => __('Currency Converter', Plugin::PLUGIN_SLUG),
             'amount' => 1,
             'base_currency' => 'USD',
             'quote_currency' => 'EUR',
             'code' => false,
+            'after' => false,
+            'border' => true,
+            'symbol' => true,
         ];
 
         return wp_parse_args($instance, $settings);

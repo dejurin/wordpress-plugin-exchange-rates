@@ -5,6 +5,7 @@
     --lt-color-gray-700:  #2f3237;
     --bs-gray-400: #ced4da;
     --bs-light: #f8f9fa;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
 }
 
 .widget-exchange-rates-table .w-100 {
@@ -173,14 +174,19 @@
 
 
 
-
-
+.unstyle {
+    border: none !important;
+    padding: 0 !important;
+}
 
 .widget-exchange-rates-currency-converter {
     text-align: center;
-    border: var(--bs-gray-400) solid 1px;
     padding: 8px 12px !important;
     border-radius: 5px;
+}
+
+.widget-exchange-rates-currency-converter.border {
+    border: var(--bs-gray-400) solid 2px!important;
 }
 
 .widget-exchange-rates-currency-converter input,

@@ -187,7 +187,7 @@ class Page
 		</div>
 		<script>
 			jQuery(document).ready(function() {
-				jQuery(document).ready(function($){
+
 					jQuery('#shortcode-badge-color').wpColorPicker({
 						change: function(event, ui){
 							shortcodeGeneratorBadge('form#shortcode-generator-badge');
@@ -197,7 +197,7 @@ class Page
 						border: true,
 						palettes: false,
 					});
-				});
+
 				function shortcodeGeneratorBadge(_this) {
 					var serializeArray = jQuery(_this).serializeArray();
 					var line = '[<?php echo Plugin::PLUGIN_SLUG; ?>-badge ';

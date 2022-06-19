@@ -4,7 +4,6 @@ namespace Dejurin\ExchangeRates\Models;
 
 // use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Plugin;
-use Dejurin\ExchangeRates\Models\Sources;
 
 class Dev
 {

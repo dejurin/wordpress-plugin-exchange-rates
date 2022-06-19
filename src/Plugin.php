@@ -76,7 +76,7 @@ class Plugin
         );
         wp_enqueue_style('plugin-'.Plugin::PLUGIN_SLUG.'-widgets-settings');
         wp_enqueue_script('plugin-'.Plugin::PLUGIN_SLUG.'-widgets-admin-common');
-        wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_style('wp-color-picker');
         wp_enqueue_script('wp-color-picker');
     }
 }
