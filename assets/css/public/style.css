@@ -187,6 +187,7 @@
 
 .widget-exchange-rates-currency-converter.border {
     border: var(--bs-gray-400) solid 2px!important;
+    margin-bottom: 8px;
 }
 
 .widget-exchange-rates-currency-converter input,

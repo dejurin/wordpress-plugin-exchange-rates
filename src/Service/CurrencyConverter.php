@@ -6,6 +6,7 @@ use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
 use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Models\Settings;
+use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\ExchangeRates\Plugin;
 
 class CurrencyConverter
@@ -19,6 +20,8 @@ class CurrencyConverter
     {
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
+
+        $currency = new Currency($this->parameters, $this->parameters['quote_currency']);
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
         $this->parameters['decimals'] = $this->settings['decimals'];
@@ -53,7 +56,14 @@ class CurrencyConverter
         }
 
         $html .= json_encode($arr);
-        $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG).'</div>';
+        $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG);
+        $html .= '</div>';
+        $html .= Dev::caption(
+            $this->parameters,
+            $currency->get_date(),
+            $widget_number,
+            $this->settings['source_id']
+        );
 
         return $html;
     }
