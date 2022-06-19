@@ -46,4 +46,42 @@ jQuery(document).ready(function() {
             jQuery(value).text(result);
         });
     });
+
+
+
+
+
+        /// Currency Converter
+        
+        jQuery('div.currency-converter').each(function(k, v) {
+
+            var el = jQuery(this);
+
+            jQuery('<b>').text('Currency Converter').appendTo(el);
+            var div = jQuery('<div>').attr('class','d-flex amount').appendTo(el);
+            jQuery('<input>').attr('value',el.data('amount')).appendTo(div);
+            jQuery('<button>').attr('class','swap').html('<svg xmlns="http://www.w3.org/2000/svg"><path d="M8 13V5.825L5.425 8.4L4 7L9 2L14 7L12.575 8.4L10 5.825V13ZM15 22 10 17 11.425 15.6 14 18.175V11H16V18.175L18.575 15.6L20 17Z"/></svg>').appendTo(div);
+
+            
+
+            jQuery.each([el.data('base'),el.data('quote')], function( i, s ) {
+                var sel = jQuery('<select>').appendTo(el);
+                jQuery.each(el.data('currencies'), function(_k,_v){
+                    
+                    var obj = {
+                        'value': _k
+                    }
+
+                    if (_k == s) {obj['selected'] = s;}
+         
+                    sel.append(jQuery("<option>").attr(obj).text(_v['name']));
+                });
+              });
+
+              jQuery('<div>').attr('class', 'result').text('1.5').appendTo(el);
+
+
+        });
+
+
 });

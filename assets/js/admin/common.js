@@ -32,5 +32,7 @@ jQuery(document).ready(function() {
         jQuery("#" + jQuery(this).data('id')).data('display', display)
         showMoreLessTable()
     });
-    showMoreLessTable()
+    showMoreLessTable();
+
+
 });
