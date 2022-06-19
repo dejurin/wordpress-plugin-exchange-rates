@@ -9,7 +9,6 @@ use Dejurin\ExchangeRates\Service\CurrencyConverter;
 
 class Converter extends \WP_Widget
 {
-
     public function __construct()
     {
         parent::__construct(
@@ -103,14 +102,14 @@ class Converter extends \WP_Widget
             <select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
                 $base_currency_list = array_keys($rates['data'][0]['rates']);
-                foreach ($base_currency_list as $value) {
-                    printf(
+        foreach ($base_currency_list as $value) {
+            printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
                         selected($value, $instance['base_currency'], false),
                         esc_html($value.' - '.$get_currencies[$value]['name'])
                     );
-                } ?>
+        } ?>
             </select>
         </p>
 		<p>
@@ -120,13 +119,13 @@ class Converter extends \WP_Widget
             <label for="<?php echo $this->get_field_id('quote_currency'); ?>"><?php _e('Quote currency:', Plugin::PLUGIN_SLUG); ?></label>
             <select id="<?php echo $this->get_field_id('quote_currency'); ?>" name="<?php echo $this->get_field_name('quote_currency'); ?>">
             <?php foreach ($base_currency_list as $value) {
-                    printf(
+            printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
                         selected($value, $instance['quote_currency'], false),
                         esc_html($value.' - '.$get_currencies[$value]['name'])
                     );
-                } ?>
+        } ?>
             </select>
         </p>
 		<p>
@@ -136,15 +135,15 @@ class Converter extends \WP_Widget
         <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
             <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
-            foreach ($get_list as $key => $value) {
-                echo sprintf(
+        foreach ($get_list as $key => $value) {
+            echo sprintf(
                     '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
                     esc_attr($key),
                     checked(true, $instance[$key], false),
                     $this->get_field_name($key),
                     $value
                 );
-            } ?>
+        } ?>
         </fieldset>
 		<?php
     }

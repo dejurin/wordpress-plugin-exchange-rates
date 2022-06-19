@@ -2,12 +2,10 @@
 
 namespace Dejurin\ExchangeRates\Service;
 
-
-use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
+use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Models\Settings;
-
 use Dejurin\ExchangeRates\Plugin;
 
 class CurrencyConverter
@@ -33,16 +31,16 @@ class CurrencyConverter
         $arr = [];
         $data_attr = '';
 
-        foreach($this->parameters as $key => $value) {
+        foreach ($this->parameters as $key => $value) {
             if (!empty($value)) {
-                $data_attr .= 'data-' . str_replace('_', '-', $key) . '="' . $value .'" ';
+                $data_attr .= 'data-'.str_replace('_', '-', $key).'="'.$value.'" ';
             }
         }
 
         $html = '<div '
                 .'class="'.self::WIDGET_SLUG.'" '
                 .'id="currency-converter'.$widget_number.'" '
-                . $data_attr
+                .$data_attr
                 .'data-currencies='
                 ."'";
 
@@ -55,7 +53,7 @@ class CurrencyConverter
         }
 
         $html .= json_encode($arr);
-        $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG)."</div>";
+        $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG).'</div>';
 
         return $html;
     }

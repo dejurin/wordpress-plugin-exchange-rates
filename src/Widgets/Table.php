@@ -174,24 +174,27 @@ class Table extends \WP_Widget
         <p>
             <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label> 
             <?php foreach (Flags::get_types() as $item) {
-            echo sprintf('<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
-                esc_attr($item['value']),
-                checked($item['value'], $instance['flag_type'], false),
-                $this->get_field_name('flag_type'),
-                $item['name']);
+            echo sprintf(
+                    '<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
+                    esc_attr($item['value']),
+                    checked($item['value'], $instance['flag_type'], false),
+                    $this->get_field_name('flag_type'),
+                    $item['name']
+                );
         } ?>
         </p>
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
                 <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
                 <?php foreach (Checkbox::get_list() as $key => $value) {
-                    echo sprintf('<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+            echo sprintf(
+                        '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
                         esc_attr($key),
                         checked(true, $instance[$key], false),
                         $this->get_field_name($key),
                         $value
                     );
-                    } ?>
+        } ?>
         </fieldset>
         <fieldset style="padding:5px 15px">
         <legend><?php _e('Table headers', Plugin::PLUGIN_SLUG); ?></legend>
@@ -203,18 +206,19 @@ class Table extends \WP_Widget
                 $this->get_field_name('table_headers_show'),
                 __('Show table header', Plugin::PLUGIN_SLUG)); ?>
             </td></tr>
-        <?php $i = 0; foreach (ColumnRate::get_сolumns() as $key => $value) { ++$i; ?>
+        <?php $i = 0;
+        foreach (ColumnRate::get_сolumns() as $key => $value) {
+            ++$i; ?>
             <tr>
                 <td>
-                    <?php 
-                        echo sprintf('<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s><label for="%1$s">%4$s</label>',
-                        esc_attr('table_headers_'.$key.'_show'),
-                        checked(true, $instance['table_headers_'.$key.'_show'], false),
-                        $this->get_field_name('table_headers_'.$key.'_show'),
-                        $value,
-                        (!isset($instance['table_headers_'.$key.'_show'])) ? 'disabled checked readonly' : ''
-                    ); 
-                    ?>
+                    <?php echo sprintf(
+                            '<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s><label for="%1$s">%4$s</label>',
+                            esc_attr('table_headers_'.$key.'_show'),
+                            checked(true, $instance['table_headers_'.$key.'_show'], false),
+                            $this->get_field_name('table_headers_'.$key.'_show'),
+                            $value,
+                            (!isset($instance['table_headers_'.$key.'_show'])) ? 'disabled checked readonly' : ''
+                    ); ?>
                 </td>
                 <td>
                     <input 
@@ -224,7 +228,8 @@ class Table extends \WP_Widget
                         type="text">
                 </td>
             </tr>
-        <?php } ?>
+        <?php
+        } ?>
         </tbody>
         </table>
         </fieldset>
