@@ -28,7 +28,7 @@ class SourceTable
             __('Last Update', Plugin::PLUGIN_SLUG),
         ]);
 
-        $get_sources = Sources::get_sources();
+        $get_sources = Sources::get_list();
         $data_sources = DataSources::getInstance();
         $sources = $data_sources->get_sources_data();
 

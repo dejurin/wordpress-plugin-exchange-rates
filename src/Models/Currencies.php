@@ -6,7 +6,7 @@ use Dejurin\ExchangeRates\Plugin;
 
 class Currencies
 {
-    public static function get_currencies()
+    public static function get_list()
     {
         return [
             'AED' => [

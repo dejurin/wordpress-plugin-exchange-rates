@@ -7,6 +7,7 @@ use Dejurin\ExchangeRates\Models\Currency;
 use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Settings;
+use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\PHPTableGenerate;
 
 class CurrencyTable
@@ -47,7 +48,7 @@ class CurrencyTable
             $this->table->set_heading($heading);
         }
 
-        $get_currencies = Currencies::get_currencies();
+        $get_currencies = Currencies::get_list();
 
         $w = $this->parameters['flag_size'];
         $h = $this->parameters['flag_size'];
@@ -74,7 +75,7 @@ class CurrencyTable
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
 
                 $class_trend = '';
-                $svg_trend = '<img src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.png">';
+                $svg_trend = '<img width="12" height="12" alt="%1$s" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.png">';
 
                 if (1 === $currency->get_trend()) {
                     $svg_trend = sprintf($svg_trend, 'up');
@@ -114,9 +115,19 @@ class CurrencyTable
                     $output_data[1] = ['data' => $currency_code];
                 }
 
+                $symbol = CurrencySymbols::get_list($currency_code);
+                $pre = $symbol;
+                $after = '';
+
+                if (isset($this->parameters['after']) && $this->parameters['after']) {
+                    $after = $pre;
+                    $pre = '';
+                }
+
                 $output_data[2] = [
-                    'data' => $currency->get_rate_format(0, true).$svg_trend,
+                    'data' => $pre.$currency->get_rate_format(0, true).$after.$svg_trend,
                     'data-rate' => $currency->get_rate(0),
+                    'data-symbol' => $symbol,
                     'class' => 'text-right',
                 ];
 
@@ -128,6 +139,7 @@ class CurrencyTable
                     $output_data[3] = [
                         'data' => $currency->get_rate_format(1, true),
                         'data-rate' => $currency->get_rate(1),
+                        'data-symbol' => $symbol,
                         'class' => 'text-right',
                     ];
                 }
@@ -209,7 +221,12 @@ class CurrencyTable
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="table-responsive"><table'.(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->settings['decimals'].'" data-decimal-point="'.$fmt['decimal_point'].'" data-thousands-sep="'.$fmt['thousands_sep'].'">',
+            'table_open' => '<div class="table-responsive"><table'
+                            .(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->settings['decimals'].'" '
+                            .'data-decimal-point="'.$fmt['decimal_point'].'" '
+                            .'data-thousands-sep="'.$fmt['thousands_sep'].'" '
+                            .'data-pre="1" '
+                            .'>',
             'table_close' => '</table></div>',
         ];
 

@@ -8,7 +8,7 @@ use Dejurin\ExchangeRates\Shortcodes\Badge;
 class Plugin
 {
     public const VERSION = '0.0.1';
-    public const NAME = 'Exchange Rates';
+    public const NAME = 'Exchange Rates & Currency Converter Widgets - All Banks';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
 

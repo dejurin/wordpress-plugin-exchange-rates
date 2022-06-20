@@ -3,9 +3,10 @@
 namespace Dejurin\ExchangeRates\Widgets;
 
 use Dejurin\ExchangeRates\Models\Checkbox;
-use Dejurin\ExchangeRates\Models\ColumnRate;
+use Dejurin\ExchangeRates\Models\TableColumns;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Flags;
+use Dejurin\ExchangeRates\Service\CurrencyTable;
 use Dejurin\ExchangeRates\Plugin;
 
 class Table extends \WP_Widget
@@ -13,7 +14,7 @@ class Table extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            Plugin::PLUGIN_SLUG.'_table',
+            'widget_'.Plugin::PLUGIN_SLUG.'_table',
             __('Exchange Rates Table', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'widget-'.Plugin::PLUGIN_SLUG.'-table',
@@ -38,7 +39,7 @@ class Table extends \WP_Widget
             // $instance['currency_list'] = explode(',', trim($instance['currency_list'], ',')); // add trim comma
 
             if (!empty($instance['base_currency'])) {
-                $object = new \Dejurin\ExchangeRates\Service\CurrencyTable();
+                $object = new CurrencyTable();
                 $object->parameters = [
                         'amount' => (float) $instance['amount'],
                         'base_currency' => (string) $instance['base_currency'],
@@ -54,6 +55,7 @@ class Table extends \WP_Widget
                         'amount_active' => (bool) $instance['amount_active'],
                         'base_show' => (bool) $instance['base_show'],
                         'border' => (bool) $instance['border'],
+                        'after' => (bool) $instance['after'],
                         'table_headers_show' => (bool) $instance['table_headers_show'],
                         'table_headers_name' => (string) $instance['table_headers_name'],
                         'table_headers_code' => (string) $instance['table_headers_code'],
@@ -86,6 +88,7 @@ class Table extends \WP_Widget
         $instance_to_save['region'] = (bool) sanitize_text_field($instance['region']);
         $instance_to_save['full_width'] = (bool) sanitize_text_field($instance['full_width']);
         $instance_to_save['amount_active'] = (bool) sanitize_text_field($instance['amount_active']);
+        $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
         $instance_to_save['base_show'] = ((bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show'])) ? false : true;
         $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
         // Table headers
@@ -104,7 +107,7 @@ class Table extends \WP_Widget
 
     public function form($instance)
     {
-        $get_currencies = Currencies::get_currencies();
+        $get_currencies = Currencies::get_list();
         $instance = $this->_merge_instance_with_default_instance($instance);
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
     
@@ -207,7 +210,7 @@ class Table extends \WP_Widget
                 __('Show table header', Plugin::PLUGIN_SLUG)); ?>
             </td></tr>
         <?php $i = 0;
-        foreach (ColumnRate::get_сolumns() as $key => $value) {
+        foreach (TableColumns::get_list() as $key => $value) {
             ++$i; ?>
             <tr>
                 <td>
@@ -251,6 +254,7 @@ class Table extends \WP_Widget
             'region' => false,
             'full_width' => false,
             'amount_active' => false,
+            'after' => false,
             'base_show' => true,
             'border' => true,
             'table_headers_show' => true,

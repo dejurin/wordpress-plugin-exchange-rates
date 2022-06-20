@@ -19,8 +19,8 @@ class Page
 
     public static function render()
     {
-        $get_currencies = Currencies::get_currencies();
-        $get_sources = Sources::get_sources();
+        $get_currencies = Currencies::get_list();
+        $get_sources = Sources::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults()); ?>

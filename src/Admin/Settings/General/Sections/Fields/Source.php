@@ -29,7 +29,7 @@ class Source
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults());
 
-        $get_sources = Sources::get_sources();
+        $get_sources = Sources::get_list();
 
         $data_cources = DataSources::getInstance();
         $sources = $data_cources->get_sources_data(); ?>

@@ -12,7 +12,7 @@ class Converter extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            Plugin::PLUGIN_SLUG.'_currency-converter',
+            'widget_'.Plugin::PLUGIN_SLUG.'_currency-converter',
             __('Currency Converter', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'unstyle',
@@ -62,9 +62,10 @@ class Converter extends \WP_Widget
 
     public function form($instance)
     {
-        $get_currencies = Currencies::get_currencies();
+        $get_currencies = Currencies::get_list();
         $instance = $this->_merge_instance_with_default_instance($instance);
-        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); ?>
+        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
+        $currency_list = array_keys($rates['data'][0]['rates']); ?>
 
         <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>
@@ -101,8 +102,8 @@ class Converter extends \WP_Widget
             <label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
             <select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
-                $base_currency_list = array_keys($rates['data'][0]['rates']);
-        foreach ($base_currency_list as $value) {
+                
+        foreach ($currency_list as $value) {
             printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),
@@ -118,7 +119,7 @@ class Converter extends \WP_Widget
         <p>
             <label for="<?php echo $this->get_field_id('quote_currency'); ?>"><?php _e('Quote currency:', Plugin::PLUGIN_SLUG); ?></label>
             <select id="<?php echo $this->get_field_id('quote_currency'); ?>" name="<?php echo $this->get_field_name('quote_currency'); ?>">
-            <?php foreach ($base_currency_list as $value) {
+            <?php foreach ($currency_list as $value) {
             printf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr($value),

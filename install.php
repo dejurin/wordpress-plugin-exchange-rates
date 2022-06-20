@@ -14,7 +14,7 @@ Description: Currency widgets for any needs.
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
 Version: 0.0.1
-Text Domain: exchange-rates
+Text Domain: currency-widgets-all-banks
 Domain Path: /languages/
 Requires at least: 5.4
 Tested up to: 6.0

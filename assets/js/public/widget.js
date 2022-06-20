@@ -97,7 +97,7 @@ jQuery(document).ready(function() {
                     pre = '';
                 }
 
-                result.text(
+                result.html(
                     pre + formatNumber(
                         rate,
                         amount,

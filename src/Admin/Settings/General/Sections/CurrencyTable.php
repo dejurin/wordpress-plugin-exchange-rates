@@ -28,7 +28,7 @@ class CurrencyTable
             __('Region', Plugin::PLUGIN_SLUG),
         ]);
 
-        $get_currencies = Currencies::get_currencies();
+        $get_currencies = Currencies::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
 
         $close = isset($rates['data'][1]);

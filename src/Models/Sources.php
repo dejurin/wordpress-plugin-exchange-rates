@@ -6,7 +6,7 @@ use Dejurin\ExchangeRates\Plugin;
 
 class Sources
 {
-    public static function get_sources()
+    public static function get_list()
     {
         return [
             'currencyrate' => ['name' => __('CurrencyRate.Today', Plugin::PLUGIN_SLUG), 'country' => 'xx', 'source_url' => 'https://currencyrate.today/'],

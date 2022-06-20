@@ -4,9 +4,9 @@ namespace Dejurin\ExchangeRates\Models;
 
 use Dejurin\ExchangeRates\Plugin;
 
-class ColumnRate
+class TableColumns
 {
-    public static function get_сolumns()
+    public static function get_list()
     {
         return [
             'name' => __('Currency col:', Plugin::PLUGIN_SLUG),

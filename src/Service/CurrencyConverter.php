@@ -27,8 +27,7 @@ class CurrencyConverter
         $this->parameters['decimals'] = $this->settings['decimals'];
         $this->parameters = array_merge($this->parameters, $fmt);
 
-        $get_currencies = Currencies::get_currencies();
-        $get_symbols = CurrencySymbols::$get_list;
+        $get_currencies = Currencies::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $base_currency_list = array_keys($rates['data'][0]['rates']);
         $arr = [];
@@ -41,7 +40,7 @@ class CurrencyConverter
         }
 
         $html = '<div '
-                .'class="'.self::WIDGET_SLUG.'" '
+                .'class="'.self::WIDGET_SLUG.($this->parameters['border'] ? ' border' : '').'" '
                 .'id="currency-converter'.$widget_number.'" '
                 .$data_attr
                 .'data-currencies='
@@ -51,7 +50,7 @@ class CurrencyConverter
             $arr[$value] = [
                 'name' => $get_currencies[$value]['name'],
                 'rate' => $rates['data'][0]['rates'][$value],
-                'symbol' => (isset($get_symbols[$value]) ? $get_symbols[$value] : $value),
+                'symbol' => CurrencySymbols::get_list($value),
             ];
         }
 

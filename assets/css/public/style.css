@@ -24,6 +24,7 @@
     margin: 0;
     width: auto;
     vertical-align: top;
+    border-collapse: collapse;
 }
 .widget-exchange-rates-table table thead {
     background-color: var(--bs-table-striped-bg);
@@ -77,11 +78,11 @@
     display: flex;
     align-items: center;
 }
-.widget-exchange-rates-table .d-flex-wrap {
+.d-flex-wrap {
     display: flex;
     flex-wrap: wrap;
 }
-.widget-exchange-rates-table .text-center {
+.text-center {
     text-align: center;
 }
 .widget-exchange-rates-table .table-danger {
@@ -169,11 +170,6 @@
     border-bottom-right-radius: 5px;
   }
 
-
-
-
-
-
 .unstyle {
     border: none !important;
     padding: 0 !important;
@@ -185,6 +181,10 @@
     border-radius: 5px;
 }
 
+.exchange-rates .border {
+    border: var(--bs-gray-400) solid 2px!important;
+    margin-bottom: 8px;
+}
 .widget-exchange-rates-currency-converter.border {
     border: var(--bs-gray-400) solid 2px!important;
     margin-bottom: 8px;
