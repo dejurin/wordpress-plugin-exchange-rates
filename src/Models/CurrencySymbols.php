@@ -4,7 +4,8 @@ namespace Dejurin\ExchangeRates\Models;
 
 class CurrencySymbols
 {
-    public static function get_list($code) {
+    public static function get_list($code)
+    {
         $symbol = '';
         $list = [
             'ALL' => 'L',
@@ -126,6 +127,7 @@ class CurrencySymbols
         if (!empty($code) && isset($list[$code])) {
             $symbol = $list[$code];
         }
+
         return $symbol;
     }
 }

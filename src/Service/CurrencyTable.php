@@ -4,12 +4,11 @@ namespace Dejurin\ExchangeRates\Service;
 
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Currency;
+use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Settings;
-use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Plugin;
-
 use Dejurin\PHPTableGenerate;
 
 class CurrencyTable

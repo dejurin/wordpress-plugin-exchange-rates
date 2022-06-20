@@ -21,7 +21,7 @@ class Dev
 
         $base_currency = isset($parameters['base_currency']) && !empty($parameters['base_currency']) ? strtoupper($parameters['base_currency']) : 'USD';
         $quote_currency = isset($parameters['quote_currency']) && !empty($parameters['quote_currency']) ? strtoupper($parameters['quote_currency']) : null;
-        
+
         $_base_currency = 'USD' === $base_currency && is_null($quote_currency) ? 'usd' : strtolower($base_currency);
         $_quote_currency = !is_null($quote_currency) && $base_currency !== $quote_currency ? strtolower($quote_currency) : '';
 

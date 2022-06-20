@@ -3,11 +3,11 @@
 namespace Dejurin\ExchangeRates\Widgets;
 
 use Dejurin\ExchangeRates\Models\Checkbox;
-use Dejurin\ExchangeRates\Models\TableColumns;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Flags;
-use Dejurin\ExchangeRates\Service\CurrencyTable;
+use Dejurin\ExchangeRates\Models\TableColumns;
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Service\CurrencyTable;
 
 class Table extends \WP_Widget
 {

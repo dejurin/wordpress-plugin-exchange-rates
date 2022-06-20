@@ -102,7 +102,7 @@ class Converter extends \WP_Widget
             <label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
             <select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
-                
+
         foreach ($currency_list as $value) {
             printf(
                         '<option value="%s"%s>%s</option>',
