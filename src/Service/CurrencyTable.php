@@ -8,6 +8,8 @@ use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\ExchangeRates\Models\Emoji;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Models\CurrencySymbols;
+use Dejurin\ExchangeRates\Plugin;
+
 use Dejurin\PHPTableGenerate;
 
 class CurrencyTable
@@ -15,6 +17,7 @@ class CurrencyTable
     public $parameters;
     public $settings;
     public $table;
+    public const WIDGET_SLUG = 'widget-'.Plugin::PLUGIN_SLUG.'-currency-table';
 
     public function get_table($widget_number)
     {
@@ -235,6 +238,7 @@ class CurrencyTable
             $this->parameters,
             $currency->get_date(),
             $widget_number,
+            self::WIDGET_SLUG,
             $this->settings['source_id']
         ));
 

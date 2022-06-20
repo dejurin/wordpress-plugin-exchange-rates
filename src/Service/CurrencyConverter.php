@@ -13,7 +13,6 @@ class CurrencyConverter
 {
     public $parameters;
     public $settings;
-
     public const WIDGET_SLUG = 'widget-'.Plugin::PLUGIN_SLUG.'-currency-converter';
 
     public function get_html_widget($widget_number)
@@ -41,7 +40,7 @@ class CurrencyConverter
 
         $html = '<div '
                 .'class="'.self::WIDGET_SLUG.($this->parameters['border'] ? ' border' : '').'" '
-                .'id="currency-converter'.$widget_number.'" '
+                .'id="'.self::WIDGET_SLUG.$widget_number.'" '
                 .$data_attr
                 .'data-currencies='
                 ."'";
@@ -61,6 +60,7 @@ class CurrencyConverter
             $this->parameters,
             $currency->get_date(),
             $widget_number,
+            self::WIDGET_SLUG,
             $this->settings['source_id']
         );
 

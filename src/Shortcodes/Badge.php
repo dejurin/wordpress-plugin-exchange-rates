@@ -24,6 +24,8 @@ class Badge
         'color' => '#eeeeee',
     ];
 
+    public const BADGE_SLUG = 'shortcode-'.Plugin::PLUGIN_SLUG.'-badge';
+
     public function __construct()
     {
         add_shortcode(Plugin::PLUGIN_SLUG.'-badge', [$this, 'shortcode']);
@@ -108,6 +110,7 @@ class Badge
                 $attr,
                 $currency->get_date(),
                 time(),
+                self::BADGE_SLUG,
                 $currency->get_source_id()
             );
         } else {
@@ -118,6 +121,6 @@ class Badge
             $result = __(Plugin::NAME.': error plugin. Check the attributes of the shortcode.', Plugin::PLUGIN_SLUG);
         }
 
-        return '<div class="widget-exchange-rates-shortcode-badge">'.$result.$caption.'</div>';
+        return '<div class="exchange-rates shortcode-exchange-rates-badge">'.$result.$caption.'</div>';
     }
 }
