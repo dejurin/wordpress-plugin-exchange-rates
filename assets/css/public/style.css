@@ -32,87 +32,97 @@
 /* Main - Style end */
 
 /* Widget Currency Table - Style start */
-.exchange-rates .widget-exchange-rates-table .w-100 {
+.exchange-rates.widget-exchange-rates-currency-table .w-100 {
     width: 100%;
 }
-.exchange-rates .widget-exchange-rates-table .table-responsive {
+.exchange-rates.widget-exchange-rates-currency-table .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-.exchange-rates .widget-exchange-rates-table caption {
-    caption-side: bottom;
-    font-weight: normal;
-}
-.exchange-rates .widget-exchange-rates-table table {
+.exchange-rates.widget-exchange-rates-currency-table table {
     font-size: 18px !important;
     margin: 0;
     width: auto;
     vertical-align: top;
     border-collapse: collapse;
+    caption-side: bottom;
+    font-weight: normal;
 }
-.exchange-rates .widget-exchange-rates-table table thead {
+
+
+.exchange-rates.widget-exchange-rates-currency-table table thead {
     background-color: var(--bs-table-striped-bg);
 }
-.exchange-rates .widget-exchange-rates-table table td,
-.exchange-rates .widget-exchange-rates-table table th,
-.exchange-rates .widget-exchange-rates-table table caption {
+.exchange-rates.widget-exchange-rates-currency-table table td,
+.exchange-rates.widget-exchange-rates-currency-table table th,
+.exchange-rates.widget-exchange-rates-currency-table table caption {
     padding: 8px !important;
 }
-.exchange-rates .widget-exchange-rates-table table caption {
+.exchange-rates.widget-exchange-rates-currency-table table th:first-child {
+    text-align: left;
+}
+.exchange-rates.widget-exchange-rates-currency-table table caption {
     background-color: transparent !important;
 }
-.exchange-rates .widget-exchange-rates-table table img {
+.exchange-rates.widget-exchange-rates-currency-table table img {
     display: inline-block !important;
 }
-.exchange-rates .widget-exchange-rates-table table tr {
+.exchange-rates.widget-exchange-rates-currency-table table.table-border {
+    border: solid var(--bs-gray-400) 2px;
+}
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-hori tr {
     border-bottom: solid var(--bs-table-striped-bg) 1px !important;
 }
-.exchange-rates .widget-exchange-rates-table table td,
-.exchange-rates .widget-exchange-rates-table table th {
-    border: solid var(--bs-table-striped-bg) 1px !important;
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-hori tr:last-child {
+    border-bottom: none !important;
 }
-.exchange-rates .widget-exchange-rates-table table.table-border {
-    border: solid var(--bs-table-striped-bg) 2px;
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-vert td,
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-vert th {
+    border-right: solid var(--bs-table-striped-bg) 1px !important;
 }
-.exchange-rates .widget-exchange-rates-table div {
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-vert td:last-child,
+.exchange-rates.widget-exchange-rates-currency-table table.table-border-vert th:last-child {
+    border-right: none !important;
+}
+.exchange-rates.widget-exchange-rates-currency-table table td {
+    white-space: nowrap;
+}
+.exchange-rates.widget-exchange-rates-currency-table div {
     line-height: 15px !important;
 }
-.exchange-rates .widget-exchange-rates-table img {
+.exchange-rates.widget-exchange-rates-currency-table img {
     height: fit-content;
 }
-.exchange-rates .widget-exchange-rates-table .small {
+.exchange-rates.widget-exchange-rates-currency-table .small {
     color:var(--bs-gray-400);
     font-size: small;
 }
-.exchange-rates .widget-exchange-rates-table .break {
+.exchange-rates.widget-exchange-rates-currency-table .break {
 	width: 100%;
 }
-.widget-exchange-rates-table .text-element {
+.widget-exchange-rates-currency-table .text-element {
     display: table;
     table-layout: fixed;
 }
-.exchange-rates .widget-exchange-rates-table .text-truncate {
+.exchange-rates.widget-exchange-rates-currency-table .text-truncate {
     display: table-cell;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.exchange-rates .widget-exchange-rates-table .table-danger {
+.exchange-rates.widget-exchange-rates-currency-table .table-danger {
     color: var(--bs-red);
 }
-.exchange-rates .widget-exchange-rates-table .table-success {
+.exchange-rates.widget-exchange-rates-currency-table .table-success {
     color: var(--bs-green);
 }
-.exchange-rates .widget-exchange-rates-table table td {
-    white-space: nowrap;
-}
-.exchange-rates .widget-exchange-rates-table .text-right {
+.exchange-rates.widget-exchange-rates-currency-table .text-right {
     text-align: right;
 }
-.exchange-rates .widget-exchange-rates-table .active {
+.exchange-rates.widget-exchange-rates-currency-table .active {
     background-color: var(--bs-table-striped-bg);
 }
-.exchange-rates .widget-exchange-rates-table input {
+.exchange-rates.widget-exchange-rates-currency-table input {
     border: 0;
     padding: 0;
     background-color: transparent !important;
@@ -121,7 +131,7 @@
     text-align: right;
     width: 100%;
 }
-.exchange-rates .widget-exchange-rates-table input:focus {
+.exchange-rates.widget-exchange-rates-currency-table input:focus {
     outline: none;
 }
 /* Widget Currency Table - Style end */

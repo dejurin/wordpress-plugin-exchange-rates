@@ -164,7 +164,7 @@ class Page
 									<label><?php echo _e('Options', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
-									<?php $checkbox = array_slice(Checkbox::get_list(), 3, 5);
+									<?php $checkbox = array_slice(Checkbox::get_list(), 5, 5);
         foreach ($checkbox as $key => $value) {
             echo sprintf(
                                             '<p><input type="checkbox" id="shortcode-badge-%1$s" name="%1$s"><label for="shortcode-badge-%1$s">%2$s</label></p>',

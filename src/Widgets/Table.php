@@ -17,7 +17,7 @@ class Table extends \WP_Widget
             'widget_'.Plugin::PLUGIN_SLUG.'_table',
             __('Exchange Rates Table', Plugin::PLUGIN_SLUG),
             [
-                'classname' => 'widget-'.Plugin::PLUGIN_SLUG.'-table',
+                'classname' => 'exchange-rates widget-'.Plugin::PLUGIN_SLUG.'-currency-table',
                 'description' => __('A table with currency rates.', Plugin::PLUGIN_SLUG),
             ]
         );
@@ -55,6 +55,8 @@ class Table extends \WP_Widget
                         'amount_active' => (bool) $instance['amount_active'],
                         'base_show' => (bool) $instance['base_show'],
                         'border' => (bool) $instance['border'],
+                        'border_hori' => (bool) $instance['border_hori'],
+                        'border_vert' => (bool) $instance['border_vert'],
                         'after' => (bool) $instance['after'],
                         'table_headers_show' => (bool) $instance['table_headers_show'],
                         'table_headers_name' => (string) $instance['table_headers_name'],
@@ -89,6 +91,8 @@ class Table extends \WP_Widget
         $instance_to_save['full_width'] = (bool) sanitize_text_field($instance['full_width']);
         $instance_to_save['amount_active'] = (bool) sanitize_text_field($instance['amount_active']);
         $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
+        $instance_to_save['border_hori'] = (bool) sanitize_text_field($instance['border_hori']);
+        $instance_to_save['border_vert'] = (bool) sanitize_text_field($instance['border_vert']);
         $instance_to_save['base_show'] = ((bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show'])) ? false : true;
         $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
         // Table headers
@@ -257,6 +261,8 @@ class Table extends \WP_Widget
             'after' => false,
             'base_show' => true,
             'border' => true,
+            'border_hori' => false,
+            'border_vert' => false,
             'table_headers_show' => true,
             'table_headers_name' => __('Currency', Plugin::PLUGIN_SLUG),
             'table_headers_code' => __('Code', Plugin::PLUGIN_SLUG),

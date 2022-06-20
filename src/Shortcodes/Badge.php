@@ -88,7 +88,7 @@ class Badge
                         $get_currency = $get_currencies[$code];
                         $symbol = CurrencySymbols::get_list($code);
 
-                        $base_currency = ($attr['base_show']) ? ((isset($parameters['code'])) ? $attr['base_currency'] : $get_currencies[$attr['base_currency']]['name']) . '/' : '';
+                        $base_currency = ($attr['base_show']) ? ((isset($parameters['code'])) ? $attr['base_currency'] : $get_currencies[$attr['base_currency']]['name']).'/' : '';
                         $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s%7$s</span></div>';
                         $result .= sprintf(
                                 $template,

@@ -221,10 +221,15 @@ class CurrencyTable
 
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
+        $class = ($this->parameters['border'] ? ' table-border' : '');
+        $class .= ($this->parameters['border_hori'] ? ' table-border-hori' : '');
+        $class .= ($this->parameters['border_vert'] ? ' table-border-vert' : '');
+
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="table-responsive"><table'
-                            .(($this->parameters['border']) ? ' class="table-border" ' : ' ').'data-decimals="'.$this->settings['decimals'].'" '
+            'table_open' => '<div class="table-responsive"><table '
+                            .'class="'.trim($class).'" '
+                            .'data-decimals="'.$this->settings['decimals'].'" '
                             .'data-decimal-point="'.$fmt['decimal_point'].'" '
                             .'data-thousands-sep="'.$fmt['thousands_sep'].'" '
                             .'data-pre="1" '
