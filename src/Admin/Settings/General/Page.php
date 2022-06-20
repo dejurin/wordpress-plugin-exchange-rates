@@ -164,7 +164,7 @@ class Page
 									<label><?php echo _e('Options', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
-									<?php $checkbox = array_slice(Checkbox::get_list(), 3, -2);
+									<?php $checkbox = array_slice(Checkbox::get_list(), 3, 5);
         foreach ($checkbox as $key => $value) {
             echo sprintf(
                                             '<p><input type="checkbox" id="shortcode-badge-%1$s" name="%1$s"><label for="shortcode-badge-%1$s">%2$s</label></p>',
@@ -187,7 +187,6 @@ class Page
 		</div>
 		<script>
 			jQuery(document).ready(function() {
-
 					jQuery('#shortcode-badge-color').wpColorPicker({
 						change: function(event, ui){
 							shortcodeGeneratorBadge('form#shortcode-generator-badge');
@@ -197,7 +196,6 @@ class Page
 						border: true,
 						palettes: false,
 					});
-
 				function shortcodeGeneratorBadge(_this) {
 					var serializeArray = jQuery(_this).serializeArray();
 					var line = '[<?php echo Plugin::PLUGIN_SLUG; ?>-badge ';

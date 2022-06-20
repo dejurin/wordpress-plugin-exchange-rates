@@ -80,24 +80,25 @@ class Badge
             $get_currencies = Currencies::get_list();
 
             if (is_array($currency_list) && !empty($currency_list)) {
-                $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'currency_format', 'inverse', 'decimals']);
+                $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after']);
 
                 foreach ($currency_list as $code) {
                     $currency = new Currency($parameters, $code);
-                    if ($currency->is_available()) {
+                    if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
                         $symbol = CurrencySymbols::get_list($code);
 
-                        $base_currency = ($attr['base_show']) ? $attr['base_currency'].'/' : '';
-                        $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s</span></div>';
+                        $base_currency = ($attr['base_show']) ? ((isset($parameters['code'])) ? $attr['base_currency'] : $get_currencies[$attr['base_currency']]['name']) . '/' : '';
+                        $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s%7$s</span></div>';
                         $result .= sprintf(
                                 $template,
                                 $attr['color'],
                                 $hsl->lightness > 200 ? '#333333' : '#ffffff',
                                 $this->img($attr['flag_type'], $get_currency),
-                                $code,
-                                $symbol,
-                                $currency->get_rate_format(0, true, true)
+                                (isset($parameters['code']) ? $code : $get_currency['name']),
+                                (isset($parameters['symbol']) && !isset($parameters['after']) ? $symbol : ''),
+                                $currency->get_rate_format(0, true, true),
+                                (isset($parameters['symbol']) && isset($parameters['after']) ? $symbol : ''),
                             );
                         $err = false;
                     }

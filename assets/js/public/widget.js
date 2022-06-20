@@ -30,6 +30,7 @@ jQuery(document).ready(function() {
 		}
 	});
     /* Caption - end */
+    
 	jQuery('.widget-exchange-rates-table input').on('click', function(event) {
 		var amount = jQuery(this).val();
 		jQuery(this).data('amount', amount).val('');
@@ -37,6 +38,7 @@ jQuery(document).ready(function() {
 		var amount = jQuery(this).data('amount');
 		jQuery(this).val(amount);
 	});
+
 	jQuery('.widget-exchange-rates-table input').on('input', function(event) {
 		var amount = parseFloat(jQuery(this).val());
 		jQuery(this).data('amount', amount);
