@@ -71,26 +71,26 @@ class Page
 			<hr>
 			<div class="row">
 				<div class="col">
-					<h2 id="source-table"><?php echo _e('Source table', Plugin::PLUGIN_SLUG); ?></h2>
+					<h2 id="source-table"><?php _e('Source table', Plugin::PLUGIN_SLUG); ?></h2>
 					<p><?php _e('List of sources that you can select as a source of exchange rate data.', Plugin::PLUGIN_SLUG); ?></p>
 					<?php Sections\SourceTable::init(); ?>
 				</div>
 				<div class="col">
-					<h2 id="currency-table"><?php echo _e('Currency Table', Plugin::PLUGIN_SLUG); ?></h2>
+					<h2 id="currency-table"><?php _e('Currency Table', Plugin::PLUGIN_SLUG); ?></h2>
 					<p><?php _e('List of currencies that are supported by the current exchange rate data source.', Plugin::PLUGIN_SLUG); ?></p>
 					<?php Sections\CurrencyTable::init(); ?>
 				</div>
 			</div>
 			<hr>
-			<h2><?php echo _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
 			<div class="row">
 				<div class="col p-0">
+			<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
 					<form  id="shortcode-generator-badge">
 					<table class="form-table">
 						<tbody>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-color"><?php echo _e('Color badge', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-color"><?php _e('Color badge', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<input type="text" id="shortcode-badge-color" name="color" value="#024bf4">
@@ -98,7 +98,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-amount"><?php echo _e('Amount', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-amount"><?php _e('Amount', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<input type="text" id="shortcode-badge-amount" name="amount" value="1">
@@ -106,7 +106,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-base_currency"><?php echo _e('Base Currency', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-base_currency"><?php _e('Base Currency', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<select id="shortcode-badge-base_currency" name="base_currency">
@@ -126,7 +126,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-currency_list"><?php echo _e('Currency list', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-currency_list"><?php _e('Currency list', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<select multiple="multiple" class="resize-both" size="10" id="shortcode-badge-currency_list" name="currency_list">
@@ -143,7 +143,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label><?php echo _e('Flag type', Plugin::PLUGIN_SLUG); ?></label>
+									<label><?php _e('Flag type', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<?php foreach (Flags::get_types() as $item) {
@@ -158,7 +158,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-decimals"><?php echo _e('Decimals', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-decimals"><?php _e('Decimals', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<input id="shortcode-badge-decimals" name="decimals" type="range" step="1" min="0" max="7" value="<?php echo $settings['decimals']; ?>">
@@ -167,7 +167,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label><?php echo _e('Options', Plugin::PLUGIN_SLUG); ?></label>
+									<label><?php _e('Options', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
 									<?php $checkbox = array_slice(Checkbox::get_list(), 5, 5);
@@ -188,6 +188,55 @@ class Page
 					<textarea id="shortcode-generator-badge-textarea" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
 				</div>
 				<div class="col p-0">
+					<h2><?php _e('Help', Plugin::PLUGIN_SLUG); ?></h2>
+					<p><?php _e('This Plugin includes two widgets and one shortcode.', Plugin::PLUGIN_SLUG); ?></p>
+
+					<h3><?php _e('Widgets', Plugin::PLUGIN_SLUG); ?></h3>
+					<ol>
+					<li><?php _e('Currency Converter is easy to use, simple real-time converter;', Plugin::PLUGIN_SLUG); ?><br>
+					&#x2714&nbsp;<?php _e('Universal widget, it can be used on travel and property website/blog, as well as online stores.', Plugin::PLUGIN_SLUG); ?>
+					</li>
+
+					<li><?php _e('Currency Table is a table with exchange rates and another features.', Plugin::PLUGIN_SLUG); ?><br>
+					&#x2714&nbsp;<?php _e('The currency rates table is mainly used by news websites, portals and financial forums.', Plugin::PLUGIN_SLUG); ?></li>
+					</ol>
+					<h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
+					<ol>
+					<li>
+					<?php _e('Badge is a simple exchange rates list.', Plugin::PLUGIN_SLUG); ?>
+						<br>
+						&#x2714&nbsp;<?php _e('An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page.', Plugin::PLUGIN_SLUG); ?>
+					</li>
+					</ol>
+					<h3><?php _e('How to install widget?', Plugin::PLUGIN_SLUG); ?></h3>
+					<ol>
+						<li><?php _e('Go to Appearance &rarr; Widgets;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Legacy Widget &rarr; Choose our Widget;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
+					</ol>
+					<h3><?php _e('How to install shortcode?', Plugin::PLUGIN_SLUG); ?></h3>
+					<ol>
+						<li><?php _e('Generate shortcode from this page;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Copy shortcode;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Paste anywhere you like;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
+					</ol>
+					<hr>
+
+					<div>
+						<div>
+							<img width="96" height="96" style="float:left;padding-right:15px" src="<?php echo plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path); ?>assets/img/bank.svg" />
+						</div>
+						<div>
+						<ul>
+                <li>&#x2753; Feel free, write if you will have any questions: <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
+                <li>&#x1F4B0; Your might like it: <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
+                <li>&#x1F4B9; Supported by: <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
+                <li>&#x1F4B5; Fiat money: <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
+            </ul>
+						</div>
+					</div>
+					
 				</div>
 			</div>
 		</div>

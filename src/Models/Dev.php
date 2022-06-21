@@ -37,7 +37,7 @@ class Dev
             $template,
             $source['short'],
             $parameters['base_currency'].(!is_null($quote_currency) ? '/'.$quote_currency : ''),
-            $local_time->format('d M')
+            $put_time->format('d M')
         );
 
         $html .= '<span title="'.__('Info', Plugin::PLUGIN_SLUG).'" data-caption-id="'.$widget_slug.'-info-caption'.$widget_nubmer.'" class="d-flex info '.Plugin::PLUGIN_SLUG.'-caption-button">'

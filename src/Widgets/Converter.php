@@ -13,9 +13,9 @@ class Converter extends \WP_Widget
     {
         parent::__construct(
             Plugin::PLUGIN_SLUG.'_currency-converter',
-            __('Currency Converter', Plugin::PLUGIN_SLUG),
+            "All Banks \u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
-                'classname' => 'exchange-rates unstyle',
+                'classname' => 'exchange-rates',
                 'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             ]
         );
