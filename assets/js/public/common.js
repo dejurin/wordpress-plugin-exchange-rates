@@ -31,7 +31,8 @@ jQuery(document).ready(function() {
 	});
     /* Caption - end */
     
-	jQuery('.widget-exchange-rates-table input').on('click', function(event) {
+	/* Currency Table - start */
+	jQuery('div.widget-exchange-rates-currency-table input').on('click', function(event) {
 		var amount = jQuery(this).val();
 		jQuery(this).data('amount', amount).val('');
 	}).on('blur', function(event) {
@@ -39,16 +40,28 @@ jQuery(document).ready(function() {
 		jQuery(this).val(amount);
 	});
 
-	jQuery('.widget-exchange-rates-table input').on('input', function(event) {
+	jQuery('div.widget-exchange-rates-currency-table input').on('input', function(event) {
 		var amount = parseFloat(jQuery(this).val());
+		var settings = jQuery('div.widget-exchange-rates-currency-table table');
+
 		jQuery(this).data('amount', amount);
-		jQuery('.widget-exchange-rates-table table tbody td[data-rate]').each(function(index, value) {
-			var settings = jQuery('.widget-exchange-rates-table table');
+		jQuery('div.widget-exchange-rates-currency-table table tbody td[data-rate]').each(function(index, value) {
 			var rate = jQuery(value).data('rate');
-			var result = formatNumber(rate, amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
-			jQuery(value).text(result);
+			var pre = jQuery(value).data('symbol');
+			var after = '';
+
+			if (settings.data('after')) {
+				after = pre;
+				pre = '';
+			}
+			
+			var result = pre + formatNumber(rate, amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point')) + after;
+			var img = jQuery(value).find('img').clone();
+			jQuery(value).html(result);
+			img.appendTo(value);
 		});
 	});
+	/* Currency Table - end */
 
 	/* Widget Currency Converter - start */
 	jQuery('div.widget-exchange-rates-currency-converter').each(function(k, v) {

@@ -2,12 +2,12 @@
 
 namespace Dejurin\ExchangeRates\Cron;
 
-class UpdateCurrency
-{
-    public static $action_name = '_update_rates';
+use Dejurin\ExchangeRates\Service\UpdateDataSources;
 
+class UpdateRates
+{
     public static function register_task()
     {
-        wp_schedule_event(time(), 'hourly', \Dejurin\ExchangeRates\Plugin::NAME.self::$action_name);
+        wp_schedule_event(time(), 'hourly', UpdateDataSources::update());
     }
 }

@@ -25,7 +25,12 @@ class Page
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
 		<div class="wrap">
-			<h1><?php echo Plugin::NAME; ?></h1>
+			
+			<h1>
+				
+				<?php echo Plugin::NAME; ?>
+			</h1>
+			
 			<hr>
 			<div class="row">
 				<div class="col">
@@ -38,6 +43,7 @@ class Page
 					</form>
 				</div>
 				<div class="col">
+					
 					<h3><?php echo $get_sources[$rates['source']]['name']; ?></h3>
 					<div class="row">
 						<div class="col p-0">

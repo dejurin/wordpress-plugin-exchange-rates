@@ -14,11 +14,11 @@ class Pages
         // General Settings
         add_submenu_page(
             'options-general.php',
-            __('Exchange rates', Plugin::PLUGIN_SLUG),
-            __('Exchange rates', Plugin::PLUGIN_SLUG),
+            "\u{1F3E6} ".__('Exchange rates', Plugin::PLUGIN_SLUG),
+            "\u{1F3E6} ".__('Exchange rates', Plugin::PLUGIN_SLUG),
             'manage_options',
             Plugin::PLUGIN_SLUG.'-general',
             ['\Dejurin\ExchangeRates\Admin\Settings\General\Page', 'render']
-        );
+         );
     }
 }

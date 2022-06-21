@@ -14,7 +14,7 @@ class Table extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            'widget_'.Plugin::PLUGIN_SLUG.'_table',
+            Plugin::PLUGIN_SLUG.'_currency-table',
             __('Exchange Rates Table', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'exchange-rates widget-'.Plugin::PLUGIN_SLUG.'-currency-table',

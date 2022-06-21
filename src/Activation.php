@@ -10,8 +10,9 @@ class Activation
          * Cron task for update currency rates each hour.
          */
 
-        // Cron\UpdateRates::register_task();
+        Cron\UpdateRates::register_task();
 
+        // Update
         Service\UpdateDataSources::update();
     }
 }

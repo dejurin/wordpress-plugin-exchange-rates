@@ -1,4 +1,4 @@
-=== Exchange Rates ===
+=== Exchange Rates & Currency Converter Widgets 🏦 All Banks ===
 Contributors: falselight
 Tags: currency converter, currencyconverter, currencies, currency, rates, exchange, converter, widgets, usd, dollar, eur, euro, foreign exchange conversion, fx rate converter, currency converter widget, money
 Requires at least: 5.4

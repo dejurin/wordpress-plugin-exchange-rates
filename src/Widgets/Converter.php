@@ -12,7 +12,7 @@ class Converter extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            'widget_'.Plugin::PLUGIN_SLUG.'_currency-converter',
+            Plugin::PLUGIN_SLUG.'_currency-converter',
             __('Currency Converter', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'exchange-rates unstyle',

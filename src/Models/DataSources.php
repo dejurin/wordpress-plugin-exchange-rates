@@ -7,9 +7,9 @@ use Dejurin\ExchangeRates\Request\Request;
 
 class DataSources
 {
+    public static $transient_option_name = Plugin::PLUGIN_SLUG.'_sources';
     private static $instance;
 
-    private $transient_sources = Plugin::PLUGIN_SLUG.'_sources';
     private $sources_url = 'https://api-bank.fex.to/sources.json';
     private $sources_data = null;
 
@@ -36,11 +36,11 @@ class DataSources
 
     public function get_sources_data()
     {
-        $this->sources_data = get_transient($this->transient_sources);
+        $this->sources_data = get_transient(self::$transient_option_name);
 
         if (!$this->validate_sources_data() || empty($this->sources_data)) {
             $this->fetch_source_data();
-            set_transient($this->transient_sources, $this->sources_data, HOUR_IN_SECONDS * 24);
+            set_transient(self::$transient_option_name, $this->sources_data, HOUR_IN_SECONDS * 24);
         }
 
         return $this->sources_data;

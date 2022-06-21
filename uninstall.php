@@ -3,7 +3,8 @@
 namespace Dejurin\ExchangeRates;
 
 use Dejurin\ExchangeRates\Models\Settings;
-use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Widgets\Converter;
+use Dejurin\ExchangeRates\Widgets\Table;
 
 // If uninstall is not called from WordPress, exit
 if (!defined('WP_UNINSTALL_PLUGIN')) {
@@ -17,7 +18,15 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
  */
 require_once 'vendor/autoload.php';
 
-delete_option(Plugin::PLUGIN_SLUG.'_rates');
-delete_option(Plugin::PLUGIN_SLUG.'_providers');
+// Rates
+delete_option(\Dejurin\ExchangeRates\Service\UpdateDataSources::$rates_option_name);
+
+// Widgets
+delete_option((new Converter())->option_name);
+delete_option((new Table())->option_name);
+
+// Settings
 delete_option(Settings::$option_name);
-// delete_transient(DataProviders::getInstance()->get_transient_name());
+
+// Delete Transient
+delete_transient(\Dejurin\ExchangeRates\Models\DataSources::$transient_option_name);

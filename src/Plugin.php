@@ -8,7 +8,7 @@ use Dejurin\ExchangeRates\Shortcodes\Badge;
 class Plugin
 {
     public const VERSION = '0.0.1';
-    public const NAME = 'Exchange Rates & Currency Converter Widgets - All Banks';
+    public const NAME = 'Exchange Rates & Currency Converter Widgets '."\u{1F3E6}".' All Banks';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
 
@@ -19,7 +19,7 @@ class Plugin
 
     public function run()
     {   /*
-         * Admin Register Script & Styles
+         * Backend and Frontend Register Script & Styles
          */
         add_action('admin_enqueue_scripts', [$this, 'register_admin_script_style']);
         add_action('wp_enqueue_scripts', [$this, 'register_public_script_style']);
@@ -49,7 +49,7 @@ class Plugin
         );
         wp_register_script(
             'plugin-'.Plugin::PLUGIN_SLUG.'-widgets',
-            plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/js/public/widget.js',
+            plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/js/public/common.js',
             ['jquery-ui-autocomplete'],
             self::VERSION,
             true
