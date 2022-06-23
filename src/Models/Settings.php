@@ -17,6 +17,7 @@ class Settings
             'currency_format' => 3,
             'decimals' => 4,
             'rates_available' => false,
+            'update_timestamp' => time(),
         ];
     }
 }

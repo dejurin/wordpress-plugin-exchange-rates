@@ -13,7 +13,7 @@ class UpdateDataSources
     public static $req_rates = null;
     private static $rates_api_uri = 'https://api-bank.fex.to/';
 
-    public static function update($show_warning_in_admin = false)
+    public static function update($show_warning_in_admin = true)
     {
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults());
@@ -25,14 +25,17 @@ class UpdateDataSources
         $req = new Request(self::$rates_api_uri.'rates/'.$settings['source_id'].'.json');
         self::$req_rates = $req->data();
 
+        $settings['rates_available'] = self::$req_rates['status'];
+        $result = update_option(Settings::$option_name, $settings);
+
         if (self::$req_rates['status']) {
             update_option(self::$rates_option_name, self::$req_rates['data']);
             $settings['base_currency'] = self::$req_rates['data']['base'];
-            $settings['rates_available'] = true;
+            $settings['update_timestamp'] = time();
+
+            return true;
         }
 
-        $result = update_option(Settings::$option_name, $settings);
-
-        return json_encode($settings);
+        return false;
     }
 }

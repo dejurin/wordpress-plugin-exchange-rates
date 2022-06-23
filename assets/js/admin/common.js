@@ -13,7 +13,8 @@ jQuery(document).ready(function() {
         });
     }
     jQuery(document).on('input', 'input[type="range"]', function() {
-        jQuery("#" + jQuery(this).attr('id') + '-show').text(jQuery(this).val());
+        console.log("#" + jQuery(this).attr('id') + '-show');
+        jQuery("#" + jQuery(this).attr('id') + '-show').html(jQuery(this).val());
     });
     jQuery("button.show-more-table").each(function() {
         var total_table_tr = jQuery("#" + jQuery(this).data('id')).find('tbody tr').length;

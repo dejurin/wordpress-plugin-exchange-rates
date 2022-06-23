@@ -2,9 +2,6 @@
 
 namespace Dejurin\ExchangeRates;
 
-use Dejurin\ExchangeRates\Admin\Admin;
-use Dejurin\ExchangeRates\Shortcodes\Badge;
-
 class Plugin
 {
     public const VERSION = '0.0.1';
@@ -25,19 +22,30 @@ class Plugin
         add_action('wp_enqueue_scripts', [$this, 'register_public_script_style']);
         add_action('widgets_init', ['Dejurin\ExchangeRates\Widgets', 'register']);
 
-        new Badge();
+        /*
+         * Update rates action.
+         */
+        add_action(Cron\UpdateRates::$action_name, Service\UpdateDataSources::update());
+
+        /*
+         * Add Badge shortcode.
+         */
+
+        new Shortcodes\Badge();
 
         if (is_admin()) {
-            Admin::run();
+            Admin\Admin::run();
         }
     }
 
+    /*
     public function hide_example_widget($widget_types)
     {
         $widget_types[] = Plugin::PLUGIN_SLUG;
 
         return $widget_types;
     }
+    */
 
     public function register_public_script_style()
     {

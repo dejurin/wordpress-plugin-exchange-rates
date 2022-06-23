@@ -232,7 +232,7 @@ class CurrencyTable
                             .'data-decimals="'.$this->settings['decimals'].'" '
                             .'data-decimal-point="'.$fmt['decimal_point'].'" '
                             .'data-thousands-sep="'.$fmt['thousands_sep'].'" '
-                            .(($this->parameters['after']) ? ' data-after="true"':'')
+                            .(($this->parameters['after']) ? ' data-after="true"' : '')
                             .'>',
             'table_close' => '</table></div>',
         ];

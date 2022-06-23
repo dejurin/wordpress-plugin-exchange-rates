@@ -23,7 +23,8 @@ class Page
         $get_sources = Sources::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $settings = get_option(Settings::$option_name, []);
-        $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
+        $settings = wp_parse_args($settings, Settings::get_defaults());
+        $get_sources_data = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data(); ?>
 		<div class="wrap">
 			
 			<h1>
@@ -34,8 +35,11 @@ class Page
 			<hr>
 			<div class="row">
 				<div class="col">
+						<p><?php _e('Advice! If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', Plugin::PLUGIN_SLUG); ?></p>
+						<?php if ($settings['rates_available']) { ?>
+						<p><b>Last successful update</b>: <?php echo date('r', $settings['update_timestamp']); ?></p>
+						<?php } ?>
 					<form action="options.php" method="post">
-						<p><?php _e('If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', Plugin::PLUGIN_SLUG); ?></p>
 						<?php
                         settings_fields(Plugin::PLUGIN_SLUG.'-general');
         do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
@@ -43,15 +47,20 @@ class Page
 					</form>
 				</div>
 				<div class="col">
-					
-					<h3><?php echo $get_sources[$rates['source']]['name']; ?></h3>
+				
+					<h3><?php echo (isset($rates['source'])) ? $get_sources[$rates['source']]['name'] : __('No data received', Plugin::PLUGIN_SLUG); ?></h3>
+			
 					<div class="row">
 						<div class="col p-0">
 							<b><?php _e('Rate (today)', Plugin::PLUGIN_SLUG); ?></b>
+							<?php if (isset($rates['data'][0])) { ?>
 							<ul>
 								<li><b><?php _e('Check Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][0]['put_time'], 'Y-m-d H:i:s'); ?></li>
 								<li><b><?php _e('Local Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][0]['local_time'], 'Y-m-d H:i:s'); ?></li>
 							</ul>
+							<?php } else { ?>
+							<p><?php _e('Rate no data.', Plugin::PLUGIN_SLUG); ?></p>
+							<?php } ?>
 						</div>
 						<div class="col p-0">
 							<b><?php _e('Previous close (yesterday)', Plugin::PLUGIN_SLUG); ?></b>
@@ -65,9 +74,18 @@ class Page
 							<?php } ?>
 						</div>
 					</div>
+					<?php if (!isset($rates['source'])) { ?>
+						<h2><?php _e('No data received. Press the "Save" button to force an update of the data.', Plugin::PLUGIN_SLUG); ?></h2>
+						<p class="m-0"><b><?php _e('ERROR', Plugin::PLUGIN_SLUG); ?>:</b>
+							<?php echo $get_sources_data['error']; ?>
+						</p>
+					<?php } else { ?>
 					<p class="m-0"><b><?php _e('If you want to force an update, click on the button "Save".', Plugin::PLUGIN_SLUG); ?></b></p>
+					<?php } ?>
+				
 				</div>
 			</div>
+			<?php if ($rates) { ?>
 			<hr>
 			<div class="row">
 				<div class="col">
@@ -81,10 +99,12 @@ class Page
 					<?php Sections\CurrencyTable::init(); ?>
 				</div>
 			</div>
+			<?php } ?>
 			<hr>
 			<div class="row">
+				<?php if ($rates) { ?>
 				<div class="col p-0">
-			<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
+				<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
 					<form  id="shortcode-generator-badge">
 					<table class="form-table">
 						<tbody>
@@ -186,7 +206,9 @@ class Page
 					</form>
 					<hr>
 					<textarea id="shortcode-generator-badge-textarea" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+					
 				</div>
+				<?php } ?>
 				<div class="col p-0">
 					<h2><?php _e('Help', Plugin::PLUGIN_SLUG); ?></h2>
 					<p><?php _e('This Plugin includes two widgets and one shortcode.', Plugin::PLUGIN_SLUG); ?></p>
@@ -211,32 +233,29 @@ class Page
 					<h3><?php _e('How to install widget?', Plugin::PLUGIN_SLUG); ?></h3>
 					<ol>
 						<li><?php _e('Go to Appearance &rarr; Widgets;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Legacy Widget &rarr; Choose our Widget;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Legacy Widget &rarr; Choose Widget;', Plugin::PLUGIN_SLUG); ?></li>
 						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
 					</ol>
 					<h3><?php _e('How to install shortcode?', Plugin::PLUGIN_SLUG); ?></h3>
 					<ol>
 						<li><?php _e('Generate shortcode from this page;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Copy shortcode;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Paste anywhere you like;', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php _e('Copy and Paste shortcode anywhere you like;', Plugin::PLUGIN_SLUG); ?></li>
 						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
 					</ol>
 					<hr>
-
 					<div>
 						<div>
 							<img width="96" height="96" style="float:left;padding-right:15px" src="<?php echo plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path); ?>assets/img/bank.svg" />
 						</div>
 						<div>
 						<ul>
-                <li>&#x2753; Feel free, write if you will have any questions: <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
-                <li>&#x1F4B0; Your might like it: <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
-                <li>&#x1F4B9; Supported by: <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
-                <li>&#x1F4B5; Fiat money: <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
-            </ul>
+							<li>&#x2753; Feel free, write if you will have any questions: <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
+							<li>&#x1F4B0; Your might like it: <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
+							<li>&#x1F4B9; Supported by: <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
+							<li>&#x1F4B5; Fiat money: <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
+						</ul>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>

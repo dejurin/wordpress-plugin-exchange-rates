@@ -33,3 +33,5 @@ $GLOBALS['dejurin_exchange_rates']->run();
  * Activation process. Running only once.
  */
 register_activation_hook(__FILE__, ['\Dejurin\ExchangeRates\Activation', 'run']);
+register_deactivation_hook(__FILE__, ['\Dejurin\ExchangeRates\Deactivation', 'run']);
+register_uninstall_hook(__FILE__, ['\Dejurin\ExchangeRates\Unistall', 'run']);

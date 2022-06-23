@@ -30,17 +30,16 @@ class Source
         $settings = wp_parse_args($settings, Settings::get_defaults());
 
         $get_sources = Sources::get_list();
-
         $data_cources = DataSources::getInstance();
         $sources = $data_cources->get_sources_data(); ?>
 
-		<select id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
-        <?php foreach ($sources['data'] as $value) {
+		<select id="<?php echo Plugin::PLUGIN_SLUG; ?> - <?php echo $args['id']; ?>" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
+        <?php foreach ($get_sources as $key => $value) {
             printf(
             '<option value="%1$s" %2$s>%3$s</option>',
-            esc_attr($value['source']),
-            selected($value['source'], $settings[$args['id']], false),
-            (isset($get_sources[$value['source']])) ? $get_sources[$value['source']]['name'] : esc_html($value['source'])
+            esc_attr($key),
+            selected($key, $settings[$args['id']], false),
+            esc_html($value['name'])
         );
         } ?>
 		</select>

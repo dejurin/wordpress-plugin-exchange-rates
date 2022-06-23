@@ -28,7 +28,7 @@ class Format
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
 
-		<select id="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
+		<select id="<?php echo Plugin::PLUGIN_SLUG; ?> - <?php echo $args['id']; ?>" name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]">
         <?php foreach (CurrencyFormat::get_list() as $key => $value) {
             printf(
             '<option value="%1$s" %2$s>%3$s</option>',
