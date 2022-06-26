@@ -28,14 +28,14 @@ class Decimals
         $settings = wp_parse_args($settings, Settings::get_defaults()); ?>
 
         <p><input 
-        id="<?php echo Plugin::PLUGIN_SLUG; ?> - <?php echo $args['id']; ?>"
+        id="<?php echo Plugin::PLUGIN_SLUG,'-',$args['id']; ?>"
         name="<?php echo Plugin::PLUGIN_SLUG; ?>[<?php echo $args['id']; ?>]"
         type="range"
         step="1"
         min="0"
         max="7"
         value="<?php echo $settings[$args['id']]; ?>">
-        <span id="<?php echo Plugin::PLUGIN_SLUG; ?> - <?php echo $args['id']; ?>-show"><?php echo $settings[$args['id']]; ?></span></p>
+        <span id="<?php echo Plugin::PLUGIN_SLUG,'-',$args['id']; ?>-show"><?php echo $settings[$args['id']]; ?></span></p>
 
 
 		<?php

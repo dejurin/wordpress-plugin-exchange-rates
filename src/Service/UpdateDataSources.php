@@ -26,16 +26,15 @@ class UpdateDataSources
         self::$req_rates = $req->data();
 
         $settings['rates_available'] = self::$req_rates['status'];
-        $result = update_option(Settings::$option_name, $settings);
 
         if (self::$req_rates['status']) {
             update_option(self::$rates_option_name, self::$req_rates['data']);
             $settings['base_currency'] = self::$req_rates['data']['base'];
             $settings['update_timestamp'] = time();
-
-            return true;
         }
 
-        return false;
+        $result = update_option(Settings::$option_name, $settings);
+
+        return self::$req_rates['status'];
     }
 }

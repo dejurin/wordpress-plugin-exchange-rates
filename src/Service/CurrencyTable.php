@@ -34,7 +34,7 @@ class CurrencyTable
                 $heading[1] = $this->parameters['table_headers_code'];
             }
 
-            $heading[2]['data'] = $this->parameters['table_headers_mid'].($this->parameters['inverse'] ? ' ('.$this->parameters['base_currency'].')' : '');
+            $heading[2]['data'] = $this->parameters['table_headers_mid']; // .($this->parameters['inverse'] ? '' : ' ('.$this->parameters['base_currency'].')')
             $heading[2]['class'] = 'text-right';
 
             if ($this->parameters['table_headers_previous_close_show']) {
@@ -117,7 +117,8 @@ class CurrencyTable
                     $output_data[1] = ['data' => $currency_code];
                 }
 
-                $symbol = CurrencySymbols::get_list($currency_code);
+
+                $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $currency_code : $this->parameters['base_currency']);
                 $pre = $symbol;
                 $after = '';
 

@@ -22,6 +22,7 @@ class Badge
         'decimals' => 4,
         'flag_type' => 'emoji',
         'color' => '#eeeeee',
+        'after' => false,
     ];
 
     public const BADGE_SLUG = 'shortcode-'.Plugin::PLUGIN_SLUG.'-badge';
@@ -80,25 +81,32 @@ class Badge
             $get_currencies = Currencies::get_list();
 
             if (is_array($currency_list) && !empty($currency_list)) {
-                $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after']);
+                $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after', 'color', 'flag_type']);
 
                 foreach ($currency_list as $code) {
                     $currency = new Currency($parameters, $code);
                     if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
-                        $symbol = CurrencySymbols::get_list($code);
+                        $symbol = CurrencySymbols::get_list($parameters['inverse'] ? $code : $parameters['base_currency']);
+                        $pre = $symbol;
+                        $after = '';
 
-                        $base_currency = ($attr['base_show']) ? ((isset($parameters['code'])) ? $attr['base_currency'] : $get_currencies[$attr['base_currency']]['name']).'/' : '';
+                        if ($parameters['after']) {
+                            $after = $pre;
+                            $pre = '';
+                        }
+
+                        $base_currency = ($parameters['base_show']) ? ((isset($parameters['code'])) ? $parameters['base_currency'] : $get_currencies[$parameters['base_currency']]['name']).'/' : '';
                         $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.$base_currency.'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s%7$s</span></div>';
                         $result .= sprintf(
                                 $template,
-                                $attr['color'],
+                                $parameters['color'],
                                 $hsl->lightness > 200 ? '#333333' : '#ffffff',
-                                $this->img($attr['flag_type'], $get_currency),
+                                $this->img($parameters['flag_type'], $get_currency),
                                 (isset($parameters['code']) ? $code : $get_currency['name']),
-                                (isset($parameters['symbol']) && !isset($parameters['after']) ? $symbol : ''),
+                                $pre,
                                 $currency->get_rate_format(0, true, true),
-                                (isset($parameters['symbol']) && isset($parameters['after']) ? $symbol : ''),
+                                $after,
                             );
                         $err = false;
                     }
@@ -108,7 +116,7 @@ class Badge
 
         if ($currency) {
             $caption = Dev::caption(
-                $attr,
+                $parameters,
                 $currency->get_date(),
                 time(),
                 self::BADGE_SLUG,
