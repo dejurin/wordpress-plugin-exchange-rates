@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
 		if (typeof ts == 'undefined') ts = ',';
 		if (typeof dp == 'undefined') dp = '.';
 
-		n = Number((r.toFixed(p) * n).toFixed(p));
+		n = Number((r * n).toFixed(p));
 		n = n.toString().split('.');
 
 		for (var iLen = n[0].length, i = iLen ? iLen % 3 || 3 : 0, j = 0; i <= iLen; i += 3) {
@@ -43,6 +43,8 @@ jQuery(document).ready(function() {
 	jQuery('div.widget-exchange-rates-currency-table input').on('input', function(event) {
 		var amount = parseFloat(jQuery(this).val());
 		var settings = jQuery('div.widget-exchange-rates-currency-table table');
+
+		amount = (amount > 0) ? amount : 1;
 
 		jQuery(this).data('amount', amount);
 		jQuery('div.widget-exchange-rates-currency-table table tbody td[data-rate]').each(function(index, value) {
@@ -113,6 +115,8 @@ jQuery(document).ready(function() {
 				after = pre;
 				pre = '';
 			}
+
+			console.log(rate);
 
 			result.html(
 				pre + formatNumber(

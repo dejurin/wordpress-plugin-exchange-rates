@@ -118,7 +118,7 @@ class CurrencyTable
                 }
 
 
-                $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $currency_code : $this->parameters['base_currency']);
+                $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
                 $pre = $symbol;
                 $after = '';
 
