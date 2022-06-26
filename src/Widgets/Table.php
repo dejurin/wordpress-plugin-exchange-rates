@@ -93,10 +93,11 @@ class Table extends \WP_Widget
         $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
         $instance_to_save['border_hori'] = (bool) sanitize_text_field($instance['border_hori']);
         $instance_to_save['border_vert'] = (bool) sanitize_text_field($instance['border_vert']);
-        $instance_to_save['base_show'] = ((bool) sanitize_text_field($instance['base_show']) && !isset($new_instance['base_show'])) ? false : true;
-        $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
+        $instance_to_save['base_show'] = (bool) sanitize_text_field($instance['base_show']) && isset($new_instance['base_show']);
+        $instance_to_save['border'] = (bool) sanitize_text_field($instance['border']) && isset($new_instance['border']);
+        
         // Table headers
-        $instance_to_save['table_headers_show'] = ((bool) sanitize_text_field($instance['table_headers_show']) && !isset($new_instance['table_headers_show'])) ? false : true;
+        $instance_to_save['table_headers_show'] = (bool) sanitize_text_field($instance['table_headers_show']) && isset($new_instance['table_headers_show']);
         $instance_to_save['table_headers_name'] = (string) sanitize_text_field($instance['table_headers_name']);
         $instance_to_save['table_headers_code'] = (string) sanitize_text_field($instance['table_headers_code']);
         $instance_to_save['table_headers_mid'] = (string) sanitize_text_field($instance['table_headers_mid']);

@@ -12,7 +12,7 @@ class Converter extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            Plugin::PLUGIN_SLUG.'_currency-converter',
+            Plugin::PLUGIN_SLUG . '_currency-converter',
             "All Banks \u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'exchange-rates',
@@ -54,8 +54,8 @@ class Converter extends \WP_Widget
         $instance_to_save['quote_currency'] = (string) strtoupper(sanitize_text_field($instance['quote_currency']));
         $instance_to_save['code'] = (bool) sanitize_text_field($instance['code']);
         $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
-        $instance_to_save['symbol'] = ((bool) sanitize_text_field($instance['symbol']) && !isset($new_instance['symbol'])) ? false : true;
-        $instance_to_save['border'] = ((bool) sanitize_text_field($instance['border']) && !isset($new_instance['border'])) ? false : true;
+        $instance_to_save['symbol'] = (bool) sanitize_text_field($instance['symbol']) && isset($new_instance['symbol']);
+        $instance_to_save['border'] = (bool) sanitize_text_field($instance['border']) && isset($new_instance['border']);
 
         return $instance_to_save;
     }
@@ -135,7 +135,7 @@ class Converter extends \WP_Widget
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-            <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
+            <?php $get_list = array_slice(Checkbox::get_list(), 6, 4);
         foreach ($get_list as $key => $value) {
             echo sprintf(
                     '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
