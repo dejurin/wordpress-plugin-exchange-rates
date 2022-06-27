@@ -149,7 +149,7 @@
     background-color: var(--bs-light);
     padding: 8px !important;
     border: var(--bs-gray-400) solid 1px;
-    display: none !important;
+    display: none;
     border-radius: 5px !important;
     z-index: 99999 !important;
     text-align: left !important;
@@ -220,7 +220,7 @@
 }
 .exchange-rates .widget-exchange-rates-currency-converter input{
     display: inline-block!important;
-    margin-right: 4px;
+    margin-right: 8px;
 }
 .exchange-rates .widget-exchange-rates-currency-converter input:hover,
 .exchange-rates .widget-exchange-rates-currency-converter select:hover {

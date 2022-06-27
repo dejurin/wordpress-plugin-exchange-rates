@@ -100,7 +100,8 @@ class CurrencyTable
                         $w,
                         $h,
                         sprintf($img_src_template, strtolower($get_currencies[$currency_code]['flag'])),
-                        $currency_title);
+                        $currency_title
+                    );
                 } else {
                     $output_data[0]['data'] .= sprintf($template, '', $currency_title);
                 }
@@ -117,8 +118,11 @@ class CurrencyTable
                     $output_data[1] = ['data' => $currency_code];
                 }
 
-
-                $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
+                if ($this->settings['source_id'] === 'currencyrate') {
+                    $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
+                } else {
+                    $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $currency_code : $this->parameters['base_currency']);
+                }
                 $pre = $symbol;
                 $after = '';
 

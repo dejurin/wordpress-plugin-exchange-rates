@@ -117,87 +117,87 @@ class Currencies
             'BTC' => [
                 'flag' => 'BTC',
                 'name' => __('Bitcoin', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'ETH' => [
                 'flag' => 'ETH',
                 'name' => __('Ethereum', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'LTC' => [
                 'flag' => 'LTC',
                 'name' => __('Litecoin', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'DOGE' => [
                 'flag' => 'DOGE',
                 'name' => __('Doge', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'DASH' => [
                 'flag' => 'DASH',
                 'name' => __('Dash', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'NXT' => [
                 'flag' => 'NXT',
                 'name' => __('NXT', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'STR' => [
                 'flag' => 'STR',
                 'name' => __('STR', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'XRP' => [
                 'flag' => 'XRP',
                 'name' => __('Ripple', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'XMR' => [
                 'flag' => 'XMR',
                 'name' => __('Monero', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'NMC' => [
                 'flag' => 'NMC',
                 'name' => __('NMC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'PPC' => [
                 'flag' => 'PPC',
                 'name' => __('PPC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'NVC' => [
                 'flag' => 'NVC',
                 'name' => __('NVC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'XPM' => [
                 'flag' => 'XPM',
                 'name' => __('XPM', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'EAC' => [
                 'flag' => 'EAC',
                 'name' => __('EAC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'VTC' => [
                 'flag' => 'VTC',
                 'name' => __('VTC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'EMC' => [
                 'flag' => 'EMC',
                 'name' => __('EMC', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'FCT' => [
                 'flag' => 'FCT',
                 'name' => __('FCT', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'BTN' => [
                 'flag' => 'BT',
@@ -217,7 +217,7 @@ class Currencies
             'BTS' => [
                 'flag' => 'BTS',
                 'name' => __('BitShares', Plugin::PLUGIN_SLUG),
-                'region' => __('Cryptocurrency', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
             'BYR' => [
                 'flag' => 'BY',
@@ -989,6 +989,12 @@ class Currencies
                 'name' => __('W-African Unit of Account', Plugin::PLUGIN_SLUG),
                 'region' => __('ECOWAS', Plugin::PLUGIN_SLUG),
             ],
+            'BNB' => [
+                'flag' => 'BNB',
+                'name' => __('Binance Coin', Plugin::PLUGIN_SLUG),
+                'region' => __('Crypto', Plugin::PLUGIN_SLUG),
+            ],
+            
         ];
     }
 }

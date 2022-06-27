@@ -78,9 +78,9 @@ class Currency
             $base_rate = $this->rates['data'][$index]['rates'][$this->base_currency];
 
             if ($this->base_currency_source === $this->base_currency) {
-                return ($this->parameters['inverse']) ? $currency_rate : $base_rate / $currency_rate;
+                return ($this->parameters['inverse']) ? $base_rate / $currency_rate : $currency_rate;
             } else {
-                return ($this->parameters['inverse']) ? $currency_rate * 1 / $base_rate : (1 / $currency_rate) * $base_rate;
+                return ($this->parameters['inverse']) ? (1 / $currency_rate) * $base_rate : $currency_rate * 1 / $base_rate;
             }
         } else {
             return 0;

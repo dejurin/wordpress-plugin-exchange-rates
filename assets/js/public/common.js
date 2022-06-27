@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
                                                                     +'<path d="M8 13V5.825L5.425 8.4L4 7L9 2L14 7L12.575 8.4L10 5.825V13ZM15 22 10 17 11.425 15.6 14 18.175V11H16V18.175L18.575 15.6L20 17Z"/>'
                                                                     +'</svg>').appendTo(div);
 
-		jQuery.each([el.data('base-currency'), el.data('quote-currency')], function(_i, s) {
+		jQuery.each([el.data('from'), el.data('to')], function(_i, s) {
 			var sel = jQuery('<select>');
 			sel.appendTo(el);
 			jQuery.each(el.data('currencies'), function(code, data) {
@@ -94,21 +94,25 @@ jQuery(document).ready(function() {
 		});
 
 		jQuery(swap).on('click', function(e) {
-			var base = jQuery(el.find('select')[0]);
-			var quote = jQuery(el.find('select')[1]);
-			var _base = base.find('option:selected').val()
-			var _quote = quote.find('option:selected').val()
-			base.val(_quote).change();
-			quote.val(_base).change();
+			var from = jQuery(el.find('select')[0]);
+			var to = jQuery(el.find('select')[1]);
+			var _from = from.find('option:selected').val()
+			var _to = to.find('option:selected').val()
+			from.val(_to).change();
+			to.val(_from).change();
 			input.trigger("input");
 		});
 
 		jQuery(input).on('input', function() {
+			console.log('---')
 			var amount = jQuery(this).val();
-			var base = jQuery(el.find('select')[0]).find('option:selected').val();
-			var quote = jQuery(el.find('select')[1]).find('option:selected').val();
-			var rate = (rates[base]['rate'] / rates[quote]['rate']);
-			var pre = (el.data('symbol')) ? rates[quote]['symbol'] : '';
+			var base_currency = el.data('base-currency');
+
+			var from = jQuery(el.find('select')[0]).find('option:selected').val();
+			var to = jQuery(el.find('select')[1]).find('option:selected').val();
+			var rate = rates[from]['rate'] * (1 / rates[to]['rate']);
+
+			var pre = (el.data('symbol')) ? rates[to]['symbol'] : '';
 			var after = '';
 
 			if (el.data('after')) {
@@ -116,7 +120,6 @@ jQuery(document).ready(function() {
 				pre = '';
 			}
 
-			console.log(rate);
 
 			result.html(
 				pre + formatNumber(

@@ -87,7 +87,13 @@ class Badge
                     $currency = new Currency($parameters, $code);
                     if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
-                        $symbol = CurrencySymbols::get_list($parameters['inverse'] ? $code : $parameters['base_currency']);
+
+                        if ($this->settings['source_id'] === 'currencyrate') {
+                            $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $parameters['base_currency'] : $code);
+                        } else {
+                            $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $code : $parameters['base_currency']);
+                        }
+                        
                         $pre = $symbol;
                         $after = '';
 

@@ -20,7 +20,10 @@ class CurrencyConverter
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
 
-        $currency = new Currency($this->parameters, $this->parameters['quote_currency']);
+        $this->parameters['base_currency'] = $this->parameters['from'];
+        $this->parameters['quote_currency'] = $this->parameters['to'];
+
+        $currency = new Currency($this->parameters, $this->parameters['to']);
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
         $this->parameters['decimals'] = $this->settings['decimals'];
@@ -28,9 +31,12 @@ class CurrencyConverter
 
         $get_currencies = Currencies::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
-        $base_currency_list = array_keys($rates['data'][0]['rates']);
+        $currency_list = array_keys($rates['data'][0]['rates']);
         $arr = [];
         $data_attr = '';
+        
+        unset($this->parameters['quote_currency']);
+        $this->parameters['base_currency'] = $this->settings['base_currency'];
 
         foreach ($this->parameters as $key => $value) {
             if (!empty($value)) {
@@ -45,13 +51,16 @@ class CurrencyConverter
                 .'data-currencies='
                 ."'";
 
-        foreach ($base_currency_list as $value) {
+        foreach ($currency_list as $value) {
             $arr[$value] = [
                 'name' => $get_currencies[$value]['name'],
-                'rate' => $rates['data'][0]['rates'][$value],
+                'rate' => ($this->settings['source_id'] === 'currencyrate') ? 1 / $rates['data'][0]['rates'][$value] : $rates['data'][0]['rates'][$value],
                 'symbol' => CurrencySymbols::get_list($value),
             ];
         }
+
+        $this->parameters['base_currency'] = $this->parameters['from'];
+        $this->parameters['quote_currency'] = $this->parameters['to'];
 
         $html .= json_encode($arr);
         $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG);
