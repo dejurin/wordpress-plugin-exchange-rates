@@ -12,7 +12,7 @@ class Converter extends \WP_Widget
     public function __construct()
     {
         parent::__construct(
-            Plugin::PLUGIN_SLUG . '_currency-converter',
+            Plugin::PLUGIN_SLUG.'_currency-converter',
             "All Banks \u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
                 'classname' => 'exchange-rates',
@@ -65,11 +65,10 @@ class Converter extends \WP_Widget
         $get_currencies = Currencies::get_list();
         $instance = $this->_merge_instance_with_default_instance($instance);
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
-        $currency_list = array_keys($rates['data'][0]['rates']); 
+        $currency_list = array_keys($rates['data'][0]['rates']);
         $first_element = end($currency_list);
         array_pop($currency_list);
-        array_unshift($currency_list, $first_element);
-        ?>
+        array_unshift($currency_list, $first_element); ?>
 
         <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>

@@ -15,12 +15,14 @@ class Currency
     private $base_currency;
     private $currency;
     private $rates = null;
+    private $reverse = false;
     private $zero_symbol = '&ndash;';
 
     public function __construct($parameters, $currency)
     {
         $this->settings = get_option(Settings::$option_name, []);
         $this->parameters = $parameters;
+        $this->reverse = isset($parameters['reverse']) ? $parameters['reverse'] : $this->reverse;
         $this->set_currencies($parameters['base_currency'], $currency);
     }
 
@@ -77,10 +79,15 @@ class Currency
             $currency_rate = $this->rates['data'][$index]['rates'][$this->currency];
             $base_rate = $this->rates['data'][$index]['rates'][$this->base_currency];
 
+            if ($this->reverse) {
+                $currency_rate = 1 / $currency_rate;
+                $base_rate = 1 / $base_rate;
+            }
+
             if ($this->base_currency_source === $this->base_currency) {
-                return ($this->parameters['inverse']) ? $base_rate / $currency_rate : $currency_rate;
+                return (!$this->parameters['inverse']) ? $base_rate / $currency_rate : $currency_rate;
             } else {
-                return ($this->parameters['inverse']) ? (1 / $currency_rate) * $base_rate : $currency_rate * 1 / $base_rate;
+                return (!$this->parameters['inverse']) ? (1 / $currency_rate) * $base_rate : $currency_rate * 1 / $base_rate;
             }
         } else {
             return 0;

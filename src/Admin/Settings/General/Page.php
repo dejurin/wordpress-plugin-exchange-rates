@@ -24,7 +24,8 @@ class Page
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $settings = get_option(Settings::$option_name, []);
         $settings = wp_parse_args($settings, Settings::get_defaults());
-        $get_sources_data = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data(); ?>
+        $get_sources_data = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data();
+        $currency_list = array_keys($rates['data'][0]['rates']); ?>
 		<div class="wrap">
 			
 			<h1>
@@ -131,9 +132,8 @@ class Page
 								<td>
 									<select id="shortcode-badge-base_currency" name="base_currency">
 										<?php
-                                            $base_currency_list = array_keys($rates['data'][0]['rates']);
 
-        foreach ($base_currency_list as $value) {
+        foreach ($currency_list as $value) {
             printf(
                                                     '<option value="%s"%s>%s</option>',
                                                     esc_attr($value),
@@ -150,7 +150,7 @@ class Page
 								</th>
 								<td>
 									<select multiple="multiple" class="resize-both" size="10" id="shortcode-badge-currency_list" name="currency_list">
-										<?php foreach ($base_currency_list as $value) {
+										<?php foreach ($currency_list as $value) {
             printf(
                                                 '<option value="%s"%s>%s</option>',
                                                 esc_attr($value),
@@ -190,7 +190,7 @@ class Page
 									<label><?php _e('Options', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
-									<?php $checkbox = array_slice(Checkbox::get_list(), 5, 5);
+									<?php $checkbox = array_slice(Checkbox::get_list(), 4, 5);
         foreach ($checkbox as $key => $value) {
             echo sprintf(
                                             '<p><input type="checkbox" id="shortcode-badge-%1$s" name="%1$s"><label for="shortcode-badge-%1$s">%2$s</label></p>',
@@ -210,7 +210,7 @@ class Page
 				</div>
 				<?php } ?>
 				<div class="col p-0">
-					<h2><?php _e('Help', Plugin::PLUGIN_SLUG); ?></h2>
+					<h1><?php _e('Help', Plugin::PLUGIN_SLUG); ?></h1>
 					<p><?php _e('This Plugin includes two widgets and one shortcode.', Plugin::PLUGIN_SLUG); ?></p>
 
 					<h3><?php _e('Widgets', Plugin::PLUGIN_SLUG); ?></h3>

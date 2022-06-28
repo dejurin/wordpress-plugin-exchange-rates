@@ -95,7 +95,7 @@ class Table extends \WP_Widget
         $instance_to_save['border_vert'] = (bool) sanitize_text_field($instance['border_vert']);
         $instance_to_save['base_show'] = (bool) sanitize_text_field($instance['base_show']) && isset($new_instance['base_show']);
         $instance_to_save['border'] = (bool) sanitize_text_field($instance['border']) && isset($new_instance['border']);
-        
+
         // Table headers
         $instance_to_save['table_headers_show'] = (bool) sanitize_text_field($instance['table_headers_show']) && isset($new_instance['table_headers_show']);
         $instance_to_save['table_headers_name'] = (string) sanitize_text_field($instance['table_headers_name']);
@@ -114,12 +114,11 @@ class Table extends \WP_Widget
     {
         $get_currencies = Currencies::get_list();
         $instance = $this->_merge_instance_with_default_instance($instance);
-        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates'); 
-        $currency_list = array_keys($rates['data'][0]['rates']); 
+        $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
+        $currency_list = array_keys($rates['data'][0]['rates']);
         $first_element = end($currency_list);
         array_pop($currency_list);
-        array_unshift($currency_list, $first_element);
-        ?>
+        array_unshift($currency_list, $first_element); ?>
     
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
@@ -137,7 +136,6 @@ class Table extends \WP_Widget
 		<p><label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
 		<select id="<?php echo $this->get_field_id('base_currency'); ?>" name="<?php echo $this->get_field_name('base_currency'); ?>">
 			<?php
-
 
         foreach ($currency_list as $value) {
             printf(

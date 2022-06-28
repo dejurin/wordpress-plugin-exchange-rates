@@ -32,9 +32,12 @@ class CurrencyConverter
         $get_currencies = Currencies::get_list();
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $currency_list = array_keys($rates['data'][0]['rates']);
+        $first_element = end($currency_list);
+        array_pop($currency_list);
+        array_unshift($currency_list, $first_element);
         $arr = [];
         $data_attr = '';
-        
+
         unset($this->parameters['quote_currency']);
         $this->parameters['base_currency'] = $this->settings['base_currency'];
 
@@ -54,7 +57,7 @@ class CurrencyConverter
         foreach ($currency_list as $value) {
             $arr[$value] = [
                 'name' => $get_currencies[$value]['name'],
-                'rate' => ($this->settings['source_id'] === 'currencyrate') ? 1 / $rates['data'][0]['rates'][$value] : $rates['data'][0]['rates'][$value],
+                'rate' => ('currencyrate' === $this->settings['source_id']) ? 1 / $rates['data'][0]['rates'][$value] : $rates['data'][0]['rates'][$value],
                 'symbol' => CurrencySymbols::get_list($value),
             ];
         }

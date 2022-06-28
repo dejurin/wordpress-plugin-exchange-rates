@@ -70,6 +70,7 @@ class CurrencyTable
         $img_src_template = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$this->parameters['flag_type'].'/%1$s.svg';
 
         foreach ($this->parameters['currency_list'] as $currency_code) {
+            $this->parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
             $currency = new Currency($this->parameters, $currency_code);
             if ($currency->is_available()) {
                 $currency_name = $get_currencies[$currency_code]['name'];
@@ -118,11 +119,7 @@ class CurrencyTable
                     $output_data[1] = ['data' => $currency_code];
                 }
 
-                if ($this->settings['source_id'] === 'currencyrate') {
-                    $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
-                } else {
-                    $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $currency_code : $this->parameters['base_currency']);
-                }
+                $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
                 $pre = $symbol;
                 $after = '';
 

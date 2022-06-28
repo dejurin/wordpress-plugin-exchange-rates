@@ -62,6 +62,7 @@ class Sources
             'ng-cbn' => ['name' => __('Central Bank of Nigeria', Plugin::PLUGIN_SLUG), 'country' => 'ng', 'source_url' => 'https://www.cbn.gov.ng/', 'short' => 'Nigeria Bank'],
             'kh-nbc' => ['name' => __('Bank of Cambodia', Plugin::PLUGIN_SLUG), 'country' => 'kh', 'source_url' => 'https://www.nbc.org.kh/', 'short' => 'Cambodia Bank'],
             'sg-mas' => ['name' => __('Monetary Authority of Singapore', Plugin::PLUGIN_SLUG), 'country' => 'sg', 'source_url' => 'https://www.mas.gov.sg/', 'short' => 'MAS SG'],
+            'al-boa' => ['name' => __('Bank of Albania', Plugin::PLUGIN_SLUG), 'country' => 'al', 'source_url' => 'https://www.bankofalbania.org/', 'short' => 'Albania Bank'],
         ];
     }
 }

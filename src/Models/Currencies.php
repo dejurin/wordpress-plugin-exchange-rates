@@ -994,7 +994,6 @@ class Currencies
                 'name' => __('Binance Coin', Plugin::PLUGIN_SLUG),
                 'region' => __('Crypto', Plugin::PLUGIN_SLUG),
             ],
-            
         ];
     }
 }

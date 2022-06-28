@@ -18,7 +18,7 @@ class SourceTable
     {
         $table = new PHPTableGenerate();
         $table->set_template([
-            'table_open' => '<table data-rows="3" data-display="hide" id="exchange-rates-source-table-1" class="exchange-rates-widgets-table widefat striped">',
+            'table_open' => '<table data-rows="5" data-display="hide" id="exchange-rates-source-table-1" class="exchange-rates-widgets-table widefat striped">',
         ]);
         $table->set_heading([
             ['data' => '', 'width' => '1%'],

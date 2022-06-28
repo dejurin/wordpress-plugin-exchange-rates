@@ -7,12 +7,16 @@ use Dejurin\ExchangeRates\Models\Currency;
 use Dejurin\ExchangeRates\Models\CurrencySymbols;
 use Dejurin\ExchangeRates\Models\Dev;
 use Dejurin\ExchangeRates\Models\Emoji;
+use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\Color;
 use Dejurin\ExchangeRates\Service\Tools;
 
 class Badge
 {
+    public $parameters;
+    public $settings;
+
     public $default_attr = [
         'amount' => 1,
         'base_currency' => 'USD',
@@ -23,6 +27,7 @@ class Badge
         'flag_type' => 'emoji',
         'color' => '#eeeeee',
         'after' => false,
+        'symbol' => false,
     ];
 
     public const BADGE_SLUG = 'shortcode-'.Plugin::PLUGIN_SLUG.'-badge';
@@ -64,6 +69,9 @@ class Badge
         $result = '';
         $err = true;
 
+        $settings = get_option(Settings::$option_name, []);
+        $this->settings = wp_parse_args($settings, Settings::get_defaults());
+
         if (is_array($attr)) {
             $attr = array_merge($this->default_attr, $attr);
         } else {
@@ -81,19 +89,16 @@ class Badge
             $get_currencies = Currencies::get_list();
 
             if (is_array($currency_list) && !empty($currency_list)) {
-                $parameters = Tools::filter_keys_allowed_list($attr, ['base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after', 'color', 'flag_type']);
+                $parameters = Tools::filter_keys_allowed_list($attr, ['source_id', 'base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after', 'color', 'flag_type']);
+                $parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
 
                 foreach ($currency_list as $code) {
                     $currency = new Currency($parameters, $code);
                     if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
 
-                        if ($this->settings['source_id'] === 'currencyrate') {
-                            $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $parameters['base_currency'] : $code);
-                        } else {
-                            $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $code : $parameters['base_currency']);
-                        }
-                        
+                        $symbol = CurrencySymbols::get_list($parameters['inverse'] ? $parameters['base_currency'] : $code);
+
                         $pre = $symbol;
                         $after = '';
 

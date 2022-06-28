@@ -123,6 +123,7 @@ class CurrencySymbols
             'VND' => '₫',
             'YER' => '﷼',
             'ZWD' => 'Z$',
+            'GEL' => 'ლ',
         ];
         if (!empty($code) && isset($list[$code])) {
             $symbol = $list[$code];
