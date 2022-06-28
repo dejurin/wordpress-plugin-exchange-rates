@@ -78,7 +78,7 @@
 .exchange-rates.widget-exchange-rates-currency-table table td,
 .exchange-rates.widget-exchange-rates-currency-table table th,
 .exchange-rates.widget-exchange-rates-currency-table table caption {
-	padding: 8px !important;
+	padding: 4px !important;
 	border: none !important;
 }
 

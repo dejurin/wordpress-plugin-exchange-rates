@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
     /* Caption - end */
     
 	/* Currency Table - start */
-	jQuery('div.widget-exchange-rates-currency-table input').on('click', function(event) {
+	jQuery('.widget-exchange-rates-currency-table input').on('click', function(event) {
 		var amount = jQuery(this).val();
 		jQuery(this).data('amount', amount).val('');
 	}).on('blur', function(event) {
@@ -40,14 +40,14 @@ jQuery(document).ready(function() {
 		jQuery(this).val(amount);
 	});
 
-	jQuery('div.widget-exchange-rates-currency-table input').on('input', function(event) {
+	jQuery('.widget-exchange-rates-currency-table input').on('input', function(event) {
 		var amount = parseFloat(jQuery(this).val());
-		var settings = jQuery('div.widget-exchange-rates-currency-table table');
+		var settings = jQuery('.widget-exchange-rates-currency-table table');
 
 		amount = (amount > 0) ? amount : 1;
 
 		jQuery(this).data('amount', amount);
-		jQuery('div.widget-exchange-rates-currency-table table tbody td[data-rate]').each(function(index, value) {
+		jQuery('.widget-exchange-rates-currency-table table tbody td[data-rate]').each(function(index, value) {
 			var rate = jQuery(value).data('rate');
 			var pre = jQuery(value).data('symbol');
 			var after = '';
@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
 	/* Currency Table - end */
 
 	/* Widget Currency Converter - start */
-	jQuery('div.widget-exchange-rates-currency-converter').each(function(k, v) {
+	jQuery('.widget-exchange-rates-currency-converter').each(function(k, v) {
 		var el = jQuery(this).html('');
 		var rates = el.data('currencies');
 
@@ -104,14 +104,12 @@ jQuery(document).ready(function() {
 		});
 
 		jQuery(input).on('input', function() {
-			console.log('---')
 			var amount = jQuery(this).val();
 			var base_currency = el.data('base-currency');
 
 			var from = jQuery(el.find('select')[0]).find('option:selected').val();
 			var to = jQuery(el.find('select')[1]).find('option:selected').val();
 			var rate = rates[from]['rate'] * (1 / rates[to]['rate']);
-
 			var pre = (el.data('symbol')) ? rates[to]['symbol'] : '';
 			var after = '';
 
