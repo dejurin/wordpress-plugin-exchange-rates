@@ -240,15 +240,15 @@ class CurrencyTable
         ];
 
         $this->table->set_template($template);
-        $this->table->set_caption(Dev::caption(
+
+        $html = $this->table->generate();
+        $html .= Dev::caption(
             $this->parameters,
             $currency->get_date(),
             $widget_number,
             self::WIDGET_SLUG,
             $this->settings['source_id']
-        ));
-
-        $html = $this->table->generate();
+        );
 
         return $html;
     }

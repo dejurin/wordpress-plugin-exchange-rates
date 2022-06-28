@@ -16,6 +16,9 @@
   border: none;
   padding: 4px;
 }
+.editor-styles-wrapper label {
+    margin: 0;
+}
 
 div.table-responsive {
 	overflow-x: auto;
