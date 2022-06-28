@@ -138,7 +138,7 @@ class Converter extends \WP_Widget
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-            <?php $get_list = array_slice(Checkbox::get_list(), 6, 4);
+            <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
         foreach ($get_list as $key => $value) {
             echo sprintf(
                     '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',

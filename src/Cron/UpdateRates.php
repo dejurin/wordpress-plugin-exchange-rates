@@ -10,9 +10,6 @@ class UpdateRates
 
     public static function register_task()
     {
-        // clear old
-        wp_clear_scheduled_hook(self::$action_name);
-
         // add new
         wp_schedule_event(
             time(),

@@ -11,7 +11,7 @@ class Activation
          */
         Cron\UpdateRates::register_task();
 
-        // Update
-        // Service\UpdateDataSources::update();
+        // Update once
+        Service\UpdateDataSources::update();
     }
 }

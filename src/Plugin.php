@@ -25,7 +25,7 @@ class Plugin
         /*
          * Update rates action.
          */
-        add_action(Cron\UpdateRates::$action_name, Service\UpdateDataSources::update());
+        // add_action(Cron\UpdateRates::$action_name, ['Service\UpdateDataSources','update']);
 
         /*
          * Add Badge shortcode.

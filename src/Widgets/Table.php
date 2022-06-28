@@ -197,7 +197,7 @@ class Table extends \WP_Widget
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
                 <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-                <?php foreach (Checkbox::get_list() as $key => $value) {
+                <?php $checkbox_list = Checkbox::get_list(); unset($checkbox_list['border']); foreach ($checkbox_list as $key => $value) {
             echo sprintf(
                         '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
                         esc_attr($key),
