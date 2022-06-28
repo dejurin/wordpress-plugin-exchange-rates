@@ -7,13 +7,23 @@ Stable tag: 0.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Exchange Rates Short Description
+❤️‍ It is a currency plugin, easy-to-use, with beautiful UI widgets and shortcode. Included exchange rates of 55 banks of the world.
 
-== Description ==
+== 📌 About ==
 
-Exchange Rates Description
+Simple and powerful real-time Currency Converter and Exchange Rates widgets for your website or blog. Included exchange rates data, from 55 central banks of the world.
 
-= Data sources =
+[DEMO 1](https://currencyrate.today/converter-widget) 👀
+[DEMO 2](https://codepen.io/currencyrate_today/pen/mdBqOxG) 👀
+📩 Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
+
+= ⭐️ FEATURES ⭐️ =
+
+- 200+ [Currencies](https://currencyrate.today/different-currencies) and Popular [CryptoCurrencies](https://currencyrate.today/other);
+- Currency exchange rate data from 55 central banks of the world;
+- Updates automatically (per hour by WordPress Cron);
+
+= 💱 Data sources 💱 =
 
 We are collect data from multiple data sources and store them on our server, [https://api-bank.fex.to/sources.html](https://api-bank.fex.to/sources.html). This plugin retrieve data  one request per hour by WordPress Cron. Our public API don't require any keys or passwords. Data providers, such as:
 
@@ -74,6 +84,29 @@ We are collect data from multiple data sources and store them on our server, [ht
 55. Transnistrian Republican Bank
 
 
+== 📌 Installation ==
+= From your WordPress dashboard =
+1. Visit "Plugins > Add New"
+2. Search for "Exchange Rates Widget"
+3. Activate Exchange Rates Widget from your Plugins page.
+4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
+
+
+= 📌 From WordPress.org =
+1. Download Exchange Rates Widget.
+2. Upload the "Exchange Rates Widget" directory to your "/wp-content/plugins/" directory, using your favorite method (ftp, sftp, scp, etc...).
+3. Activate Exchange Rates Widget from your Plugins page.
+4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
+
+
+= 📌 From WordPress "Add Plugins" =
+1. Download Exchange Rates Widget.
+2. Go to yourdomain.com/wp-admin/plugin-install.php
+3. Press button "Upload Plugin"
+3. Choise "Exchange Rates Widget" zip archive and press button "Install Now".
+4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
+
+
 == Changelog ==
 
 = 0.0.1 =
@@ -85,3 +118,16 @@ We are collect data from multiple data sources and store them on our server, [ht
 = 0.0.1 =
 
 First release.
+
+
+== 🍩 Donations ==
+
+ℹ️ Official website & 💹 Source: [CurrencyRate](https://currencyrate.today/)
+❓ Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
+💵 Fiat money: (https://currencyconvert.online/)
+💰 Your might like it:
+🔵 [Exchange Rates Widget](https://wordpress.org/plugins/exchange-rates-widget/)
+🔴 [Currency Converter Calculator](https://wordpress.org/plugins/currency-converter-calculator/)
+🟢 [Crypto Converter ⚡ Widget](https://wordpress.org/plugins/crypto-converter-widget/)
+⚫ [Cryptocurrency Price Widget](https://wordpress.org/plugins/cryptocurrency-price-widget/)
+🟡 [Currency Converter Widget ⚡ PRO](https://wordpress.org/plugins/currency-converter-widget-pro/)

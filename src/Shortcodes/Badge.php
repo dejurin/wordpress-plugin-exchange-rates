@@ -39,16 +39,22 @@ class Badge
 
     protected function img($flag_type, $currency)
     {
-        $w = 24;
+        $w = 20;
         $h = ('rectangular' === $flag_type) ? ($w / 4 * 3) : $w;
-
-        $img_template = '<img loading="lazy" src="%1$s" width="%2$s" height="%3$s" alt="%4$s" />&nbsp;';
+        
+        $img_template = '<img loading="lazy" style="width:%1$spx!important;height:%2$spx!important" src="%3$s" alt="%4$s" />&nbsp;';
         $img_template_src = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$flag_type.'/%1$s.svg';
         $line = '';
 
         if ('emoji' === $flag_type) {
             $emoji = Emoji::get_list();
-            $line = $emoji[$currency['flag']].'&nbsp;';
+            $line = sprintf(
+                $img_template,
+                $w,
+                $h,
+                sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$currency['flag']])),
+                $currency['flag']
+            );
         } elseif ('none' !== $flag_type) {
             $line = sprintf(
                 $img_template,
