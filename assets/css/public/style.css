@@ -202,10 +202,9 @@
     font-size: 16px;
     padding: 4px 8px;
     line-height: 1.5;
-    color: var(--lt-color-gray-700);
-    background-color: var(--bs-light);
+    background-color: var(--bs-light) !important;
     background-clip: padding-box;
-    border: var(--bs-table-striped-bg) solid 1px;
+    border: var(--bs-table-striped-bg) solid 1px !important;
     appearance: none;
     border-radius: var(--radius) ;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
