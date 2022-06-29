@@ -15,7 +15,7 @@ class Converter extends \WP_Widget
             Plugin::PLUGIN_SLUG.'_currency-converter',
             "All Banks \u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
-                'classname' => 'exchange-rates',
+                'classname' => Plugin::PLUGIN_SLUG,
                 'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             ]
         );
@@ -75,12 +75,12 @@ class Converter extends \WP_Widget
             <p>
                 <label for="<?php echo $this->get_field_id('title'); ?>">
                     <?php _e('Title:', Plugin::PLUGIN_SLUG); ?>
+                    <input 
+                        id="<?php echo $this->get_field_id('title'); ?>"
+                        name="<?php echo $this->get_field_name('title'); ?>"
+                        value="<?php echo esc_attr($instance['title']); ?>"
+                        type="text">
                 </label>
-                <input 
-                    id="<?php echo $this->get_field_id('title'); ?>"
-                    name="<?php echo $this->get_field_name('title'); ?>"
-                    value="<?php echo esc_attr($instance['title']); ?>"
-                    type="text">
             </p>
             <p>
                 <small><?php _e('Title of widget.', Plugin::PLUGIN_SLUG); ?></small>
@@ -91,12 +91,12 @@ class Converter extends \WP_Widget
         <p>
 			<label for="<?php echo $this->get_field_id('amount'); ?>">
                 <?php _e('Amount:', Plugin::PLUGIN_SLUG); ?>
-            </label>
             <input 
                 id="<?php echo $this->get_field_id('amount'); ?>"
                 name="<?php echo $this->get_field_name('amount'); ?>"
                 value="<?php echo esc_attr($instance['amount']); ?>"
                 type="text">
+            </label>
         </p>
 		<p>
             <small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small>
@@ -141,7 +141,7 @@ class Converter extends \WP_Widget
             <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
         foreach ($get_list as $key => $value) {
             echo sprintf(
-                    '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+                    '<p><label><input type="checkbox" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label></p>',
                     esc_attr($key),
                     checked(true, $instance[$key], false),
                     $this->get_field_name($key),
@@ -149,6 +149,10 @@ class Converter extends \WP_Widget
                 );
         } ?>
         </fieldset>
+        <hr>
+        <h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
+		<textarea name="shortcode-generator" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+        <div class="tablenav tablenav-pages" style="float: right"><button class="button button-primary"><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 		<?php
     }
 

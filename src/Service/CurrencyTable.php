@@ -18,7 +18,7 @@ class CurrencyTable
     public $table;
     public const WIDGET_SLUG = 'widget-'.Plugin::PLUGIN_SLUG.'-currency-table';
 
-    public function get_table($widget_number)
+    public function get_html_widget($widget_number)
     {
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
@@ -68,6 +68,10 @@ class CurrencyTable
         $start_template = '<div class="d-flex">';
         $end_template = '</div></div>';
         $img_src_template = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$this->parameters['flag_type'].'/%1$s.svg';
+
+        if (!is_array($this->parameters['currency_list'])) {
+            $this->parameters['currency_list'] = array_filter(explode(',', $this->parameters['currency_list']), 'strlen');
+        }
 
         foreach ($this->parameters['currency_list'] as $currency_code) {
             $this->parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
@@ -181,8 +185,8 @@ class CurrencyTable
                     $img_template,
                     $w,
                     $h,
-                    sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$get_currencies[$currency_code]['flag']])),
-                    $currency_title
+                    sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$get_currencies[$base_currency_code]['flag']])),
+                    $base_currency_title
                 );
             } elseif ('none' !== $this->parameters['flag_type']) {
                 $output_data[0]['data'] .= sprintf(
@@ -224,7 +228,7 @@ class CurrencyTable
             if ($t > 2) {
                 $output_data[3] = [
                     'data' => '',
-                    'colspan' => $t - ($this->parameters['code']) ? 3 : 2,
+                    'colspan' => $t - (($this->parameters['code']) ? 3 : 2),
                     'class' => 'active',
                 ];
             }
@@ -241,7 +245,7 @@ class CurrencyTable
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="table-responsive"><table '
+            'table_open' => '<div class="'.self::WIDGET_SLUG.' table-responsive"><table '
                             .'class="'.trim($class).'" '
                             .'data-decimals="'.$this->settings['decimals'].'" '
                             .'data-decimal-point="'.$fmt['decimal_point'].'" '

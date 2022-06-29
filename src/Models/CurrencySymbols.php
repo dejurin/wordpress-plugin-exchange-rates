@@ -124,6 +124,7 @@ class CurrencySymbols
             'YER' => '﷼',
             'ZWD' => 'Z$',
             'GEL' => 'ლ',
+            'MMK' => 'K.',
         ];
         if (!empty($code) && isset($list[$code])) {
             $symbol = $list[$code];

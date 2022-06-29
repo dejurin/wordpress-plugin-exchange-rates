@@ -34,6 +34,54 @@ jQuery(document).ready(function() {
         showMoreLessTable()
     });
     showMoreLessTable();
+    /* shortcode generator */
+    function dejurinExchangeRates_ShortcodeGenerator(_this) {
+        var _id = jQuery(_this).find('input[name="id_base"]').val();
+        
+        if (jQuery(_this).data('shortcode-generator')) {
+            _id = jQuery(_this).data('shortcode-generator');
+        }
 
+        var serializeArray = jQuery(_this).serializeArray();
+        var line = '[' + _id + ' ';
+        var currency_list = '';
 
+        jQuery.each(serializeArray, function(index, attr) {
+            if (attr.name === 'shortcode-generator' || 
+                attr.name === 'id_base' ||
+                attr.name === 'widget-width' ||
+                attr.name === 'widget-height' ||
+                attr.name === 'widget_number' ||
+                attr.name === 'widget-id'
+                ) {
+                // ignore
+            } else {
+                if (attr.name === 'currency_list') {
+                    currency_list += attr.value + ',';
+                } else {
+                    value = attr.value;
+                    var attrName ='';
+                    try {
+                        attrName = (attr.name.split('[')[2]).slice(0, -1);
+                      }
+                      catch(err) {
+                        attrName = attr.name;
+                      }
+                    line += attrName + '="' + value + '" ';
+                }
+            }
+        });
+        if (currency_list !== '') {
+            line += 'currency_list="' + currency_list.slice(0, currency_list.length - 1) + '"';
+        }
+        line += ']';
+        jQuery(_this).find('textarea[name="shortcode-generator"]').text(line);
+    }
+    jQuery(document).on("input click", 'form[class="form"]', function(event) {
+        if (jQuery(event.target).prop("tagName") !== 'TEXTAREA') {
+            dejurinExchangeRates_ShortcodeGenerator(this);
+            console.log(jQuery(event.target).prop("tagName"))
+        }
+    });
+    dejurinExchangeRates_ShortcodeGenerator('form[class="form"]');
 });

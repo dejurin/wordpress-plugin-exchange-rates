@@ -17,7 +17,7 @@ class Table extends \WP_Widget
             Plugin::PLUGIN_SLUG.'_currency-table',
             "All Banks \u{1F3E6} ".__('Currency Table Widget', Plugin::PLUGIN_SLUG),
             [
-                'classname' => 'exchange-rates widget-'.Plugin::PLUGIN_SLUG.'-currency-table',
+                'classname' => Plugin::PLUGIN_SLUG,
                 'description' => __('A table with currency rates.', Plugin::PLUGIN_SLUG),
             ]
         );
@@ -68,7 +68,7 @@ class Table extends \WP_Widget
                         'table_headers_previous_close_show' => (bool) $instance['table_headers_previous_close_show'],
                         'table_headers_changes_show' => (bool) $instance['table_headers_changes_show'],
                     ];
-                echo $object->get_table($this->number);
+                echo $object->get_html_widget($this->number);
             }
         }
 
@@ -125,12 +125,12 @@ class Table extends \WP_Widget
         <p>
 			<label for="<?php echo $this->get_field_id('amount'); ?>">
                 <?php _e('Amount:', Plugin::PLUGIN_SLUG); ?>
-            </label>
             <input 
                 id="<?php echo $this->get_field_id('amount'); ?>"
                 name="<?php echo $this->get_field_name('amount'); ?>"
                 value="<?php echo esc_attr($instance['amount']); ?>"
                 type="text">
+            </label>
         </p>
 		<p><small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small></p>
 		<p><label for="<?php echo $this->get_field_id('base_currency'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
@@ -171,7 +171,7 @@ class Table extends \WP_Widget
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Flag', Plugin::PLUGIN_SLUG); ?></legend>
         <p>
-            <label for="<?php echo $this->get_field_id('flag_size'); ?>"><?php _e('Flag size:', Plugin::PLUGIN_SLUG); ?></label>
+            <label for="<?php echo $this->get_field_id('flag_size'); ?>"><?php _e('Flag size:', Plugin::PLUGIN_SLUG); ?>
             <input 
                 id="<?php echo $this->get_field_id('flag_size'); ?>"
                 name="<?php echo $this->get_field_name('flag_size'); ?>"
@@ -180,13 +180,14 @@ class Table extends \WP_Widget
                 min="16"
                 max="64"
                 value="<?php echo esc_attr($instance['flag_size']); ?>">
+            </label>
             <span id="<?php echo $this->get_field_id('flag_size'); ?>-show"><?php echo esc_attr($instance['flag_size']); ?></span>px
         </p>
         <p>
-            <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label> 
+            <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label>&nbsp;
             <?php foreach (Flags::get_types() as $item) {
             echo sprintf(
-                    '<input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s><label for="flag-type-%1$s">%4$s</label>&nbsp;',
+                    '<label for="flag-type-%1$s"><input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label>&nbsp;',
                     esc_attr($item['value']),
                     checked($item['value'], $instance['flag_type'], false),
                     $this->get_field_name('flag_type'),
@@ -197,9 +198,11 @@ class Table extends \WP_Widget
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
                 <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
-                <?php $checkbox_list = Checkbox::get_list(); unset($checkbox_list['border']); foreach ($checkbox_list as $key => $value) {
+                <?php $checkbox_list = Checkbox::get_list();
+        unset($checkbox_list['border']);
+        foreach ($checkbox_list as $key => $value) {
             echo sprintf(
-                        '<p><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label></p>',
+                        '<p><label><input type="checkbox" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label></p>',
                         esc_attr($key),
                         checked(true, $instance[$key], false),
                         $this->get_field_name($key),
@@ -211,7 +214,7 @@ class Table extends \WP_Widget
         <legend><?php _e('Table headers', Plugin::PLUGIN_SLUG); ?></legend>
         <table><tbody>
             <tr><td scope="col" colspan="2">
-            <?php echo sprintf('<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s><label for="%1$s">%4$s</label>',
+            <?php echo sprintf('<label for="%1$s"><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label>',
                 esc_attr('table_headers_show'),
                 checked(true, $instance['table_headers_show'], false),
                 $this->get_field_name('table_headers_show'),
@@ -223,7 +226,7 @@ class Table extends \WP_Widget
             <tr>
                 <td>
                     <?php echo sprintf(
-                            '<input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s><label for="%1$s">%4$s</label>',
+                            '<label for="%1$s"><input type="checkbox" id="%1$s" name="%3$s" value="%1$s"%2$s %5$s>&nbsp;%4$s</label>',
                             esc_attr('table_headers_'.$key.'_show'),
                             checked(true, $instance['table_headers_'.$key.'_show'], false),
                             $this->get_field_name('table_headers_'.$key.'_show'),
@@ -244,6 +247,9 @@ class Table extends \WP_Widget
         </tbody>
         </table>
         </fieldset>
+        <hr>
+		<textarea name="shortcode-generator" style="width:100%" rows="8" onclick="this.focus();this.select()" readonly></textarea>
+        <div class="tablenav tablenav-pages" style="float: right"><button class="button button-primary"><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 		<?php
     }
 

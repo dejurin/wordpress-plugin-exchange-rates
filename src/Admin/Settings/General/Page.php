@@ -106,7 +106,7 @@ class Page
 				<?php if ($rates) { ?>
 				<div class="col p-0">
 				<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
-					<form  id="shortcode-generator-badge">
+					<form class="form" data-shortcode-generator="<?php echo Plugin::PLUGIN_SLUG; ?>_badge">
 					<table class="form-table">
 						<tbody>
 							<tr>
@@ -190,10 +190,10 @@ class Page
 									<label><?php _e('Options', Plugin::PLUGIN_SLUG); ?></label>
 								</th>
 								<td>
-									<?php $checkbox = array_slice(Checkbox::get_list(), 4, 5);
+									<?php $checkbox = array_slice(Checkbox::get_list(), 2, 5);
         foreach ($checkbox as $key => $value) {
             echo sprintf(
-                                            '<p><input type="checkbox" id="shortcode-badge-%1$s" name="%1$s"><label for="shortcode-badge-%1$s">%2$s</label></p>',
+                                            '<p><label><input type="checkbox" name="%1$s">&nbsp;%2$s</label></p>',
                                             esc_attr($key),
                                             $value
                                         );
@@ -203,9 +203,9 @@ class Page
 						</tbody>
 					</table>
 					<input type="hidden" name="id" value="<?php echo time(); ?>">
-					</form>
 					<hr>
-					<textarea id="shortcode-generator-badge-textarea" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+					<textarea name="shortcode-generator" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+					</form>
 					
 				</div>
 				<?php } ?>
@@ -270,26 +270,6 @@ class Page
 						border: true,
 						palettes: false,
 					});
-				function shortcodeGeneratorBadge(_this) {
-					var serializeArray = jQuery(_this).serializeArray();
-					var line = '[<?php echo Plugin::PLUGIN_SLUG; ?>-badge ';
-					var currency_list = '';
-					jQuery.each(serializeArray, function(index, attr) {
-						if (attr.name === 'currency_list') {
-							currency_list += attr.value + ',';
-						} else {
-							value = attr.value;
-							line += attr.name + '="' + value + '" ';
-						}
-					});
-					line += 'currency_list="' + currency_list.slice(0, currency_list.length - 1) + '"';
-					line += ']';
-					jQuery('#shortcode-generator-badge-textarea').text(line);
-				}
-				jQuery('form#shortcode-generator-badge').on("input", function(event) {
-					shortcodeGeneratorBadge(this);
-				});
-				shortcodeGeneratorBadge('form#shortcode-generator-badge');
 			});
 		</script>
 <?php

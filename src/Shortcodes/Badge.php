@@ -16,32 +16,33 @@ class Badge
 {
     public $parameters;
     public $settings;
-
-    public $default_attr = [
-        'amount' => 1,
-        'base_currency' => 'USD',
-        'currency_list' => 'EUR',
-        'base_show' => false,
-        'inverse' => false,
-        'decimals' => 4,
-        'flag_type' => 'emoji',
-        'color' => '#eeeeee',
-        'after' => false,
-        'symbol' => false,
-    ];
+    public $default_attr = [];
 
     public const BADGE_SLUG = 'shortcode-'.Plugin::PLUGIN_SLUG.'-badge';
 
     public function __construct()
     {
-        add_shortcode(Plugin::PLUGIN_SLUG.'-badge', [$this, 'shortcode']);
+        add_shortcode(Plugin::PLUGIN_SLUG.'_badge', [$this, 'shortcode']);
+        // Default
+        $this->default_attr = [
+            'amount' => 1,
+            'base_currency' => 'USD',
+            'currency_list' => 'EUR',
+            'base_show' => false,
+            'inverse' => false,
+            'decimals' => 4,
+            'flag_type' => 'emoji',
+            'color' => '#eeeeee',
+            'after' => false,
+            'symbol' => false,
+        ];
     }
 
     protected function img($flag_type, $currency)
     {
         $w = 20;
         $h = ('rectangular' === $flag_type) ? ($w / 4 * 3) : $w;
-        
+
         $img_template = '<img loading="lazy" style="width:%1$spx!important;height:%2$spx!important" src="%3$s" alt="%4$s" />&nbsp;';
         $img_template_src = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$flag_type.'/%1$s.svg';
         $line = '';
@@ -123,7 +124,7 @@ class Badge
                                 (isset($parameters['code']) ? $code : $get_currency['name']),
                                 $pre,
                                 $currency->get_rate_format(0, true, true),
-                                $after,
+                                $after
                             );
                         $err = false;
                     }
@@ -147,6 +148,6 @@ class Badge
             $result = __(Plugin::NAME.': error plugin. Check the attributes of the shortcode.', Plugin::PLUGIN_SLUG);
         }
 
-        return '<div class="exchange-rates shortcode-exchange-rates-badge">'.$result.$caption.'</div>';
+        return '<div class="'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge">'.$result.$caption.'</div>';
     }
 }

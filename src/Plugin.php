@@ -20,7 +20,7 @@ class Plugin
          */
         add_action('admin_enqueue_scripts', [$this, 'register_admin_script_style']);
         add_action('wp_enqueue_scripts', [$this, 'register_public_script_style']);
-        add_action('widgets_init', ['Dejurin\ExchangeRates\Widgets', 'register']);
+        add_action('widgets_init', ['\Dejurin\ExchangeRates\Widgets', 'register']);
 
         /*
          * Update rates action.
@@ -28,10 +28,25 @@ class Plugin
         add_action(Cron\UpdateRates::$action_name, ['\Dejurin\ExchangeRates\Service\UpdateDataSources', 'update']);
 
         /*
+         * CODE START
+         * Each HOUR_IN_SECONDS launches update data. In case the WP Cron doesn't work.
+         * If WP Cron work fine, you need to commented or delete this one code below.
+         */
+        $settings = get_option(Models\Settings::$option_name, []);
+        if (intval($settings['update_timestamp']) + HOUR_IN_SECONDS < time()) {
+            Service\UpdateDataSources::update();
+        }
+        /*
+         * CODE END
+        */
+
+        /*
          * Add Badge shortcode.
          */
 
         new Shortcodes\Badge();
+        new Shortcodes\CurrencyTable();
+        new Shortcodes\CurrencyConverter();
 
         if (is_admin()) {
             Admin\Admin::run();
