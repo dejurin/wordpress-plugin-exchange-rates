@@ -36,10 +36,16 @@ jQuery(document).ready(function() {
     showMoreLessTable();
     /* shortcode generator */
     function dejurinExchangeRates_ShortcodeGenerator(_this) {
-        var _id = jQuery(_this).find('input[name="id_base"]').val();
-        
+        var _id;
         if (jQuery(_this).data('shortcode-generator')) {
             _id = jQuery(_this).data('shortcode-generator');
+            
+            if (_id === '0') {
+                _id = jQuery(_this).find('input[name="id_base"]').val();
+            }
+        } else {
+            jQuery(_this).data('shortcode-generator', '0')
+            return false;
         }
 
         var serializeArray = jQuery(_this).serializeArray();
@@ -52,36 +58,48 @@ jQuery(document).ready(function() {
                 attr.name === 'widget-width' ||
                 attr.name === 'widget-height' ||
                 attr.name === 'widget_number' ||
+                attr.name === 'multi_number' ||
+                attr.name === 'add_new' ||
                 attr.name === 'widget-id'
                 ) {
                 // ignore
             } else {
-                if (attr.name === 'currency_list') {
+                var attrName ='';
+                try {
+                    attrName = (attr.name.split('[')[2]).slice(0, -1);
+                  }
+                  catch(err) {
+                    attrName = attr.name;
+                  }
+                if (attrName === 'currency_list') {
                     currency_list += attr.value + ',';
                 } else {
                     value = attr.value;
-                    var attrName ='';
-                    try {
-                        attrName = (attr.name.split('[')[2]).slice(0, -1);
-                      }
-                      catch(err) {
-                        attrName = attr.name;
-                      }
                     line += attrName + '="' + value + '" ';
                 }
             }
         });
+        
         if (currency_list !== '') {
             line += 'currency_list="' + currency_list.slice(0, currency_list.length - 1) + '"';
         }
         line += ']';
-        jQuery(_this).find('textarea[name="shortcode-generator"]').text(line);
+        
+        if (jQuery(_this).find('select[multiple="multiple"] option:selected').length > 0 ||
+        jQuery(_this).find('select[multiple="multiple"]').length === 0) {
+            jQuery(_this).find('button').removeAttr('disabled');
+            jQuery(_this).find('textarea[name="shortcode-generator"]').text(line);
+        }
+        
     }
-    jQuery(document).on("input click", 'form[class="form"]', function(event) {
+    jQuery(document).on("input click", 'form', function(event) {
+        if (jQuery(event.target).prop("tagName") === 'BUTTON') {
+            event.preventDefault();
+        }
         if (jQuery(event.target).prop("tagName") !== 'TEXTAREA') {
             dejurinExchangeRates_ShortcodeGenerator(this);
-            console.log(jQuery(event.target).prop("tagName"))
         }
     });
-    dejurinExchangeRates_ShortcodeGenerator('form[class="form"]');
+    
+    dejurinExchangeRates_ShortcodeGenerator('form');
 });

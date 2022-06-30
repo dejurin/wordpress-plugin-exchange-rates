@@ -106,7 +106,8 @@ class Page
 				<?php if ($rates) { ?>
 				<div class="col p-0">
 				<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
-					<form class="form" data-shortcode-generator="<?php echo Plugin::PLUGIN_SLUG; ?>_badge">
+					<form data-shortcode-generator="<?php echo Plugin::PLUGIN_SLUG; ?>_badge">
+					<input type="hidden" name="id_base" value="<?php echo Plugin::PLUGIN_SLUG; ?>_badge"/>
 					<table class="form-table">
 						<tbody>
 							<tr>
@@ -205,6 +206,7 @@ class Page
 					<input type="hidden" name="id" value="<?php echo time(); ?>">
 					<hr>
 					<textarea name="shortcode-generator" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+					<div style="float: right"><button class="button button-primary" disabled><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 					</form>
 					
 				</div>
@@ -249,10 +251,10 @@ class Page
 						</div>
 						<div>
 						<ul>
-							<li>&#x2753; Feel free, write if you will have any questions: <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
-							<li>&#x1F4B0; Your might like it: <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
-							<li>&#x1F4B9; Supported by: <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
-							<li>&#x1F4B5; Fiat money: <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
+							<li>&#x2753; <?php _e('Feel free, write if you will have any questions:', Plugin::PLUGIN_SLUG); ?> <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
+							<li>&#x1F4B0; <?php _e('Your might like it:', Plugin::PLUGIN_SLUG); ?> <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
+							<li>&#x1F4B9; <?php _e('Supported by:', Plugin::PLUGIN_SLUG); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
+							<li>&#x1F4B5; <?php _e('Fiat money:', Plugin::PLUGIN_SLUG); ?> <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
 						</ul>
 						</div>
 					</div>
@@ -261,15 +263,14 @@ class Page
 		</div>
 		<script>
 			jQuery(document).ready(function() {
-					jQuery('#shortcode-badge-color').wpColorPicker({
-						change: function(event, ui){
-							shortcodeGeneratorBadge('form#shortcode-generator-badge');
-							jQuery('#shortcode-badge-color').val(ui.color.toString())
-							console.log(ui.color.toString())
-						},
-						border: true,
-						palettes: false,
-					});
+				jQuery('#shortcode-badge-color').wpColorPicker({
+					change: function(event, ui){
+						shortcodeGeneratorBadge('form#shortcode-generator-badge');
+						jQuery('#shortcode-badge-color').val(ui.color.toString())
+					},
+					border: true,
+					palettes: false,
+				});
 			});
 		</script>
 <?php

@@ -35,6 +35,7 @@ class Badge
             'color' => '#eeeeee',
             'after' => false,
             'symbol' => false,
+            'id' => time(),
         ];
     }
 
@@ -101,6 +102,7 @@ class Badge
 
                 foreach ($currency_list as $code) {
                     $currency = new Currency($parameters, $code);
+
                     if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
 
@@ -136,7 +138,7 @@ class Badge
             $caption = Dev::caption(
                 $parameters,
                 $currency->get_date(),
-                time(),
+                $attr['id'],
                 self::BADGE_SLUG,
                 $currency->get_source_id()
             );
@@ -145,7 +147,7 @@ class Badge
         }
 
         if ($err) {
-            return '<b>' . Plugin::NAME . '</b> ' .__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', Plugin::PLUGIN_SLUG);
+            return '<b>'.Plugin::NAME.'</b> '.__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', Plugin::PLUGIN_SLUG);
         }
 
         return '<div class="'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge">'.$result.$caption.'</div>';

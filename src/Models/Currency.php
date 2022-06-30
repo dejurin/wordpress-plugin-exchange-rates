@@ -123,7 +123,7 @@ class Currency
         }
     }
 
-    public function get_change_format()
+    public function get_change_format($raw = false)
     {
         if ($this->currency !== $this->base_currency) {
             $result = self::for_format(
@@ -132,7 +132,7 @@ class Currency
                 $this->settings['decimals']
             );
 
-            return strcmp($result, '0') ? $result : $this->zero_symbol;
+            return strcmp($result, '0') ? $result : (($raw) ? null : $this->zero_symbol);
         }
     }
 
@@ -167,12 +167,17 @@ class Currency
 
     public function get_trend()
     {
-        if ($this->get_rate(0) > $this->get_rate(1) && 0 !== $this->get_rate(1)) {
-            return 1;
-        } elseif ($this->get_rate(0) === $this->get_rate(1) || 0 === $this->get_rate(1)) {
-            return 0;
-        } else {
-            return -1;
+        if (!is_null($this->get_change_format($raw = true))) {
+            $rate_0 = $this->get_rate(0);
+            $rate_1 = $this->get_rate(1);
+
+            if ($rate_0 > $rate_1 && 0 !== strcmp($rate_0, $rate_1)) {
+                return 1;
+            } elseif ($rate_0 === $rate_1 || 0 === strcmp($rate_0, $rate_1)) {
+                return 0;
+            } else {
+                return -1;
+            }
         }
 
         return false;

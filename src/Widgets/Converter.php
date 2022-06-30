@@ -151,9 +151,11 @@ class Converter extends \WP_Widget
         </fieldset>
         <hr>
         <h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
-        <hr>
+        <p><small><?php _e('If you only need a widget, ignore this shortcode.', Plugin::PLUGIN_SLUG); ?><br/>
+        <?php _e('If you want to put the widget anywhere on your website/blog, use the shortcode.', Plugin::PLUGIN_SLUG); ?></small></p>
+        <input type="hidden" name="id" value="<?php echo time(); ?>">
 		<textarea name="shortcode-generator" style="width:100%" rows="8" onclick="this.focus();this.select()" readonly></textarea>
-        <div class="tablenav tablenav-pages" style="float: right"><button class="button button-primary"><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
+        <div style="float: right"><button class="button button-primary" disabled><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 		<?php
     }
 

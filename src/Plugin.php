@@ -5,7 +5,7 @@ namespace Dejurin\ExchangeRates;
 class Plugin
 {
     public const VERSION = '0.0.1';
-    public const NAME = 'Exchange Rates & Currency Converter Widgets '."\u{1F3E6}".' All Banks';
+    public const NAME = "\u{1F3E6}".'Exchange Rates & Currency Converter - Widgets';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
 

@@ -44,6 +44,7 @@ class CurrencyTable
             'table_headers_code_show' => false,
             'table_headers_previous_close_show' => false,
             'table_headers_changes_show' => false,
+            'id' => time(),
         ];
     }
 
@@ -52,6 +53,6 @@ class CurrencyTable
         $obj = new Service_CurrencyTable();
         $obj->parameters = (isset($attr) && is_array($attr)) ? array_merge($this->default_attr, $attr) : $this->default_attr;
 
-        return '<div class="'.Plugin::PLUGIN_SLUG.'">'.$obj->get_html_widget(34325).'</div>';
+        return '<div class="'.Plugin::PLUGIN_SLUG.'">'.$obj->get_html_widget($obj->parameters['id']).'</div>';
     }
 }

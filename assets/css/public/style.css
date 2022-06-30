@@ -36,6 +36,9 @@
 
 
 /* Widget Currency Table - Style start */
+.exchange-rates .widget-exchange-rates-currency-table {
+ padding-bottom: 8px;
+}
 .exchange-rates .widget-exchange-rates-currency-table .w-100 {
 	width: 100%;
 }
@@ -89,6 +92,7 @@
 .exchange-rates .widget-exchange-rates-currency-table table caption {
 	background-color: transparent !important;
 }
+
 
 .exchange-rates .widget-exchange-rates-currency-table table img {
 	display: inline-block !important;

@@ -58,6 +58,7 @@ class Table extends \WP_Widget
                         'border_hori' => (bool) $instance['border_hori'],
                         'border_vert' => (bool) $instance['border_vert'],
                         'after' => (bool) $instance['after'],
+                        'symbol' => (bool) $instance['symbol'],
                         'table_headers_show' => (bool) $instance['table_headers_show'],
                         'table_headers_name' => (string) $instance['table_headers_name'],
                         'table_headers_code' => (string) $instance['table_headers_code'],
@@ -91,6 +92,7 @@ class Table extends \WP_Widget
         $instance_to_save['full_width'] = (bool) sanitize_text_field($instance['full_width']);
         $instance_to_save['amount_active'] = (bool) sanitize_text_field($instance['amount_active']);
         $instance_to_save['after'] = (bool) sanitize_text_field($instance['after']);
+        $instance_to_save['symbol'] = (bool) sanitize_text_field($instance['symbol']);
         $instance_to_save['border_hori'] = (bool) sanitize_text_field($instance['border_hori']);
         $instance_to_save['border_vert'] = (bool) sanitize_text_field($instance['border_vert']);
         $instance_to_save['base_show'] = (bool) sanitize_text_field($instance['base_show']) && isset($new_instance['base_show']);
@@ -248,8 +250,12 @@ class Table extends \WP_Widget
         </table>
         </fieldset>
         <hr>
+        <h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
+        <p><small><?php _e('If you only need a widget, ignore this shortcode.', Plugin::PLUGIN_SLUG); ?><br/>
+        <?php _e('If you want to put the widget anywhere on your website/blog, use the shortcode.', Plugin::PLUGIN_SLUG); ?></small></p>
+        <input type="hidden" name="id" value="<?php echo time(); ?>">
 		<textarea name="shortcode-generator" style="width:100%" rows="8" onclick="this.focus();this.select()" readonly></textarea>
-        <div class="tablenav tablenav-pages" style="float: right"><button class="button button-primary"><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
+        <div style="float: right"><button class="button button-primary" disabled><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 		<?php
     }
 
@@ -268,6 +274,7 @@ class Table extends \WP_Widget
             'region' => false,
             'full_width' => false,
             'amount_active' => false,
+            'symbol' => false,
             'after' => false,
             'base_show' => true,
             'border' => true,
@@ -279,6 +286,8 @@ class Table extends \WP_Widget
             'table_headers_mid' => __('Price', Plugin::PLUGIN_SLUG),
             'table_headers_previous_close' => __('Previous Close', Plugin::PLUGIN_SLUG),
             'table_headers_changes' => __('Changes', Plugin::PLUGIN_SLUG),
+            'table_headers_name_show' => true,
+            'table_headers_mid_show' => true,
             'table_headers_code_show' => false,
             'table_headers_previous_close_show' => false,
             'table_headers_changes_show' => false,
