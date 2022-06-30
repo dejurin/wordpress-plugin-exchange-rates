@@ -145,7 +145,7 @@ class Badge
         }
 
         if ($err) {
-            $result = __(Plugin::NAME.': error plugin. Check the attributes of the shortcode.', Plugin::PLUGIN_SLUG);
+            return '<b>' . Plugin::NAME . '</b> ' .__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', Plugin::PLUGIN_SLUG);
         }
 
         return '<div class="'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge">'.$result.$caption.'</div>';
