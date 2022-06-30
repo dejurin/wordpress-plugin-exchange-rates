@@ -1,4 +1,4 @@
-=== Exchange Rates & Currency Converter Widgets &#x1F3E6; All Banks ===
+=== &#x1F3E6; Exchange Rates & Currency Converter - Widgets ===
 Contributors: falselight
 Tags: currency converter, currency conversion, currency exchange, exchange rates, currencies, euro, dollar, 
 Requires at least: 5.4
@@ -83,27 +83,224 @@ We are collect data from multiple data sources and store them on our server, [ht
 54. &#x1F1F2;&#x1F1F2; Central Bank of Myanmar
 55. Transnistrian Republican Bank
 
+= 💲 Supported Currencies 💲 =
+
+- Afghan Afghani
+- Albanian Lek
+- Algerian Dinar
+- Angolan Kwanza
+- Argentine Peso
+- Armenian Dram
+- Aruban Florin
+- Australian Dollar
+- Azerbaijanian Manat
+- Bahamian Dollar
+- Bahraini Dinar
+- Bangladeshi Taka
+- Barbados Dollar
+- Belarusian ruble
+- Belarussian Ruble
+- Belize Dollar
+- Bermudian Dollar
+- Bhutanese Ngultrum
+- Binance Coin
+- BitShares
+- Bitcoin
+- Boliviano
+- Botswana Pula
+- Brazilian Real
+- British Pound
+- Brunei Dollar
+- Bulgarian Lev
+- Burundi Franc
+- CFA Franc BCEAO
+- CFA Franc BEAC
+- CFP Franc
+- Cabo Verde Escudo
+- Cambodian Riel
+- Canadian Dollar
+- Cayman Islands Dollar
+- Chilean Peso
+- Chilean Unit of Account
+- Chinese Yuan (offshore)
+- Colombian Peso
+- Comoro Franc
+- Congolese Franc
+- Convertible Mark & Herzegovina
+- Convertible peso
+- Cordoba Oro
+- Costa Rican Colon
+- Croatian Kuna
+- Cuban Peso
+- Czech Koruna
+- Danish Krone
+- Dash
+- Djibouti Franc
+- Doge
+- Dominican Peso
+- EAC
+- EMC
+- East Caribbean Dollar
+- Egyptian Pound
+- El Salvador Colon
+- Eritrean Nakfa
+- Ethereum
+- Ethiopian Birr
+- Euro  
+- FCT
+- Falkland Islands Pound
+- Fiji Dollar
+- Gambian Dalasi
+- Georgian Lari
+- Ghana Cedi
+- Gibraltar Pound
+- Gold (ounce)
+- Guatemalan Quetzal
+- Guernsey Pound
+- Guilder
+- Guinea Franc
+- Guyana Dollar
+- Haitian Gourde
+- Honduran Lempira
+- Hong Kong Dollar
+- Hungarian Forint
+- Iceland Krona
+- Indian Rupee
+- Indonesian Rupiah
+- Iranian Rial
+- Iraqi Dinar
+- Israeli Shekel
+- Jamaican Dollar
+- Japanese Yen
+- Jersey Pound
+- Jordanian Dinar
+- Kazakhstani Tenge
+- Kenyan Shilling
+- Kuwaiti Dinar
+- Kyrgyzstani Som
+- Lao Kip
+- Lebanese Pound
+- Lesotho Loti
+- Liberian Dollar
+- Libyan Dinar
+- Linden Dollar
+- Litecoin
+- Macanese Pataca
+- Macedonian Denar
+- Malagasy Ariary
+- Malawian Kwacha
+- Malaysian Ringgit
+- Maldivian Rufiyaa
+- Manx pound
+- Mauritanian Ouguiya
+- Mauritius Rupee
+- Mexican Peso
+- Moldovan Leu
+- Monero
+- Mongolian Tugrik
+- Moroccan Dirham
+- Mozambique Metical
+- Myanmar Kyat
+- NMC
+- NVC
+- NXT
+- Namibia Dollar
+- Nepalese Rupee
+- New Taiwan Dollar
+- New Zealand Dollar
+- Nigerian Naira
+- North Korean Won
+- Norwegian Krone
+- PPC
+- Pakistani Rupee
+- Palladium (ounce)
+- Panamanian Balboa
+- Papua New Guinean Kina
+- Paraguayan Guarani
+- Peruvian Sol
+- Peso Uruguayo
+- Philippine Peso
+- Platinum (ounce)
+- Polish Zloty
+- Qatari Rial
+- Renminbi
+- Rial Omani
+- Ripple
+- Romanian Leu
+- Russian Ruble
+- Rwanda Franc
+- STR
+- Saint Helena Pound
+- Samoan Tala
+- Sao Tomean Dobra
+- Saudi Riyal
+- Serbian Dinar
+- Seychelles Rupee
+- Sierra Leonean Leone
+- Silver (ounce)
+- Singapore Dollar
+- Solomon Islands Dollar
+- Somali Shilling
+- South African Rand
+- South Korean Won
+- South Sudanese Pound
+- Special Drawing Rights
+- Sri Lanka Rupee
+- Sudanese Pound
+- Surinam Dollar
+- Swazi Lilangeni
+- Swedish Krona
+- Swiss Franc
+- Syrian Pound
+- Tajikistani Somoni
+- Tanzanian Shilling
+- Thai Baht
+- Tongan Pa?anga
+- Transnistrian ruble
+- Trinidad and Tobago Dollar
+- Tunisian Dinar
+- Turkish Lira
+- Turkmenistan New Manat
+- UAE Dirham
+- US Dollar
+- Uganda Shilling
+- Ukrainian Hryvnia
+- Uzbekistan Sum
+- VEF BLKMKT
+- VEF DICOM
+- VEF DIPRO
+- VTC
+- Vanuatu Vatu
+- Venezuelan Bolivar
+- Vietnamese Dong
+- W-African Unit of Account
+- XPM
+- Yemeni Rial
+- Zambian Kwacha
+- Zimbabwean Dollar
+
 
 == 📌 Installation ==
+
 = From your WordPress dashboard =
 1. Visit "Plugins > Add New"
-2. Search for "Exchange Rates Widget"
-3. Activate Exchange Rates Widget from your Plugins page.
+2. Search for "Exchange Rates & Currency Converter - Widgets"
+3. Activate Exchange Rates & Currency Converter - Widgets from your Plugins page.
 4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
 
 
 = 📌 From WordPress.org =
-1. Download Exchange Rates Widget.
-2. Upload the "Exchange Rates Widget" directory to your "/wp-content/plugins/" directory, using your favorite method (ftp, sftp, scp, etc...).
-3. Activate Exchange Rates Widget from your Plugins page.
+1. Download Exchange Rates & Currency Converter - Widgets.
+2. Upload the "Exchange Rates & Currency Converter - Widgets" directory to your "/wp-content/plugins/" directory, using your favorite method (ftp, sftp, scp, etc...).
+3. Activate Exchange Rates & Currency Converter - Widgets from your Plugins page.
 4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
 
 
 = 📌 From WordPress "Add Plugins" =
-1. Download Exchange Rates Widget.
+1. Download Exchange Rates & Currency Converter - Widgets.
 2. Go to yourdomain.com/wp-admin/plugin-install.php
 3. Press button "Upload Plugin"
-3. Choise "Exchange Rates Widget" zip archive and press button "Install Now".
+3. Choise "Exchange Rates & Currency Converter - Widgets" zip archive and press button "Install Now".
 4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
 
 

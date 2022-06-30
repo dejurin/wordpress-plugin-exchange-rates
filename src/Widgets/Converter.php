@@ -13,7 +13,7 @@ class Converter extends \WP_Widget
     {
         parent::__construct(
             Plugin::PLUGIN_SLUG.'_currency-converter',
-            "All Banks \u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
+            "\u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
                 'classname' => Plugin::PLUGIN_SLUG,
                 'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
@@ -70,7 +70,7 @@ class Converter extends \WP_Widget
         array_pop($currency_list);
         array_unshift($currency_list, $first_element); ?>
 
-        <fieldset style="padding:5px 15px;margin-bottom:15px">
+        <fieldset style="padding:5px 15px;margin-bottom:15px">test
             <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>
             <p>
                 <label for="<?php echo $this->get_field_id('title'); ?>">

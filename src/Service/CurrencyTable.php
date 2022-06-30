@@ -269,7 +269,8 @@ class CurrencyTable
             $currency->get_date(),
             $widget_number,
             self::WIDGET_SLUG,
-            $this->settings['source_id']
+            $this->settings['source_id'],
+            0
         );
 
         return $html;

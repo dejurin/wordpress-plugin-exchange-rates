@@ -10,12 +10,12 @@ if (!defined('ABSPATH')) {
 /*
 Plugin Name: Exchange Rates & Currency Converter Widgets 🏦 All Banks
 Plugin URI: https://wordpress.org/plugins/exchange-rates/
-Description: Currency widgets for any needs.
+Description: It is a currency plugin, easy-to-use, with beautiful UI widgets and shortcode. Included exchange rates of 55 banks of the world.
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
 Version: 0.0.1
 Text Domain: exchange-rates
-Domain Path: /languages/
+Domain Path: /languages
 Requires at least: 5.4
 Tested up to: 6.0
 License: GPLv2 or later

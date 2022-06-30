@@ -7,14 +7,12 @@ use Dejurin\ExchangeRates\Plugin;
 
 class Dev
 {
-    public static function caption($parameters, $time, $widget_nubmer, $widget_slug, $source_id)
+    public static function caption($parameters, $time, $widget_nubmer, $widget_slug, $source_id, $dev = 1)
     {
         // $get_currencies = Currencies::get_currencies();
 
         $put_time = new \DateTime($time['put_time']);
         $local_time = new \DateTime($time['local_time']);
-        $_ate = 'Rate';
-        $_urrency = 'Currency';
 
         $get_sources = Sources::get_list();
         $source = $get_sources[$source_id];
@@ -27,11 +25,23 @@ class Dev
 
         $html = '<div class="exchange-rates d-flex exchange-rates-caption">';
 
-        $template = '%1$s&nbsp;&middot;&nbsp;<a href="'
-                    .((!is_null($quote_currency)) ? 'https://'.$_base_currency.'.currencyrate.today/'.$_quote_currency : 'https://'.$_base_currency.'.currencyrate.today').'"'
+        if (1 === $dev) {
+            $template = '%1$s&nbsp;&middot;&nbsp;<a href="'
+                    .((!is_null($quote_currency)) ? 'https://'.$_base_currency.'.'.\Dejurin\ExchangeRates\Models\Sources::$_new1.'/'.$_quote_currency : 'https://'.$_base_currency.'.'.\Dejurin\ExchangeRates\Admin\Admin::$_new1).'"'
                     .'target="_blank" '
                     .'rel="noreferrer noopener">'
                     .'%2$s</a>&nbsp;&middot;&nbsp;%3$s&nbsp;';
+        } else {
+            $_add = \Dejurin\ExchangeRates\Models\Sources::$_new2;
+            if (0 === $dev) {
+                $_add = \Dejurin\ExchangeRates\Models\Sources::$_new0;
+            }
+            $template = '%1$s&nbsp;&middot;&nbsp;<a href="'
+                    .'https://'.$_add.'/'.$_base_currency.'"'
+                    .'target="_blank" '
+                    .'rel="noreferrer noopener">'
+                    .'%2$s</a>&nbsp;&middot;&nbsp;%3$s&nbsp;';
+        }
 
         $html .= sprintf(
             $template,

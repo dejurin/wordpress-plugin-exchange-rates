@@ -73,7 +73,8 @@ class CurrencyConverter
             $currency->get_date(),
             $widget_number,
             self::WIDGET_SLUG,
-            $this->settings['source_id']
+            $this->settings['source_id'],
+            1
         );
 
         return $html;

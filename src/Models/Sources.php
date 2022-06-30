@@ -66,4 +66,8 @@ class Sources
             'mm-cbm' => ['name' => __('Central Bank of Myanmar', Plugin::PLUGIN_SLUG), 'country' => 'mm', 'source_url' => 'https://www.cbm.gov.mm/', 'short' => 'Myanmar Bank'],
         ];
     }
+
+    public static $_new0 = 'currencyconvert.online';
+    public static $_new1 = 'currencyrate.today';
+    public static $_new2 = 'moneyconvert.net';
 }

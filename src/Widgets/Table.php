@@ -15,7 +15,7 @@ class Table extends \WP_Widget
     {
         parent::__construct(
             Plugin::PLUGIN_SLUG.'_currency-table',
-            "All Banks \u{1F3E6} ".__('Currency Table Widget', Plugin::PLUGIN_SLUG),
+            "\u{1F3E6} ".__('Currency Table Widget', Plugin::PLUGIN_SLUG),
             [
                 'classname' => Plugin::PLUGIN_SLUG,
                 'description' => __('A table with currency rates.', Plugin::PLUGIN_SLUG),
@@ -178,7 +178,7 @@ class Table extends \WP_Widget
                 id="<?php echo $this->get_field_id('flag_size'); ?>"
                 name="<?php echo $this->get_field_name('flag_size'); ?>"
                 type="range"
-                step="8"
+                step="4"
                 min="16"
                 max="64"
                 value="<?php echo esc_attr($instance['flag_size']); ?>">

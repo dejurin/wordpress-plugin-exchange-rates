@@ -140,7 +140,8 @@ class Badge
                 $currency->get_date(),
                 $attr['id'],
                 self::BADGE_SLUG,
-                $currency->get_source_id()
+                $currency->get_source_id(),
+                2
             );
         } else {
             $err = true;

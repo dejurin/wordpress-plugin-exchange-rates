@@ -6,7 +6,7 @@ class Widgets
 {
     public static function register()
     {
-        register_widget('Dejurin\ExchangeRates\Widgets\Table');
-        register_widget('Dejurin\ExchangeRates\Widgets\Converter');
+        register_widget('\Dejurin\ExchangeRates\Widgets\Table');
+        register_widget('\Dejurin\ExchangeRates\Widgets\Converter');
     }
 }
