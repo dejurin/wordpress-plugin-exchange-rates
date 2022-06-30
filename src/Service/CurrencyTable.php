@@ -20,6 +20,7 @@ class CurrencyTable
 
     public function get_html_widget($widget_number)
     {
+        $err = true;
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
 
@@ -77,6 +78,7 @@ class CurrencyTable
             $this->parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
             $currency = new Currency($this->parameters, $currency_code);
             if ($currency->is_available()) {
+                $err = false;
                 $currency_name = $get_currencies[$currency_code]['name'];
                 $currency_region = $get_currencies[$currency_code]['region'];
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
@@ -170,6 +172,10 @@ class CurrencyTable
 
                 $this->table->add_row($output_data);
             }
+        }
+
+        if ($err) {
+            return '<b>' . Plugin::NAME . '</b> ' .__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', Plugin::PLUGIN_SLUG);
         }
 
         if ($this->parameters['base_show']) {

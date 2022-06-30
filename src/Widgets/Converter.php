@@ -151,7 +151,8 @@ class Converter extends \WP_Widget
         </fieldset>
         <hr>
         <h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
-		<textarea name="shortcode-generator" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
+        <hr>
+		<textarea name="shortcode-generator" style="width:100%" rows="8" onclick="this.focus();this.select()" readonly></textarea>
         <div class="tablenav tablenav-pages" style="float: right"><button class="button button-primary"><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
 		<?php
     }

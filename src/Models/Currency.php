@@ -159,7 +159,7 @@ class Currency
             $pre = (1 === $this->get_trend()) ? '+' : '';
             $result = self::for_format($value, $this->settings['currency_format'], $decimal);
 
-            return $pre.$result.'&percnt;';
+            return strcmp($result, '0') ? $pre.$result.'&percnt;' : $this->zero_symbol;
         } else {
             return '&ndash;';
         }
