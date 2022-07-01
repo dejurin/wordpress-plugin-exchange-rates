@@ -123,7 +123,7 @@ class Table extends \WP_Widget
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $currency_list = array_keys($rates['data'][0]['rates']);
 
-        if ($settings['source_id'] !== 'currencyrate') {
+        if ('currencyrate' !== $settings['source_id']) {
             $first_element = end($currency_list);
             array_pop($currency_list);
             array_unshift($currency_list, $first_element);
@@ -196,7 +196,7 @@ class Table extends \WP_Widget
             <label for="flag-type"><?php _e('Flag type:', Plugin::PLUGIN_SLUG); ?></label>&nbsp;
             <?php foreach (Flags::get_types() as $item) {
             echo sprintf(
-                    '<label for="flag-type-%1$s"><input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label>&nbsp;',
+                    '<label for="flag-type-%1$s"><input type="radio" id="flag-type-%1$s" name="%3$s" value="%1$s"%2$s>%4$s</label>&nbsp;&nbsp;',
                     esc_attr($item['value']),
                     checked($item['value'], $instance['flag_type'], false),
                     $this->get_field_name('flag_type'),
@@ -293,8 +293,8 @@ class Table extends \WP_Widget
             'table_headers_mid' => __('Price', Plugin::PLUGIN_SLUG),
             'table_headers_previous_close' => __('Previous Close', Plugin::PLUGIN_SLUG),
             'table_headers_changes' => __('Changes', Plugin::PLUGIN_SLUG),
-            'table_headers_name_show' => true,
-            'table_headers_mid_show' => true,
+            'table_headers_name_show' => null,
+            'table_headers_mid_show' => null,
             'table_headers_code_show' => false,
             'table_headers_previous_close_show' => false,
             'table_headers_changes_show' => false,

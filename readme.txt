@@ -15,6 +15,8 @@ Simple and powerful real-time Currency Converter and Exchange Rates widgets for 
 
 [DEMO 1](https://currencyrate.today/converter-widget) 👀
 [DEMO 2](https://codepen.io/currencyrate_today/pen/mdBqOxG) 👀
+[youtube https://www.youtube.com/watch?v=FTxvE9oeDyU]
+
 📩 Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
 
 = ⭐️ FEATURES ⭐️ =

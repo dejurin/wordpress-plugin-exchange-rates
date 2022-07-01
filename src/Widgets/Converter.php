@@ -6,7 +6,6 @@ use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Models\Sources;
-
 use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\CurrencyConverter;
 
@@ -72,14 +71,14 @@ class Converter extends \WP_Widget
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $currency_list = array_keys($rates['data'][0]['rates']);
 
-        if ($settings['source_id'] !== 'currencyrate') {
+        if ('currencyrate' !== $settings['source_id']) {
             $first_element = end($currency_list);
             array_pop($currency_list);
             array_unshift($currency_list, $first_element);
         } ?>
 
         <p><b><?php _e('Exchange rate source:', Plugin::PLUGIN_SLUG); ?></b> <?php echo $get_sources[$settings['source_id']]['name']; ?></p>
-        <fieldset style="padding:5px 15px;margin-bottom:15px">test
+        <fieldset style="padding:5px 15px;margin-bottom:15px">
             <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>
             <p>
                 <label for="<?php echo $this->get_field_id('title'); ?>">
@@ -150,7 +149,7 @@ class Converter extends \WP_Widget
             <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
         foreach ($get_list as $key => $value) {
             echo sprintf(
-                    '<p><label><input type="checkbox" name="%3$s" value="%1$s"%2$s>&nbsp;%4$s</label></p>',
+                    '<p><label><input type="checkbox" name="%3$s" value="%1$s"%2$s>%4$s</label></p>',
                     esc_attr($key),
                     checked(true, $instance[$key], false),
                     $this->get_field_name($key),

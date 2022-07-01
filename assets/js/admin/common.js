@@ -105,4 +105,13 @@ jQuery(document).ready(function() {
         _form = 'form[data-shortcode-generator]'
     }
     dejurinExchangeRates_ShortcodeGenerator(_form);
+
+    jQuery('#shortcode-badge-color').wpColorPicker({
+        change: function(event, ui){
+            dejurinExchangeRates_ShortcodeGenerator(_form);
+            jQuery('#shortcode-badge-color').val(ui.color.toString())
+        },
+        border: true,
+        palettes: false,
+    });
 });

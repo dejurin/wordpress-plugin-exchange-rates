@@ -45,7 +45,6 @@ class Badge
         $h = ('rectangular' === $flag_type) ? ($w / 4 * 3) : $w;
 
         $img_template = '<img loading="lazy" style="width:%1$spx!important;height:%2$spx!important" src="%3$s" alt="%4$s" />&nbsp;';
-        $img_template_src = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$flag_type.'/%1$s.svg';
         $line = '';
 
         if ('emoji' === $flag_type) {
@@ -60,10 +59,10 @@ class Badge
         } elseif ('none' !== $flag_type) {
             $line = sprintf(
                 $img_template,
-                sprintf($img_template_src, strtolower($currency['flag'])),
                 $w,
                 $h,
-                'title'
+                sprintf(plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.$flag_type.'/%1$s.svg', strtolower($currency['flag'])),
+                $currency['flag']
             );
         }
 

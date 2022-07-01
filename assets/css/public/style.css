@@ -2,6 +2,7 @@
 :root {
 	--bs-red: #dc3545;
 	--bs-green: #198754;
+	--bs-gray: #999999;
 	--bs-light: rgba(255, 255, 255, .25);
 	--bs-light-hover: rgba(255, 255, 255, .35);
 	--bs-table-striped-bg: rgba(0, 0, 0, .05);
@@ -52,6 +53,7 @@
 .exchange-rates .widget-exchange-rates-currency-table table {
 	margin: 0;
 	width: auto;
+	font-size: 16px;
 	vertical-align: top;
 	border-collapse: collapse !important;
 	caption-side: bottom !important;
@@ -99,7 +101,6 @@
 	background-color: transparent !important;
 }
 
-
 .exchange-rates .widget-exchange-rates-currency-table table img {
 	display: inline-block !important;
 	margin-bottom: 0 !important;
@@ -121,6 +122,7 @@
 
 .exchange-rates .widget-exchange-rates-currency-table .small {
 	font-size: small;
+	color: var(--bs-gray) !important;
 }
 
 .exchange-rates .widget-exchange-rates-currency-table .break {
@@ -156,6 +158,7 @@
 }
 
 .exchange-rates .widget-exchange-rates-currency-table input {
+	font-size: large !important;
 	border: 0;
 	padding: 0;
 	background-color: transparent !important;
@@ -242,6 +245,7 @@
 .exchange-rates .widget-exchange-rates-currency-converter select {
 	width: 100%;
 	font-size: 16px;
+	height: 40px;
 	padding: 4px 8px;
 	line-height: 1.5;
 	background-color: var(--bs-light) !important;
@@ -282,6 +286,9 @@
 	font-size: large;
 	font-weight: bold;
 }
+.exchange-rates .widget-exchange-rates-currency-converter button {
+	height: 40px;
+}
 
 .exchange-rates .widget-exchange-rates-currency-converter button.swap svg {
 	width: 24px;
@@ -296,6 +303,7 @@
 	justify-content: center !important;
 	padding: 4px 8px !important;
 	background-color: var(--bs-light) !important;
+	align-items: center;
 }
 
 .exchange-rates .widget-exchange-rates-currency-converter button.swap:hover {

@@ -130,9 +130,9 @@ class CurrencyTable
                 if ($this->parameters['table_headers_code_show']) {
                     $output_data[1] = ['data' => $currency_code];
                 }
-                
+
                 $symbol = '';
-                if ($this->parameters['symbol']) {
+                if (isset($this->parameters['symbol']) && $this->parameters['symbol']) {
                     $symbol = CurrencySymbols::get_list($this->parameters['inverse'] ? $this->parameters['base_currency'] : $currency_code);
                 }
                 $pre = $symbol;
