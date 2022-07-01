@@ -15,6 +15,8 @@ Simple and powerful real-time Currency Converter and Exchange Rates widgets for 
 
 [DEMO 1](https://currencyrate.today/converter-widget) 👀
 [DEMO 2](https://codepen.io/currencyrate_today/pen/mdBqOxG) 👀
+
+Video demonstration of the settings and capabilities of the plugin.
 [youtube https://www.youtube.com/watch?v=FTxvE9oeDyU]
 
 📩 Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
@@ -24,6 +26,20 @@ Simple and powerful real-time Currency Converter and Exchange Rates widgets for 
 - 200+ [Currencies](https://currencyrate.today/different-currencies) and Popular [CryptoCurrencies](https://currencyrate.today/other);
 - Currency exchange rate data from 55 central banks of the world;
 - Updates automatically (per hour by WordPress Cron);
+
+
+== 📌 Widgets ==
+
+- Currency Converter is easy to use, simple real-time converter;
+✔ Universal widget, it can be used on travel and property website/blog, as well as online stores.
+- Currency Table is a table with exchange rates and another features.
+✔ The currency rates table is mainly used by news websites, portals and financial forums.
+
+== 📌 Shortcode ==
+
+- Badge is a simple exchange rates list.
+✔ An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page.
+
 
 = 💱 Data sources 💱 =
 
@@ -324,6 +340,7 @@ First release.
 ℹ️ Official website & 💹 Source: [CurrencyRate](https://currencyrate.today/)
 ❓ Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
 💵 Fiat money: (https://currencyconvert.online/)
+
 💰 Your might like it:
 🔵 [Exchange Rates Widget](https://wordpress.org/plugins/exchange-rates-widget/)
 🔴 [Currency Converter Calculator](https://wordpress.org/plugins/currency-converter-calculator/)
