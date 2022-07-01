@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
         var _id;
         if (jQuery(_this).data('shortcode-generator')) {
             _id = jQuery(_this).data('shortcode-generator');
-            
+
             if (_id === '0') {
                 _id = jQuery(_this).find('input[name="id_base"]').val();
             }
@@ -53,7 +53,7 @@ jQuery(document).ready(function() {
         var currency_list = '';
 
         jQuery.each(serializeArray, function(index, attr) {
-            if (attr.name === 'shortcode-generator' || 
+            if (attr.name === 'shortcode-generator' ||
                 attr.name === 'id_base' ||
                 attr.name === 'widget-width' ||
                 attr.name === 'widget-height' ||
@@ -61,16 +61,15 @@ jQuery(document).ready(function() {
                 attr.name === 'multi_number' ||
                 attr.name === 'add_new' ||
                 attr.name === 'widget-id'
-                ) {
+            ) {
                 // ignore
             } else {
-                var attrName ='';
+                var attrName = '';
                 try {
                     attrName = (attr.name.split('[')[2]).slice(0, -1);
-                  }
-                  catch(err) {
+                } catch (err) {
                     attrName = attr.name;
-                  }
+                }
                 if (attrName === 'currency_list') {
                     currency_list += attr.value + ',';
                 } else {
@@ -79,7 +78,7 @@ jQuery(document).ready(function() {
                 }
             }
         });
-        
+
         if (currency_list !== '') {
             line += 'currency_list="' + currency_list.slice(0, currency_list.length - 1) + '"';
         }
@@ -90,7 +89,7 @@ jQuery(document).ready(function() {
             jQuery(_this).find('button').removeAttr('disabled');
             jQuery(_this).find('textarea[name="shortcode-generator"]').text(line);
         }
-        
+
     }
     jQuery(document).on("input click", 'form', function(event) {
         if (jQuery(event.target).prop("tagName") === 'BUTTON') {
@@ -107,7 +106,7 @@ jQuery(document).ready(function() {
     dejurinExchangeRates_ShortcodeGenerator(_form);
 
     jQuery('#shortcode-badge-color').wpColorPicker({
-        change: function(event, ui){
+        change: function(event, ui) {
             dejurinExchangeRates_ShortcodeGenerator(_form);
             jQuery('#shortcode-badge-color').val(ui.color.toString())
         },
