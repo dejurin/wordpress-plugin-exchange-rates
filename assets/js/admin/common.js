@@ -84,9 +84,9 @@ jQuery(document).ready(function() {
             line += 'currency_list="' + currency_list.slice(0, currency_list.length - 1) + '"';
         }
         line += ']';
-        
+
         if (jQuery(_this).find('select[multiple="multiple"] option:selected').length > 0 ||
-        jQuery(_this).find('select[multiple="multiple"]').length === 0) {
+            jQuery(_this).find('select[multiple="multiple"]').length === 0) {
             jQuery(_this).find('button').removeAttr('disabled');
             jQuery(_this).find('textarea[name="shortcode-generator"]').text(line);
         }
@@ -100,6 +100,9 @@ jQuery(document).ready(function() {
             dejurinExchangeRates_ShortcodeGenerator(this);
         }
     });
-    
-    dejurinExchangeRates_ShortcodeGenerator('form');
+    var _form = 'form';
+    if (jQuery('form[data-shortcode-generator]').length > 0) {
+        _form = 'form[data-shortcode-generator]'
+    }
+    dejurinExchangeRates_ShortcodeGenerator(_form);
 });

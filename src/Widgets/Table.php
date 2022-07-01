@@ -5,6 +5,8 @@ namespace Dejurin\ExchangeRates\Widgets;
 use Dejurin\ExchangeRates\Models\Checkbox;
 use Dejurin\ExchangeRates\Models\Currencies;
 use Dejurin\ExchangeRates\Models\Flags;
+use Dejurin\ExchangeRates\Models\Settings;
+use Dejurin\ExchangeRates\Models\Sources;
 use Dejurin\ExchangeRates\Models\TableColumns;
 use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\CurrencyTable;
@@ -115,12 +117,17 @@ class Table extends \WP_Widget
     public function form($instance)
     {
         $get_currencies = Currencies::get_list();
+        $get_sources = Sources::get_list();
         $instance = $this->_merge_instance_with_default_instance($instance);
+        $settings = get_option(Settings::$option_name, []);
         $rates = get_option(Plugin::PLUGIN_SLUG.'_rates');
         $currency_list = array_keys($rates['data'][0]['rates']);
-        $first_element = end($currency_list);
-        array_pop($currency_list);
-        array_unshift($currency_list, $first_element); ?>
+
+        if ($settings['source_id'] !== 'currencyrate') {
+            $first_element = end($currency_list);
+            array_pop($currency_list);
+            array_unshift($currency_list, $first_element);
+        } ?>
     
         <fieldset style="padding:5px 15px;margin-bottom:15px">
         <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>

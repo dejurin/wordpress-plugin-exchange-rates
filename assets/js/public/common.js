@@ -118,7 +118,6 @@ jQuery(document).ready(function() {
 				pre = '';
 			}
 
-
 			result.html(
 				pre + formatNumber(
 					rate,

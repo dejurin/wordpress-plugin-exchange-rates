@@ -231,12 +231,11 @@
 .exchange-rates .widget-exchange-rates-currency-converter {
 	text-align: center;
 	border-radius: var(--radius);
+	padding: 8px 12px !important;
 }
 
 .exchange-rates .widget-exchange-rates-currency-converter.border {
 	border: var(--bs-table-striped-bg) solid 2px !important;
-	margin-bottom: 8px;
-	padding: 8px 12px !important;
 }
 
 .exchange-rates .widget-exchange-rates-currency-converter input,
