@@ -1,4 +1,4 @@
-=== &#x1F3E6; Exchange Rates & Currency Converter - Widgets ===
+=== &#x1F3E6; Exchange Rates & Currency Converter - Widget ===
 Contributors: falselight
 Tags: currency converter, currency conversion, currency exchange, exchange rates, currencies, euro, dollar, 
 Requires at least: 5.4
@@ -11,10 +11,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == 📌 About ==
 
-Simple and powerful real-time Currency Converter and Exchange Rates widgets for your website or blog. Included exchange rates data, from 55 central banks of the world.
+Simple and powerful real-time Currency Converter and Exchange Rates widgets for your website/blog or e-commerce. Included exchange rates data, from 55 central banks of the world.
 
-[DEMO 1](https://currencyrate.today/converter-widget) 👀
-[DEMO 2](https://codepen.io/currencyrate_today/pen/mdBqOxG) 👀
 
 Video demonstration of the settings and capabilities of the plugin.
 [youtube https://www.youtube.com/watch?v=FTxvE9oeDyU]
@@ -26,6 +24,11 @@ Video demonstration of the settings and capabilities of the plugin.
 - 200+ [Currencies](https://currencyrate.today/different-currencies) and Popular [CryptoCurrencies](https://currencyrate.today/other);
 - Currency exchange rate data from 55 central banks of the world;
 - Updates automatically (per hour by WordPress Cron);
+- Flexible design and settings, easy to adapt to your style;
+- Types of currency icons: rectangular, square, circler;
+- Real-time conversion;
+- Easy-to-use;
+- Our plugin will complement your site and keep your users engaged.
 
 
 == 📌 Widgets ==
@@ -355,8 +358,7 @@ First release.
 == 🍩 Donations ==
 
 ℹ️ Official website & 💹 Source: [CurrencyRate](https://currencyrate.today/)
-❓ Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
-💵 Fiat money: (https://currencyconvert.online/)
+💵 Currency Convert Online: (https://currencyconvert.online/)
 
 💰 Your might like it:
 🔵 [Exchange Rates Widget](https://wordpress.org/plugins/exchange-rates-widget/)

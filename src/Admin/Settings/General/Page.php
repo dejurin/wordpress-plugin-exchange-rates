@@ -247,15 +247,8 @@ class Page
 					<hr>
 					<div>
 						<div>
-							<img width="128" height="128" style="float:left;padding-right:15px" src="<?php echo plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path); ?>assets/img/bank.svg" />
-						</div>
-						<div>
 						<ul>
-							<li>&#x2753; <?php _e('Feel free, write if you will have any questions:', Plugin::PLUGIN_SLUG); ?> <a href="https://t.me/converter_support" target="_blank">Online support</a></li>
-							<li>&#x1F4B0; <?php _e('Your might like it:', Plugin::PLUGIN_SLUG); ?> <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank">WP Plugin page</a></li>
-							<li>&#x1F4B9; <?php _e('Supported by:', Plugin::PLUGIN_SLUG); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
-							<li>&#x1F4B5; <?php _e('Fiat money:', Plugin::PLUGIN_SLUG); ?> <a href="https://moneyconvert.net/" target="_blank">MoneyConvert.net</a></li>
-							<li>&#x2B50; <?php _e('Supported us, please', Plugin::PLUGIN_SLUG); ?> <a href="https://wordpress.org/support/plugin/currency-converter-calculator/reviews/#new-post" target="_blank"><b><?php _e('Add your own review', Plugin::PLUGIN_SLUG); ?></b></a></li>
+							<li>&#x1F4B9; <?php _e('Supported by:', Plugin::PLUGIN_SLUG); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate.Today</a></li>
 						</ul>
 						</div>
 					</div>
