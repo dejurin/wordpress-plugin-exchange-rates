@@ -301,6 +301,7 @@ We are collect data from multiple data sources and store them on our server, [ht
 == 📌 Installation ==
 
 = From your WordPress dashboard =
+
 1. Visit "Plugins > Add New"
 2. Search for "Exchange Rates & Currency Converter - Widgets"
 3. Activate Exchange Rates & Currency Converter - Widgets from your Plugins page.
@@ -308,6 +309,7 @@ We are collect data from multiple data sources and store them on our server, [ht
 
 
 = 📌 From WordPress.org =
+
 1. Download Exchange Rates & Currency Converter - Widgets.
 2. Upload the "Exchange Rates & Currency Converter - Widgets" directory to your "/wp-content/plugins/" directory, using your favorite method (ftp, sftp, scp, etc...).
 3. Activate Exchange Rates & Currency Converter - Widgets from your Plugins page.
@@ -315,12 +317,27 @@ We are collect data from multiple data sources and store them on our server, [ht
 
 
 = 📌 From WordPress "Add Plugins" =
+
 1. Download Exchange Rates & Currency Converter - Widgets.
 2. Go to yourdomain.com/wp-admin/plugin-install.php
 3. Press button "Upload Plugin"
 3. Choise "Exchange Rates & Currency Converter - Widgets" zip archive and press button "Install Now".
 4. Add widgets on yourdomain.com/wp-admin/widgets.php page.
 
+== Screenshots ==
+
+1. screenshot-1.png - Currency Table Widget (Exchange Rates) with circular icons
+2. screenshot-2.png - Currency Converter Widget
+1. screenshot-3.png - Currency Table Widget (Exchange Rates) with circular icons, country
+1. screenshot-4.png - Currency Table Widget (Exchange Rates) with emoji icons, country
+1. screenshot-5.png - Currency Table Shortcode (Exchange Rates) with circular icons, country, code, prev price and changes
+1. screenshot-6.png - Badge Shortcode (Exchange Rates) with emoji icons
+1. screenshot-7.png - Badge Shortcode (Exchange Rates) with circular icons
+1. screenshot-8.png - Currency Table Widget (Exchange Rates) with active amount input
+1. screenshot-9.png - Currency Table Widget (Exchange Rates) with active amount input, circular icons, code, prev price and changes
+1. screenshot-10.png - Currency Table Widget (Exchange Rates) with active amount input, rectangular icons, code, prev price and changes
+1. screenshot-11.png - Admin panel / Appearance / Widgets preview
+1. screenshot-12.png - Plugin settings page
 
 == Changelog ==
 
