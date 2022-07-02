@@ -17,7 +17,7 @@ class Converter extends \WP_Widget
             Plugin::PLUGIN_SLUG.'_currency-converter',
             "\u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             [
-                'classname' => Plugin::PLUGIN_SLUG,
+                'classname' => 'cr-'.Plugin::PLUGIN_SLUG,
                 'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
             ]
         );

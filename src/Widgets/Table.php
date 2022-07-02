@@ -19,7 +19,7 @@ class Table extends \WP_Widget
             Plugin::PLUGIN_SLUG.'_currency-table',
             "\u{1F3E6} ".__('Currency Table Widget', Plugin::PLUGIN_SLUG),
             [
-                'classname' => Plugin::PLUGIN_SLUG,
+                'classname' => 'cr-'.Plugin::PLUGIN_SLUG,
                 'description' => __('A table with currency rates.', Plugin::PLUGIN_SLUG),
             ]
         );
