@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exchange Rates & Currency Converter Widgets 🏦 All "
 "Banks\n"
-"POT-Creation-Date: 2022-07-02 11:14+0300\n"
+"POT-Creation-Date: 2022-07-02 11:38+0300\n"
 "PO-Revision-Date: 2022-06-21 17:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -214,28 +214,8 @@ msgstr ""
 msgid "Copy and Paste shortcode anywhere you like;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:254
-msgid "Feel free, write if you will have any questions:"
-msgstr ""
-
-#: src/Admin/Settings/General/Page.php:255
-msgid "Your might like it:"
-msgstr ""
-
-#: src/Admin/Settings/General/Page.php:256
+#: src/Admin/Settings/General/Page.php:251
 msgid "Supported by:"
-msgstr ""
-
-#: src/Admin/Settings/General/Page.php:257
-msgid "Fiat money:"
-msgstr ""
-
-#: src/Admin/Settings/General/Page.php:258
-msgid "Supported us, please"
-msgstr ""
-
-#: src/Admin/Settings/General/Page.php:258
-msgid "Add your own review"
 msgstr ""
 
 #: src/Admin/Settings/General/Sections/CurrencyTable.php:24
