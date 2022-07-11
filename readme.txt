@@ -52,7 +52,7 @@ We are collect data from multiple data sources and store them on our server, [ht
 3. 🇦🇱 Bank of Albania
 4. 🇰🇭 Bank of Cambodia
 5. 🇨🇦 Bank of Canada
-6. 🇬🇧	Bank of England
+6. 🇬🇧 Bank of England
 7. 🇮🇱 Bank of Israel
 8. 🇲🇽 Bank of Mexico
 9. 🇲🇽 Bank of Mexico (FIX)
