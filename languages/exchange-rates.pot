@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exchange Rates & Currency Converter Widgets 🏦 All "
 "Banks\n"
-"POT-Creation-Date: 2022-07-02 11:38+0300\n"
+"POT-Creation-Date: 2022-07-11 22:46+0300\n"
 "PO-Revision-Date: 2022-06-21 17:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: install.php\n"
@@ -27,194 +27,198 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:39
+#: src/Admin/Settings/General/Page.php:36
 msgid ""
 "Advice! If you need mid-exchange rates of all currencies, select the source "
 "CurrencyRate.Today."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:47
+#: src/Admin/Settings/General/Page.php:38
+msgid "Last successful update:"
+msgstr ""
+
+#: src/Admin/Settings/General/Page.php:45
 msgid "Save"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:52
+#: src/Admin/Settings/General/Page.php:49
 msgid "No data received"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:56
+#: src/Admin/Settings/General/Page.php:52
 msgid "Rate (today)"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:59
-#: src/Admin/Settings/General/Page.php:70
+#: src/Admin/Settings/General/Page.php:55
+#: src/Admin/Settings/General/Page.php:66
 msgid "Check Date"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:60
-#: src/Admin/Settings/General/Page.php:71
+#: src/Admin/Settings/General/Page.php:56
+#: src/Admin/Settings/General/Page.php:67
 msgid "Local Date"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:63
+#: src/Admin/Settings/General/Page.php:59
 msgid "Rate no data."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:67
+#: src/Admin/Settings/General/Page.php:63
 msgid "Previous close (yesterday)"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:74
+#: src/Admin/Settings/General/Page.php:70
 msgid "Previous close no data."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:79
+#: src/Admin/Settings/General/Page.php:75
 msgid ""
 "No data received. Press the \"Save\" button to force an update of the data."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:80
+#: src/Admin/Settings/General/Page.php:76
 msgid "ERROR"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:84
+#: src/Admin/Settings/General/Page.php:80
 msgid "If you want to force an update, click on the button \"Save\"."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:93
+#: src/Admin/Settings/General/Page.php:88
 msgid "Source table"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:94
+#: src/Admin/Settings/General/Page.php:89
 msgid "List of sources that you can select as a source of exchange rate data."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:98
+#: src/Admin/Settings/General/Page.php:93
 msgid "Currency Table"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:99
+#: src/Admin/Settings/General/Page.php:94
 msgid ""
 "List of currencies that are supported by the current exchange rate data "
 "source."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:108
+#: src/Admin/Settings/General/Page.php:103
 msgid "Badge shortcode generator "
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:115
+#: src/Admin/Settings/General/Page.php:110
 msgid "Color badge"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:123
+#: src/Admin/Settings/General/Page.php:118
 msgid "Amount"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:131
+#: src/Admin/Settings/General/Page.php:126
 msgid "Base Currency"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:150
+#: src/Admin/Settings/General/Page.php:142
 msgid "Currency list"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:167
+#: src/Admin/Settings/General/Page.php:159
 msgid "Flag type"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:182
+#: src/Admin/Settings/General/Page.php:174
 #: src/Admin/Settings/General/Sections/Fields/Decimals.php:14
 msgid "Decimals"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:191 src/Widgets/Converter.php:148
+#: src/Admin/Settings/General/Page.php:183 src/Widgets/Converter.php:148
 #: src/Widgets/Table.php:209
 msgid "Options"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:209 src/Widgets/Converter.php:166
+#: src/Admin/Settings/General/Page.php:201 src/Widgets/Converter.php:166
 #: src/Widgets/Table.php:265
 msgid "Generate"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:215
+#: src/Admin/Settings/General/Page.php:207
 msgid "Help"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:216
+#: src/Admin/Settings/General/Page.php:208
 msgid "This Plugin includes two widgets and one shortcode."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:218
+#: src/Admin/Settings/General/Page.php:209
 msgid "Widgets"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:220
+#: src/Admin/Settings/General/Page.php:211
 msgid "Currency Converter is easy to use, simple real-time converter;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:221
+#: src/Admin/Settings/General/Page.php:212
 msgid ""
 "Universal widget, it can be used on travel and property website/blog, as "
 "well as online stores."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:224
+#: src/Admin/Settings/General/Page.php:215
 msgid "Currency Table is a table with exchange rates and another features."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:225
+#: src/Admin/Settings/General/Page.php:216
 msgid ""
 "The currency rates table is mainly used by news websites, portals and "
 "financial forums."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:227 src/Widgets/Converter.php:161
+#: src/Admin/Settings/General/Page.php:218 src/Widgets/Converter.php:161
 #: src/Widgets/Table.php:260
 msgid "Shortcode"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:230
+#: src/Admin/Settings/General/Page.php:221
 msgid "Badge is a simple exchange rates list."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:232
+#: src/Admin/Settings/General/Page.php:223
 msgid ""
 "An excellent shortcode that can be used in international online stores. "
 "With ease you can add a list of prices in different currencies to the "
 "product page."
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:235
+#: src/Admin/Settings/General/Page.php:226
 msgid "How to install widget?"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:237
+#: src/Admin/Settings/General/Page.php:228
 msgid "Go to Appearance &rarr; Widgets;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:238
+#: src/Admin/Settings/General/Page.php:229
 msgid "Legacy Widget &rarr; Choose Widget;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:239
-#: src/Admin/Settings/General/Page.php:245
+#: src/Admin/Settings/General/Page.php:230
+#: src/Admin/Settings/General/Page.php:236
 msgid "Enjoy!"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:241
+#: src/Admin/Settings/General/Page.php:232
 msgid "How to install shortcode?"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:243
+#: src/Admin/Settings/General/Page.php:234
 msgid "Generate shortcode from this page;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:244
+#: src/Admin/Settings/General/Page.php:235
 msgid "Copy and Paste shortcode anywhere you like;"
 msgstr ""
 
-#: src/Admin/Settings/General/Page.php:251
+#: src/Admin/Settings/General/Page.php:242
 msgid "Supported by:"
 msgstr ""
 
@@ -249,11 +253,11 @@ msgstr ""
 msgid "Formatting"
 msgstr ""
 
-#: src/Admin/Settings/General/Sections/Fields/Source.php:16
+#: src/Admin/Settings/General/Sections/Fields/Source.php:15
 msgid "Sources"
 msgstr ""
 
-#: src/Admin/Settings/General/Sections/Settings.php:72
+#: src/Admin/Settings/General/Sections/Settings.php:69
 msgid ""
 "Different data providers may provide different sets of currencies and their "
 "prices. We recommend you select local data provider."
@@ -1787,6 +1791,26 @@ msgid ""
 "that could be affected by changes in the exchange rates."
 msgstr ""
 
+#: src/Models/Flags.php:23
+msgid "None"
+msgstr ""
+
+#: src/Models/Flags.php:24
+msgid "Rectangular"
+msgstr ""
+
+#: src/Models/Flags.php:25
+msgid "Square"
+msgstr ""
+
+#: src/Models/Flags.php:26
+msgid "Circular"
+msgstr ""
+
+#: src/Models/Flags.php:27
+msgid "Emoji"
+msgstr ""
+
 #: src/Models/Sources.php:12
 msgid "CurrencyRate.Today"
 msgstr ""
@@ -2031,7 +2055,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/Service/CurrencyTable.php:181 src/Shortcodes/Badge.php:150
+#: src/Service/CurrencyTable.php:181 src/Shortcodes/Badge.php:154
 msgid ""
 "Error: Check parameters of widget or shortcode. Probably you changed the "
 "source of currency rates, where there was not the desired currency that you "
@@ -2146,7 +2170,7 @@ msgid "Show table header"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "&#x1F3E6; Exchange Rates & Currency Converter - Widget"
+msgid "Exchange Rates 🏦"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -2156,7 +2180,7 @@ msgstr ""
 #. Description of the plugin/theme
 msgid ""
 "❤️‍ It is a currency plugin, easy-to-use, with beautiful UI widgets and "
-"shortcode. Included exchange rates of 55 banks of the world."
+"shortcode. Included exchange rates of 🏦 55 banks of the world."
 msgstr ""
 
 #. Author of the plugin/theme
