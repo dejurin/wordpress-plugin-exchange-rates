@@ -9,11 +9,11 @@ class TableColumns
     public static function get_list()
     {
         return [
-            'name' => __('Currency col:', Plugin::PLUGIN_SLUG),
-            'code' => __('Code col:', Plugin::PLUGIN_SLUG),
-            'mid' => __('Price col:', Plugin::PLUGIN_SLUG),
-            'previous_close' => __('Previous Close col:', Plugin::PLUGIN_SLUG),
-            'changes' => __('Changes col:', Plugin::PLUGIN_SLUG),
+            'name' => esc_html__('Currency col:', 'exchange-rates'),
+            'code' => esc_html__('Code col:', 'exchange-rates'),
+            'mid' => esc_html__('Price col:', 'exchange-rates'),
+            'previous_close' => esc_html__('Previous Close col:', 'exchange-rates'),
+            'changes' => esc_html__('Changes col:', 'exchange-rates'),
         ];
     }
 }

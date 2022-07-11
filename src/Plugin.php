@@ -5,7 +5,7 @@ namespace Dejurin\ExchangeRates;
 class Plugin
 {
     public const VERSION = '0.0.1';
-    public const NAME = 'Exchange Rates';
+    public const NAME = 'Exchange Rates 🏦';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
 

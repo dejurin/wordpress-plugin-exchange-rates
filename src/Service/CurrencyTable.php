@@ -178,7 +178,7 @@ class CurrencyTable
         }
 
         if ($err) {
-            return '<b>'.Plugin::NAME.'</b> '.__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', Plugin::PLUGIN_SLUG);
+            return '<b>'.Plugin::NAME.'</b> '.esc_html__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', 'exchange-rates');
         }
 
         if ($this->parameters['base_show']) {

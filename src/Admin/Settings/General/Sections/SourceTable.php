@@ -22,10 +22,10 @@ class SourceTable
         ]);
         $table->set_heading([
             ['data' => '', 'width' => '1%'],
-            __('Item', Plugin::PLUGIN_SLUG),
-            __('ID', Plugin::PLUGIN_SLUG),
-            __('Base', Plugin::PLUGIN_SLUG),
-            __('Last Update', Plugin::PLUGIN_SLUG),
+            esc_html__('Item', 'exchange-rates'),
+            esc_html__('ID', 'exchange-rates'),
+            esc_html__('Base', 'exchange-rates'),
+            esc_html__('Last Update', 'exchange-rates'),
         ]);
 
         $get_sources = Sources::get_list();
@@ -34,16 +34,16 @@ class SourceTable
 
         foreach ($sources['data'] as $key => $value) {
             $table->add_row([
-                '<img width="16" height="16" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.$value['country'].'.svg" />',
-                (isset($get_sources[$value['source']])) ? $get_sources[$value['source']]['name'] : esc_html($value['source']),
-                '<code>'.$value['source'].'</code>',
-                '<code>'.$value['base'].'</code>',
-                get_date_from_gmt($value['lastupdate'], 'Y-m-d H:i:s'),
+                '<img width="16" height="16" alt="'.esc_attr($value['source']).'" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.esc_attr($value['country']).'.svg" />',
+                (isset($get_sources[$value['source']])) ? esc_attr($get_sources[$value['source']]['name']) : esc_attr($value['source']),
+                '<code>'.esc_html($value['source']).'</code>',
+                '<code>'.esc_html($value['base']).'</code>',
+                esc_html(get_date_from_gmt($value['lastupdate'], 'Y-m-d H:i:s')),
             ]);
         }
 
         $html = $table->generate();
 
-        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
+        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
     }
 }

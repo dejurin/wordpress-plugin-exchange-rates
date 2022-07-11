@@ -20,7 +20,7 @@ class UpdateDataSources
 
         // Update sources
         $get_data_sources = DataSources::getInstance();
-        $sources = $get_data_sources->get_sources_data();
+        // $sources = $get_data_sources->get_sources_data();
 
         $req = new Request(self::$rates_api_uri.'rates/'.$settings['source_id'].'.json');
         self::$req_rates = $req->data();
@@ -33,7 +33,8 @@ class UpdateDataSources
             $settings['update_timestamp'] = time();
         }
 
-        $result = update_option(Settings::$option_name, $settings);
+        // $result = 
+        update_option(Settings::$option_name, $settings);
 
         return self::$req_rates['status'];
     }

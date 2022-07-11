@@ -59,8 +59,6 @@ class Settings
         if (isset($values['source_id'])) {
             \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data();
         }
-
-        // Соединяем дефолотные + текущие с теми, что были введены сейчас
         $values = wp_parse_args($values, $current_options);
 
         return $values;
@@ -68,8 +66,6 @@ class Settings
 
     public static function render()
     {
-        echo '<p>';
-        _e('Different data providers may provide different sets of currencies and their prices. We recommend you select local data provider.', Plugin::NAME);
-        echo '</p>';
+        echo '<p>',esc_html__('Different data providers may provide different sets of currencies and their prices. We recommend you select local data provider.', 'exchange-rates'),'</p>';
     }
 }

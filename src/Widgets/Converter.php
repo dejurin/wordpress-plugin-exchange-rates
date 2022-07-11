@@ -15,10 +15,10 @@ class Converter extends \WP_Widget
     {
         parent::__construct(
             Plugin::PLUGIN_SLUG.'_currency-converter',
-            "\u{1F3E6} ".__('Currency Converter Widget', Plugin::PLUGIN_SLUG),
+            "🏦 ".esc_html__('Currency Converter Widget', 'exchange-rates'),
             [
                 'classname' => 'cr-'.Plugin::PLUGIN_SLUG,
-                'description' => __('Currency Converter Widget', Plugin::PLUGIN_SLUG),
+                'description' => esc_html__('Currency Converter Widget', 'exchange-rates'),
             ]
         );
 
@@ -31,14 +31,14 @@ class Converter extends \WP_Widget
 
         $object = new CurrencyConverter();
         $object->parameters = [
-            'title' => (string) $instance['title'],
-            'amount' => (float) $instance['amount'],
-            'from' => (string) $instance['from'],
-            'to' => (string) $instance['to'],
-            'code' => (bool) $instance['code'],
-            'border' => (bool) $instance['border'],
-            'symbol' => (bool) $instance['symbol'],
-            'after' => (bool) $instance['after'],
+            'title' => (string) sanitize_text_field($instance['title']),
+            'amount' => (float) sanitize_text_field($instance['amount']),
+            'from' => (string) sanitize_text_field($instance['from']),
+            'to' => (string) sanitize_text_field($instance['to']),
+            'code' => (bool) sanitize_text_field($instance['code']),
+            'border' => (bool) sanitize_text_field($instance['border']),
+            'symbol' => (bool) sanitize_text_field($instance['symbol']),
+            'after' => (bool) sanitize_text_field($instance['after']),
         ];
 
         echo $args['before_widget'];
@@ -77,41 +77,41 @@ class Converter extends \WP_Widget
             array_unshift($currency_list, $first_element);
         } ?>
 
-        <p><b><?php _e('Exchange rate source:', Plugin::PLUGIN_SLUG); ?></b> <?php echo $get_sources[$settings['source_id']]['name']; ?></p>
+        <p><b><?php esc_html_e('Exchange rate source:', 'exchange-rates'); ?></b> <?php echo esc_html($get_sources[$settings['source_id']]['name']); ?></p>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
-            <legend><?php _e('Titles', Plugin::PLUGIN_SLUG); ?></legend>
+            <legend><?php esc_html_e('Titles', 'exchange-rates'); ?></legend>
             <p>
-                <label for="<?php echo $this->get_field_id('title'); ?>">
-                    <?php _e('Title:', Plugin::PLUGIN_SLUG); ?>
+                <label for="<?php echo esc_html($this->get_field_id('title')); ?>">
+                    <?php esc_html_e('Title:', 'exchange-rates'); ?>
                     <input 
-                        id="<?php echo $this->get_field_id('title'); ?>"
-                        name="<?php echo $this->get_field_name('title'); ?>"
+                        id="<?php echo esc_html($this->get_field_id('title')); ?>"
+                        name="<?php echo esc_html($this->get_field_name('title')); ?>"
                         value="<?php echo esc_attr($instance['title']); ?>"
                         type="text">
                 </label>
             </p>
             <p>
-                <small><?php _e('Title of widget.', Plugin::PLUGIN_SLUG); ?></small>
+                <small><?php esc_html_e('Title of widget.', 'exchange-rates'); ?></small>
             </p>
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
-        <legend><?php _e('Currency', Plugin::PLUGIN_SLUG); ?></legend>
+        <legend><?php esc_html_e('Currency', 'exchange-rates'); ?></legend>
         <p>
-			<label for="<?php echo $this->get_field_id('amount'); ?>">
-                <?php _e('Amount:', Plugin::PLUGIN_SLUG); ?>
+			<label for="<?php echo esc_html($this->get_field_id('amount')); ?>">
+                <?php esc_html_e('Amount:', 'exchange-rates'); ?>
             <input 
-                id="<?php echo $this->get_field_id('amount'); ?>"
-                name="<?php echo $this->get_field_name('amount'); ?>"
-                value="<?php echo esc_attr($instance['amount']); ?>"
+                id="<?php echo esc_html($this->get_field_id('amount')); ?>"
+                name="<?php echo esc_html($this->get_field_name('amount')); ?>"
+                value="<?php echo esc_html($instance['amount']); ?>"
                 type="text">
             </label>
         </p>
 		<p>
-            <small><?php _e('Amount multiplied by the rate.', Plugin::PLUGIN_SLUG); ?></small>
+            <small><?php esc_html_e('Amount multiplied by the rate.', 'exchange-rates'); ?></small>
         </p>
 		<p>
-            <label for="<?php echo $this->get_field_id('from'); ?>"><?php _e('Base currency:', Plugin::PLUGIN_SLUG); ?></label>
-            <select id="<?php echo $this->get_field_id('from'); ?>" name="<?php echo $this->get_field_name('from'); ?>">
+            <label for="<?php echo esc_html($this->get_field_id('from')); ?>"><?php esc_html_e('Base currency:', 'exchange-rates'); ?></label>
+            <select id="<?php echo esc_html($this->get_field_id('from')); ?>" name="<?php echo esc_html($this->get_field_name('from')); ?>">
 			<?php
 
         foreach ($currency_list as $value) {
@@ -125,11 +125,11 @@ class Converter extends \WP_Widget
             </select>
         </p>
 		<p>
-            <small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small>
+            <small><?php esc_html_e('The currency in which will be settled other currencies.', 'exchange-rates'); ?></small>
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('to'); ?>"><?php _e('Quote currency:', Plugin::PLUGIN_SLUG); ?></label>
-            <select id="<?php echo $this->get_field_id('to'); ?>" name="<?php echo $this->get_field_name('to'); ?>">
+            <label for="<?php echo esc_html($this->get_field_id('to')); ?>"><?php esc_html_e('Quote currency:', 'exchange-rates'); ?></label>
+            <select id="<?php echo esc_html($this->get_field_id('to')); ?>" name="<?php echo esc_html($this->get_field_name('to')); ?>">
             <?php foreach ($currency_list as $value) {
             printf(
                         '<option value="%s"%s>%s</option>',
@@ -141,36 +141,36 @@ class Converter extends \WP_Widget
             </select>
         </p>
 		<p>
-            <small><?php _e('The currency in which will be settled other currencies.', Plugin::PLUGIN_SLUG); ?></small>
+            <small><?php esc_html_e('The currency in which will be settled other currencies.', 'exchange-rates'); ?></small>
         </p>
         </fieldset>
         <fieldset style="padding:5px 15px;margin-bottom:15px">
-            <legend><?php _e('Options', Plugin::PLUGIN_SLUG); ?></legend>
+            <legend><?php esc_html_e('Options', 'exchange-rates'); ?></legend>
             <?php $get_list = array_slice(Checkbox::get_list(), 4, 4);
         foreach ($get_list as $key => $value) {
             echo sprintf(
                     '<p><label><input type="checkbox" name="%3$s" value="%1$s"%2$s>%4$s</label></p>',
                     esc_attr($key),
                     checked(true, $instance[$key], false),
-                    $this->get_field_name($key),
-                    $value
+                    esc_html($this->get_field_name($key)),
+                    esc_html($value)
                 );
         } ?>
         </fieldset>
         <hr>
-        <h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
-        <p><small><?php _e('If you only need a widget, ignore this shortcode.', Plugin::PLUGIN_SLUG); ?><br/>
-        <?php _e('If you want to put the widget anywhere on your website/blog, use the shortcode.', Plugin::PLUGIN_SLUG); ?></small></p>
-        <input type="hidden" name="id" value="<?php echo time(); ?>">
+        <h3><?php esc_html_e('Shortcode', 'exchange-rates'); ?></h3>
+        <p><small><?php esc_html_e('If you only need a widget, ignore this shortcode.', 'exchange-rates'); ?><br/>
+        <?php esc_html_e('If you want to put the widget anywhere on your website/blog, use the shortcode.', 'exchange-rates'); ?></small></p>
+        <input type="hidden" name="id" value="<?php echo esc_html(time()); ?>">
 		<textarea name="shortcode-generator" style="width:100%" rows="8" onclick="this.focus();this.select()" readonly></textarea>
-        <div style="float: right"><button class="button button-primary" disabled><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
+        <div style="float:right"><button class="button button-primary" disabled><?php esc_html_e('Generate', 'exchange-rates'); ?></button></div>
 		<?php
     }
 
     private function _merge_instance_with_default_instance($instance)
     {
         $settings = [
-            'title' => __('Currency Converter', Plugin::PLUGIN_SLUG),
+            'title' => esc_html__('Currency Converter', 'exchange-rates'),
             'amount' => 1,
             'from' => 'USD',
             'to' => 'EUR',

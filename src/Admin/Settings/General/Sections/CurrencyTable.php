@@ -21,11 +21,11 @@ class CurrencyTable
         ]);
         $table->set_heading([
             ['data' => '', 'width' => '1%'],
-            __('Currency', Plugin::PLUGIN_SLUG),
-            __('ISO code', Plugin::PLUGIN_SLUG),
-            __('Rate', Plugin::PLUGIN_SLUG),
-            __('Close', Plugin::PLUGIN_SLUG),
-            __('Region', Plugin::PLUGIN_SLUG),
+            esc_html__('Currency', 'exchange-rates'),
+            esc_html__('ISO code', 'exchange-rates'),
+            esc_html__('Rate', 'exchange-rates'),
+            esc_html__('Close', 'exchange-rates'),
+            esc_html__('Region', 'exchange-rates'),
         ]);
 
         $get_currencies = Currencies::get_list();
@@ -36,18 +36,18 @@ class CurrencyTable
         foreach ($get_currencies as $key => $value) {
             if (isset($rates['data'][0]['rates'][$key])) {
                 $table->add_row([
-                    '<img width="16" height="16" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.strtolower($value['flag']).'.svg" />',
+                    '<img width="16" height="16" alt="'.esc_attr($key).'" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.esc_attr(strtolower($value['flag'])).'.svg" />',
                     $value['name'],
-                    '<code>'.$key.'</code>',
-                    $rates['data'][0]['rates'][$key],
-                    $close ? $rates['data'][1]['rates'][$key] : '&ndash;',
-                    $value['region'],
+                    '<code>'.esc_attr($key).'</code>',
+                    esc_attr($rates['data'][0]['rates'][$key]),
+                    $close ? ($rates['data'][1]['rates'][$key]) : esc_attr('&ndash;'),
+                    esc_attr($value['region']),
                 ]);
             }
         }
 
         $html = $table->generate();
 
-        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',_e('Show More/Less', Plugin::PLUGIN_SLUG),'</button></p>';
+        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
     }
 }

@@ -66,7 +66,7 @@ class CurrencyConverter
         $this->parameters['quote_currency'] = $this->parameters['to'];
 
         $html .= json_encode($arr);
-        $html .= "'>".__('Loading...', Plugin::PLUGIN_SLUG);
+        $html .= "'>".esc_html__('Loading...', 'exchange-rates');
         $html .= '</div>';
         $html .= Dev::caption(
             $this->parameters,

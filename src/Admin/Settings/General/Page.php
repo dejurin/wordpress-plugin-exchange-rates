@@ -27,76 +27,71 @@ class Page
         $get_sources_data = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data();
         $currency_list = array_keys($rates['data'][0]['rates']); ?>
 		<div class="wrap">
-			
 			<h1>
-				
 				<?php echo Plugin::NAME; ?>
 			</h1>
-			
 			<hr>
 			<div class="row">
 				<div class="col">
-						<p><?php _e('Advice! If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', Plugin::PLUGIN_SLUG); ?></p>
-						<?php if ($settings['rates_available']) { ?>
-						<p><b>Last successful update</b>: <?php echo date('r', $settings['update_timestamp']); ?></p>
-						<?php } ?>
+					<p><?php esc_html_e('Advice! If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', 'exchange-rates'); ?></p>
+					<?php if ($settings['rates_available']) { ?>
+					<p><b><?php esc_html_e('Last successful update:', 'exchange-rates'); ?></b> 
+					<?php echo esc_html(date('r', $settings['update_timestamp'])); ?></p>
+					<?php } ?>
 					<form action="options.php" method="post">
 						<?php
                         settings_fields(Plugin::PLUGIN_SLUG.'-general');
-        do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
-        submit_button(__('Save', Plugin::PLUGIN_SLUG)); ?>
+        				do_settings_sections(Plugin::PLUGIN_SLUG.'-general');
+        				submit_button(esc_html__('Save', 'exchange-rates')); ?>
 					</form>
 				</div>
 				<div class="col">
-				
-					<h3><?php echo (isset($rates['source'])) ? $get_sources[$rates['source']]['name'] : __('No data received', Plugin::PLUGIN_SLUG); ?></h3>
-			
+					<h3><?php echo (isset($rates['source'])) ? esc_html($get_sources[$rates['source']]['name']) : esc_html__('No data received', 'exchange-rates'); ?></h3>
 					<div class="row">
 						<div class="col p-0">
-							<b><?php _e('Rate (today)', Plugin::PLUGIN_SLUG); ?></b>
+							<b><?php esc_html_e('Rate (today)', 'exchange-rates'); ?></b>
 							<?php if (isset($rates['data'][0])) { ?>
 							<ul>
-								<li><b><?php _e('Check Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][0]['put_time'], 'Y-m-d H:i:s'); ?></li>
-								<li><b><?php _e('Local Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][0]['local_time'], 'Y-m-d H:i:s'); ?></li>
+								<li><b><?php esc_html_e('Check Date', 'exchange-rates'); ?></b>: <?php echo esc_html(get_date_from_gmt($rates['data'][0]['put_time'], 'Y-m-d H:i:s')); ?></li>
+								<li><b><?php esc_html_e('Local Date', 'exchange-rates'); ?></b>: <?php echo esc_html(get_date_from_gmt($rates['data'][0]['local_time'], 'Y-m-d H:i:s')); ?></li>
 							</ul>
 							<?php } else { ?>
-							<p><?php _e('Rate no data.', Plugin::PLUGIN_SLUG); ?></p>
+							<p><?php esc_html_e('Rate no data.', 'exchange-rates'); ?></p>
 							<?php } ?>
 						</div>
 						<div class="col p-0">
-							<b><?php _e('Previous close (yesterday)', Plugin::PLUGIN_SLUG); ?></b>
+							<b><?php esc_html_e('Previous close (yesterday)', 'exchange-rates'); ?></b>
 							<?php if (isset($rates['data'][1])) { ?>
 							<ul>
-								<li><b><?php _e('Check Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][1]['put_time'], 'Y-m-d H:i:s'); ?></li>
-								<li><b><?php _e('Local Date', Plugin::PLUGIN_SLUG); ?></b>: <?php echo get_date_from_gmt($rates['data'][1]['local_time'], 'Y-m-d H:i:s'); ?></li>
+								<li><b><?php esc_html_e('Check Date', 'exchange-rates'); ?></b>: <?php echo esc_html(get_date_from_gmt($rates['data'][1]['put_time'], 'Y-m-d H:i:s')); ?></li>
+								<li><b><?php esc_html_e('Local Date', 'exchange-rates'); ?></b>: <?php echo esc_html(get_date_from_gmt($rates['data'][1]['local_time'], 'Y-m-d H:i:s')); ?></li>
 							</ul>
 							<?php } else { ?>
-							<p><?php _e('Previous close no data.', Plugin::PLUGIN_SLUG); ?></p>
+							<p><?php esc_html_e('Previous close no data.', 'exchange-rates'); ?></p>
 							<?php } ?>
 						</div>
 					</div>
 					<?php if (!isset($rates['source'])) { ?>
-						<h2><?php _e('No data received. Press the "Save" button to force an update of the data.', Plugin::PLUGIN_SLUG); ?></h2>
-						<p class="m-0"><b><?php _e('ERROR', Plugin::PLUGIN_SLUG); ?>:</b>
-							<?php echo $get_sources_data['error']; ?>
+						<h2><?php esc_html_e('No data received. Press the "Save" button to force an update of the data.', 'exchange-rates'); ?></h2>
+						<p class="m-0"><b><?php esc_html_e('ERROR', 'exchange-rates'); ?>:</b>
+							<?php echo esc_html($get_sources_data['error']); ?>
 						</p>
 					<?php } else { ?>
-					<p class="m-0"><b><?php _e('If you want to force an update, click on the button "Save".', Plugin::PLUGIN_SLUG); ?></b></p>
+					<p class="m-0"><b><?php esc_html_e('If you want to force an update, click on the button "Save".', 'exchange-rates'); ?></b></p>
 					<?php } ?>
-				
 				</div>
 			</div>
 			<?php if ($rates) { ?>
 			<hr>
 			<div class="row">
 				<div class="col">
-					<h2 id="source-table"><?php _e('Source table', Plugin::PLUGIN_SLUG); ?></h2>
-					<p><?php _e('List of sources that you can select as a source of exchange rate data.', Plugin::PLUGIN_SLUG); ?></p>
+					<h2 id="source-table"><?php esc_html_e('Source table', 'exchange-rates'); ?></h2>
+					<p><?php esc_html_e('List of sources that you can select as a source of exchange rate data.', 'exchange-rates'); ?></p>
 					<?php Sections\SourceTable::init(); ?>
 				</div>
 				<div class="col">
-					<h2 id="currency-table"><?php _e('Currency Table', Plugin::PLUGIN_SLUG); ?></h2>
-					<p><?php _e('List of currencies that are supported by the current exchange rate data source.', Plugin::PLUGIN_SLUG); ?></p>
+					<h2 id="currency-table"><?php esc_html_e('Currency Table', 'exchange-rates'); ?></h2>
+					<p><?php esc_html_e('List of currencies that are supported by the current exchange rate data source.', 'exchange-rates'); ?></p>
 					<?php Sections\CurrencyTable::init(); ?>
 				</div>
 			</div>
@@ -105,14 +100,14 @@ class Page
 			<div class="row">
 				<?php if ($rates) { ?>
 				<div class="col p-0">
-				<h2><?php _e('Badge shortcode generator ', Plugin::PLUGIN_SLUG); ?></h2>
+				<h2><?php esc_html_e('Badge shortcode generator ', 'exchange-rates'); ?></h2>
 					<form data-shortcode-generator="<?php echo Plugin::PLUGIN_SLUG; ?>_badge">
 					<input type="hidden" name="id_base" value="<?php echo Plugin::PLUGIN_SLUG; ?>_badge"/>
 					<table class="form-table">
 						<tbody>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-color"><?php _e('Color badge', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-color"><?php esc_html_e('Color badge', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<input type="text" id="shortcode-badge-color" name="color" value="#024bf4">
@@ -120,7 +115,7 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-amount"><?php _e('Amount', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-amount"><?php esc_html_e('Amount', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<input type="text" id="shortcode-badge-amount" name="amount" value="1">
@@ -128,58 +123,55 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-base_currency"><?php _e('Base Currency', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-base_currency"><?php esc_html_e('Base Currency', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<select id="shortcode-badge-base_currency" name="base_currency">
-										<?php
-
-        foreach ($currency_list as $value) {
-            printf(
+										<?php foreach ($currency_list as $value) { printf(
                                                     '<option value="%s"%s>%s</option>',
                                                     esc_attr($value),
                                                     selected($value, $rates['base'], false),
                                                     esc_html($value.' - '.$get_currencies[$value]['name'])
                                                 );
-        } ?>
+        									} ?>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-currency_list"><?php _e('Currency list', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-currency_list"><?php esc_html_e('Currency list', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<select multiple="multiple" class="resize-both" size="10" id="shortcode-badge-currency_list" name="currency_list">
 										<?php foreach ($currency_list as $value) {
-            printf(
+            														printf(
                                                 '<option value="%s"%s>%s</option>',
                                                 esc_attr($value),
                                                 selected('EUR', $value, false),
                                                 esc_html($value.' - '.$get_currencies[$value]['name'])
                                             );
-        } ?>
+        								} ?>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<th scope="row">
-									<label><?php _e('Flag type', Plugin::PLUGIN_SLUG); ?></label>
+									<label><?php esc_html_e('Flag type', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<?php foreach (Flags::get_types() as $item) {
-            echo sprintf(
+            							echo sprintf(
                                             '<input type="radio" id="shortcode-badge-flag_type-%1$s" name="flag_type" value="%1$s"%3$s><label for="shortcode-badge-flag_type-%1$s">%2$s</label>&nbsp;',
                                             esc_attr($item['value']),
-                                            $item['name'],
+                                            esc_html($item['name']),
                                             checked($item['value'], 'none', false)
                                         );
-        } ?>
+        							} ?>
 								</td>
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="shortcode-badge-decimals"><?php _e('Decimals', Plugin::PLUGIN_SLUG); ?></label>
+									<label for="shortcode-badge-decimals"><?php esc_html_e('Decimals', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<input id="shortcode-badge-decimals" name="decimals" type="range" step="1" min="0" max="7" value="<?php echo $settings['decimals']; ?>">
@@ -188,17 +180,17 @@ class Page
 							</tr>
 							<tr>
 								<th scope="row">
-									<label><?php _e('Options', Plugin::PLUGIN_SLUG); ?></label>
+									<label><?php esc_html_e('Options', 'exchange-rates'); ?></label>
 								</th>
 								<td>
 									<?php $checkbox = array_slice(Checkbox::get_list(), 2, 5);
-        foreach ($checkbox as $key => $value) {
-            echo sprintf(
+        								foreach ($checkbox as $key => $value) {
+            								echo sprintf(
                                             '<p><label><input type="checkbox" name="%1$s">&nbsp;%2$s</label></p>',
                                             esc_attr($key),
-                                            $value
+                                            esc_html($value)
                                         );
-        } ?>
+        							} ?>
 								</td>
 							</tr>
 						</tbody>
@@ -206,49 +198,48 @@ class Page
 					<input type="hidden" name="id" value="<?php echo time(); ?>">
 					<hr>
 					<textarea name="shortcode-generator" style="width:100%" rows="3" onclick="this.focus();this.select()" readonly></textarea>
-					<div style="float: right"><button class="button button-primary" disabled><?php _e('Generate', Plugin::PLUGIN_SLUG); ?></button></div>
+					<div style="float: right"><button class="button button-primary" disabled><?php esc_html_e('Generate', 'exchange-rates'); ?></button></div>
 					</form>
 					
 				</div>
 				<?php } ?>
 				<div class="col p-0">
-					<h1><?php _e('Help', Plugin::PLUGIN_SLUG); ?></h1>
-					<p><?php _e('This Plugin includes two widgets and one shortcode.', Plugin::PLUGIN_SLUG); ?></p>
-
-					<h3><?php _e('Widgets', Plugin::PLUGIN_SLUG); ?></h3>
+					<h1><?php esc_html_e('Help', 'exchange-rates'); ?></h1>
+					<p><?php esc_html_e('This Plugin includes two widgets and one shortcode.', 'exchange-rates'); ?></p>
+					<h3><?php esc_html_e('Widgets', 'exchange-rates'); ?></h3>
 					<ol>
-					<li><?php _e('Currency Converter is easy to use, simple real-time converter;', Plugin::PLUGIN_SLUG); ?><br>
-					&#x2714&nbsp;<?php _e('Universal widget, it can be used on travel and property website/blog, as well as online stores.', Plugin::PLUGIN_SLUG); ?>
+					<li><?php esc_html_e('Currency Converter is easy to use, simple real-time converter;', 'exchange-rates'); ?><br>
+					✔&nbsp;<?php esc_html_e('Universal widget, it can be used on travel and property website/blog, as well as online stores.', 'exchange-rates'); ?>
 					</li>
 
-					<li><?php _e('Currency Table is a table with exchange rates and another features.', Plugin::PLUGIN_SLUG); ?><br>
-					&#x2714&nbsp;<?php _e('The currency rates table is mainly used by news websites, portals and financial forums.', Plugin::PLUGIN_SLUG); ?></li>
+					<li><?php esc_html_e('Currency Table is a table with exchange rates and another features.', 'exchange-rates'); ?><br>
+					✔&nbsp;<?php esc_html_e('The currency rates table is mainly used by news websites, portals and financial forums.', 'exchange-rates'); ?></li>
 					</ol>
-					<h3><?php _e('Shortcode', Plugin::PLUGIN_SLUG); ?></h3>
+					<h3><?php esc_html_e('Shortcode', 'exchange-rates'); ?></h3>
 					<ol>
 					<li>
-					<?php _e('Badge is a simple exchange rates list.', Plugin::PLUGIN_SLUG); ?>
+					<?php esc_html_e('Badge is a simple exchange rates list.', 'exchange-rates'); ?>
 						<br>
-						&#x2714&nbsp;<?php _e('An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page.', Plugin::PLUGIN_SLUG); ?>
+						✔&nbsp;<?php esc_html_e('An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page.', 'exchange-rates'); ?>
 					</li>
 					</ol>
-					<h3><?php _e('How to install widget?', Plugin::PLUGIN_SLUG); ?></h3>
+					<h3><?php esc_html_e('How to install widget?', 'exchange-rates'); ?></h3>
 					<ol>
-						<li><?php _e('Go to Appearance &rarr; Widgets;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Legacy Widget &rarr; Choose Widget;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php esc_html_e('Go to Appearance &rarr; Widgets;', 'exchange-rates'); ?></li>
+						<li><?php esc_html_e('Legacy Widget &rarr; Choose Widget;', 'exchange-rates'); ?></li>
+						<li><?php esc_html_e('Enjoy!', 'exchange-rates'); ?></li>
 					</ol>
-					<h3><?php _e('How to install shortcode?', Plugin::PLUGIN_SLUG); ?></h3>
+					<h3><?php esc_html_e('How to install shortcode?', 'exchange-rates'); ?></h3>
 					<ol>
-						<li><?php _e('Generate shortcode from this page;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Copy and Paste shortcode anywhere you like;', Plugin::PLUGIN_SLUG); ?></li>
-						<li><?php _e('Enjoy!', Plugin::PLUGIN_SLUG); ?></li>
+						<li><?php esc_html_e('Generate shortcode from this page;', 'exchange-rates'); ?></li>
+						<li><?php esc_html_e('Copy and Paste shortcode anywhere you like;', 'exchange-rates'); ?></li>
+						<li><?php esc_html_e('Enjoy!', 'exchange-rates'); ?></li>
 					</ol>
 					<hr>
 					<div>
 						<div>
 						<ul>
-							<li>&#x1F4B9; <?php _e('Supported by:', Plugin::PLUGIN_SLUG); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate.Today</a></li>
+							<li>💹 <?php esc_html_e('Supported by:', 'exchange-rates'); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate.Today</a></li>
 						</ul>
 						</div>
 					</div>

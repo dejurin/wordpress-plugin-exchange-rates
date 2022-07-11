@@ -20,11 +20,11 @@ class Flags
     public static function get_types()
     {
         return [
-            ['name' => 'None', 'value' => 'none'],
-            ['name' => 'Rectangular', 'value' => 'rectangular'],
-            ['name' => 'Square', 'value' => 'square'],
-            ['name' => 'Circular', 'value' => 'circular'],
-            ['name' => 'Emoji', 'value' => 'emoji'],
+            ['name' => esc_html__('None', 'exchange-rates'), 'value' => 'none'],
+            ['name' => esc_html__('Rectangular', 'exchange-rates'), 'value' => 'rectangular'],
+            ['name' => esc_html__('Square', 'exchange-rates'), 'value' => 'square'],
+            ['name' => esc_html__('Circular', 'exchange-rates'), 'value' => 'circular'],
+            ['name' => esc_html__('Emoji', 'exchange-rates'), 'value' => 'emoji'],
         ];
     }
 }
