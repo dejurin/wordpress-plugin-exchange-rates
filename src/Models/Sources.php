@@ -9,7 +9,7 @@ class Sources
     public static function get_list()
     {
         return [
-            'currencyrate' => ['name' => esc_html__('CurrencyRate.Today', 'exchange-rates'), 'country' => 'xx', 'source_url' => 'https://currencyrate.today/', 'short' => 'CurrencyRate'],
+            'currencyrate' => ['name' => esc_html__('CurrencyRate.Today', 'exchange-rates'), 'country' => 'currencyrate', 'source_url' => 'https://currencyrate.today/', 'short' => 'CurrencyRate'],
             'ba-cbbh' => ['name' => esc_html__('The Central Bank of Bosnia and Herzegovina', 'exchange-rates'), 'country' => 'ba', 'source_url' => 'https://www.cbbh.ba/', 'short' => 'BH Bank'],
             'eg-cbe' => ['name' => esc_html__('Central Bank of Egypt', 'exchange-rates'), 'country' => 'eg', 'source_url' => 'https://www.cbe.org.eg/', 'short' => 'CBE'],
             'bd-bb' => ['name' => esc_html__('Bangladesh Bank', 'exchange-rates'), 'country' => 'bd', 'source_url' => 'https://bb.org.bd/', 'short' => 'Bangladesh Bank'],

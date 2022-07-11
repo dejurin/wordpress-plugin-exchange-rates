@@ -13,6 +13,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Simple and powerful real-time Currency Converter and Exchange Rates widgets for your website/blog or e-commerce. Included exchange rates data, from 55 central banks of the world.
 
+Video demonstration of the settings and capabilities of the plugin.
+[youtube https://www.youtube.com/watch?v=FTxvE9oeDyU]
+
 📩 Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
 
 = ⭐️ FEATURES ⭐️ =

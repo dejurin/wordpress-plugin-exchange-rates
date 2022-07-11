@@ -105,8 +105,11 @@ class Badge
                     if ($currency->is_available() && isset($get_currencies[$code])) {
                         $get_currency = $get_currencies[$code];
 
-                        $symbol = CurrencySymbols::get_list($parameters['inverse'] ? $parameters['base_currency'] : $code);
-
+                        $symbol = '';
+                        if ($parameters['symbol']) {
+                            $symbol = CurrencySymbols::get_list($parameters['inverse'] ? $parameters['base_currency'] : $code);
+                        }
+                        
                         $pre = $symbol;
                         $after = '';
 
@@ -115,8 +118,9 @@ class Badge
                             $pre = '';
                         }
 
+
                         $base_currency = ($parameters['base_show']) ? ((isset($parameters['code'])) ? $parameters['base_currency'] : $get_currencies[$parameters['base_currency']]['name']).'/' : '';
-                        $template = '<div class="badge-leaders"><span style="background-color:%1$s;color:%2$s">%3$s'.esc_html($base_currency).'%4$s</span><span style="background-color:%1$s;color:%2$s">%5$s%6$s%7$s</span></div>';
+                        $template = '<div class="badge-leaders"><span style="background-color:%1$s!important;color:%2$s!important">%3$s'.esc_html($base_currency).'%4$s</span><span style="background-color:%1$s!important;color:%2$s!important">%5$s%6$s%7$s</span></div>';
                         $result .= sprintf(
                                 $template,
                                 esc_html($parameters['color']),
