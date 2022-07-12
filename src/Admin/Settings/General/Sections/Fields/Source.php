@@ -12,7 +12,7 @@ class Source
     {
         add_settings_field(
             'source_id',
-            '<a href="#source-table">'.__('Sources', 'exchange-rates').'</a>',
+            '<a href="#source-table">'.esc_html__('Sources', 'exchange-rates').'</a>',
             [__CLASS__, 'render'],
             Plugin::PLUGIN_SLUG.'-general',
             'source_id',
