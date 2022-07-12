@@ -174,8 +174,8 @@ class Page
 									<label for="shortcode-badge-decimals"><?php esc_html_e('Decimals', 'exchange-rates'); ?></label>
 								</th>
 								<td>
-									<input id="shortcode-badge-decimals" name="decimals" type="range" step="1" min="0" max="7" value="<?php echo $settings['decimals']; ?>">
-									<span id="shortcode-badge-decimals-show"><?php echo $settings['decimals']; ?></span>
+									<input id="shortcode-badge-decimals" name="decimals" type="range" step="1" min="0" max="7" value="<?php echo esc_attr($settings['decimals']); ?>">
+									<span id="shortcode-badge-decimals-show"><?php echo esc_html($settings['decimals']); ?></span>
 								</td>
 							</tr>
 							<tr>
