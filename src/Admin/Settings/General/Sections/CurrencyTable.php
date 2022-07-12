@@ -37,7 +37,7 @@ class CurrencyTable
             if (isset($rates['data'][0]['rates'][$key])) {
                 $table->add_row([
                     '<img width="16" height="16" alt="'.esc_attr($key).'" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.esc_attr(strtolower($value['flag'])).'.svg" />',
-                    $value['name'],
+                    esc_attr($value['name']),
                     '<code>'.esc_attr($key).'</code>',
                     esc_attr($rates['data'][0]['rates'][$key]),
                     $close ? ($rates['data'][1]['rates'][$key]) : esc_attr('&ndash;'),
@@ -48,6 +48,6 @@ class CurrencyTable
 
         $html = $table->generate();
 
-        echo '<div class="table-responsive">',$html,'</div><p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
+        echo '<div class="table-responsive">',esc_html($html),'</div><p><button type="button" data-id="exchange-rates-currency-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
     }
 }
