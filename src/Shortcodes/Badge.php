@@ -154,6 +154,6 @@ class Badge
             return '<b>'.Plugin::NAME.'</b> '.esc_html__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', 'exchange-rates');
         }
 
-        return '<div class="cr-'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge">'.esc_html($result.$caption).'</div>';
+        return '<div class="cr-'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge">'.$result.$caption.'</div>';
     }
 }

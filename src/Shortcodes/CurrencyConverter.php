@@ -35,6 +35,6 @@ class CurrencyConverter
         $obj = new Service_CurrencyConverter();
         $obj->parameters = (isset($attr) && is_array($attr)) ? array_merge($this->default_attr, $attr) : $this->default_attr;
 
-        return '<div class="cr-'.Plugin::PLUGIN_SLUG.'">'.esc_html($obj->get_html_widget($obj->parameters['id'])).'</div>';
+        return '<div class="cr-'.Plugin::PLUGIN_SLUG.'">'.$obj->get_html_widget($obj->parameters['id']).'</div>';
     }
 }
