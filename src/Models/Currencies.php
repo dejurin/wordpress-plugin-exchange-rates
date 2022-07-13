@@ -797,7 +797,7 @@ class Currencies
             'SSP' => [
                 'flag' => 'SS',
                 'name' => esc_html__('South Sudanese Pound', 'exchange-rates'),
-                'region' => esc_html__('South Sudan,', 'exchange-rates'),
+                'region' => esc_html__('South Sudan', 'exchange-rates'),
             ],
             'SZL' => [
                 'flag' => 'SZ',
@@ -826,7 +826,7 @@ class Currencies
             ],
             'TOP' => [
                 'flag' => 'TO',
-                'name' => esc_html__('Tongan Pa?anga', 'exchange-rates'),
+                'name' => esc_html__('Tongan Paanga', 'exchange-rates'),
                 'region' => esc_html__('Tonga', 'exchange-rates'),
             ],
             'TRY' => [
