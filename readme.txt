@@ -13,6 +13,8 @@ Description: ❤️‍ It is a currency plugin, easy-to-use, with beautiful UI W
 
 Simple and powerful real-time Currency Converter and Exchange Rates widgets for your website/blog or e-commerce. Included exchange rates data, from 55 central banks of the world.
 
+[DEMO👀](https://yuri.ws/)
+
 Video demonstration of the settings and capabilities of the plugin.
 [youtube https://www.youtube.com/watch?v=FTxvE9oeDyU]
 
