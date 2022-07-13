@@ -7,7 +7,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-❤️‍ It is a currency plugin, easy-to-use, with beautiful UI widgets and shortcode. Included exchange rates of 🏦 55 banks of the world.
+❤️‍ It is a currency plugin, easy-to-use, with beautiful UI Currency Converter & Exchange Rates Widgets and with supported shortcode. Included exchange rates of 🏦 55 banks of the world.
 
 == 📌 About ==
 
