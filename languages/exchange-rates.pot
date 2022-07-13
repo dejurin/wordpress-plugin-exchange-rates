@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Exchange Rates 🏦\n"
-"POT-Creation-Date: 2022-07-11 22:51+0300\n"
+"POT-Creation-Date: 2022-07-13 13:13+0300\n"
 "PO-Revision-Date: 2022-06-21 17:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,6 +21,30 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: src/Admin/Notices.php:35
+msgid "Successful!"
+msgstr ""
+
+#: src/Admin/Notices.php:65
+msgid "Please rate our free"
+msgstr ""
+
+#: src/Admin/Notices.php:68
+msgid "Your valuable feedback will help us improve!"
+msgstr ""
+
+#: src/Admin/Notices.php:68
+msgid "It will only take a few minutes"
+msgstr ""
+
+#: src/Admin/Notices.php:68
+msgid "Rate it now"
+msgstr ""
+
+#: src/Admin/Notices.php:69 src/Admin/Settings/General/Page.php:247
+msgid "Rating"
+msgstr ""
 
 #: src/Admin/Pages/Plugins.php:12
 msgid "Settings"
@@ -221,6 +245,18 @@ msgstr ""
 msgid "Supported by:"
 msgstr ""
 
+#: src/Admin/Settings/General/Page.php:243
+msgid "Questions"
+msgstr ""
+
+#: src/Admin/Settings/General/Page.php:243
+msgid "Support"
+msgstr ""
+
+#: src/Admin/Settings/General/Page.php:245
+msgid "Please rate plugin"
+msgstr ""
+
 #: src/Admin/Settings/General/Sections/CurrencyTable.php:24
 #: src/Shortcodes/CurrencyTable.php:39 src/Widgets/Converter.php:98
 #: src/Widgets/Table.php:133 src/Widgets/Table.php:291
@@ -243,8 +279,8 @@ msgstr ""
 msgid "Region"
 msgstr ""
 
-#: src/Admin/Settings/General/Sections/CurrencyTable.php:51
-#: src/Admin/Settings/General/Sections/SourceTable.php:47
+#: src/Admin/Settings/General/Sections/CurrencyTable.php:49
+#: src/Admin/Settings/General/Sections/SourceTable.php:45
 msgid "Show More/Less"
 msgstr ""
 
@@ -2169,7 +2205,7 @@ msgid "Show table header"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Exchange Rates 🏦"
+msgid "Exchange Rates"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

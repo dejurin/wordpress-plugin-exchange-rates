@@ -357,7 +357,7 @@ First release.
 == 🍩 Donations ==
 
 ℹ️ Official website & 💹 Source: [CurrencyRate](https://currencyrate.today/)
-💵 Currency Convert Online: [CurrencyConvert.online](https://currencyconvert.online/)
+💵 Currency Convert Online: (https://currencyconvert.online/)
 
 💰 Your might like it:
 🔵 [Exchange Rates Widget](https://wordpress.org/plugins/exchange-rates-widget/)
