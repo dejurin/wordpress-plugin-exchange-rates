@@ -237,15 +237,21 @@ class Page
 					</ol>
 					<hr>
 					<div>
-						<div>
+						<div style="font-size:large">
 						<ul>
-							<li>💹 <?php esc_html_e('Supported by:', 'exchange-rates'); ?> <a href="https://currencyrate.today/" target="_blank">CurrencyRate.Today</a></li>
+							<li>💹 <?php esc_html_e('Supported by:', 'exchange-rates'); ?> <a href="https://currencyrate.today/" rel="noopener" target="_blank">CurrencyRate.Today</a></li>
+							<li>❓ <?php esc_html_e('Questions', 'exchange-rates'); ?>: <a href="https://wordpress.org/support/plugin/exchange-rates/" rel="noopener" target="_blank"><?php esc_html_e('Support', 'exchange-rates'); ?></a></li>
 						</ul>
+						<p style="font-size:x-large">🥰 <?php esc_html_e('Please rate plugin', 'exchange-rates'); ?>
+                                    &laquo;<a href="https://wordpress.org/plugins/<?php echo Plugin::PLUGIN_SLUG; ?>/reviews/#new-post" rel="noopener" target="_blank"><?php echo Plugin::NAME; ?></a>&raquo;
+									<a href="https://wordpress.org/support/plugin/<?php echo Plugin::PLUGIN_SLUG; ?>/reviews/#new-post" rel="noopener" target="_blank"><img src="<?php echo plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path); ?>assets/img/stars.png" alt="<?php esc_html_e('Rating', 'exchange-rates'); ?>"></a></p>
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<p>V<?php echo Plugin::VERSION; ?></p>
 <?php
     }
 

@@ -42,8 +42,6 @@ class SourceTable
             ]);
         }
 
-        $html = $table->generate();
-
-        echo '<div class="table-responsive">',esc_html($html),'</div><p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
+        echo '<div class="table-responsive">',$table->generate(),'</div><p><button type="button" data-id="exchange-rates-source-table-1" class="button show-more-table">',esc_html__('Show More/Less', 'exchange-rates'),'</button></p>';
     }
 }

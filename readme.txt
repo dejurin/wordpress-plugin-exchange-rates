@@ -1,9 +1,9 @@
-=== Exchange Rates 🏦 ===
+=== Exchange Rates ===
 Contributors: falselight
 Tags: currency converter, currency conversion, currency exchange, exchange rates, currencies, euro, dollar, 
 Requires at least: 5.4
 Tested up to: 6.0
-Stable tag: 0.0.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

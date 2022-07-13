@@ -2,10 +2,12 @@
 
 namespace Dejurin\ExchangeRates;
 
+use Dejurin\ExchangeRates\Admin\Notices;
+
 class Plugin
 {
-    public const VERSION = '0.0.1';
-    public const NAME = 'Exchange Rates 🏦';
+    public const VERSION = '1.0.0';
+    public const NAME = 'Exchange Rates';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
 
@@ -21,6 +23,11 @@ class Plugin
         add_action('admin_enqueue_scripts', [$this, 'register_admin_script_style']);
         add_action('wp_enqueue_scripts', [$this, 'register_public_script_style']);
         add_action('widgets_init', ['\Dejurin\ExchangeRates\Widgets', 'register']);
+
+
+        $admin_notice = Notices::get_instance();
+        $admin_notice->info('Rate', 'rate');
+
 
         /*
          * Update rates action.
