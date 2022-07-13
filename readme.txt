@@ -7,7 +7,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI and shortcode supported. Included rates of 55 banks of the world.
+❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 55 world banks.
 
 == 📌 About ==
 
