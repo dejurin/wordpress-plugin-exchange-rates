@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Exchange Rates 🏦\n"
-"POT-Creation-Date: 2022-07-13 19:31+0300\n"
-"PO-Revision-Date: 2022-07-13 19:31+0300\n"
+"POT-Creation-Date: 2022-07-13 19:35+0300\n"
+"PO-Revision-Date: 2022-07-13 19:35+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -74,11 +74,13 @@ msgstr "No data received"
 msgid "Rate (today)"
 msgstr "Rate (today)"
 
-#: src/Admin/Settings/General/Page.php:55 src/Admin/Settings/General/Page.php:66
+#: src/Admin/Settings/General/Page.php:55
+#: src/Admin/Settings/General/Page.php:66
 msgid "Check Date"
 msgstr "Check Date"
 
-#: src/Admin/Settings/General/Page.php:56 src/Admin/Settings/General/Page.php:67
+#: src/Admin/Settings/General/Page.php:56
+#: src/Admin/Settings/General/Page.php:67
 msgid "Local Date"
 msgstr "Local Date"
 
@@ -122,9 +124,11 @@ msgstr "Currency Table"
 
 #: src/Admin/Settings/General/Page.php:94
 msgid ""
-"List of currencies that are supported by the current exchange rate data source."
+"List of currencies that are supported by the current exchange rate data "
+"source."
 msgstr ""
-"List of currencies that are supported by the current exchange rate data source."
+"List of currencies that are supported by the current exchange rate data "
+"source."
 
 #: src/Admin/Settings/General/Page.php:103
 msgid "Badge shortcode generator "
@@ -183,11 +187,11 @@ msgstr "Currency Converter is easy to use, simple real-time converter;"
 
 #: src/Admin/Settings/General/Page.php:212
 msgid ""
-"Universal widget, it can be used on travel and property website/blog, as well "
-"as online stores."
+"Universal widget, it can be used on travel and property website/blog, as "
+"well as online stores."
 msgstr ""
-"Universal widget, it can be used on travel and property website/blog, as well "
-"as online stores."
+"Universal widget, it can be used on travel and property website/blog, as "
+"well as online stores."
 
 #: src/Admin/Settings/General/Page.php:215
 msgid "Currency Table is a table with exchange rates and another features."
@@ -213,10 +217,12 @@ msgstr "Badge is a simple exchange rates list."
 #: src/Admin/Settings/General/Page.php:223
 msgid ""
 "An excellent shortcode that can be used in international online stores. With "
-"ease you can add a list of prices in different currencies to the product page."
+"ease you can add a list of prices in different currencies to the product "
+"page."
 msgstr ""
 "An excellent shortcode that can be used in international online stores. With "
-"ease you can add a list of prices in different currencies to the product page."
+"ease you can add a list of prices in different currencies to the product "
+"page."
 
 #: src/Admin/Settings/General/Page.php:226
 msgid "How to install widget?"
@@ -2175,9 +2181,11 @@ msgstr "If you only need a widget, ignore this shortcode."
 
 #: src/Widgets/Converter.php:163 src/Widgets/Table.php:262
 msgid ""
-"If you want to put the widget anywhere on your website/blog, use the shortcode."
+"If you want to put the widget anywhere on your website/blog, use the "
+"shortcode."
 msgstr ""
-"If you want to put the widget anywhere on your website/blog, use the shortcode."
+"If you want to put the widget anywhere on your website/blog, use the "
+"shortcode."
 
 #: src/Widgets/Converter.php:173
 msgid "Currency Converter"
@@ -2229,13 +2237,13 @@ msgstr "https://wordpress.org/plugins/exchange-rates/"
 
 #. Description of the plugin/theme
 msgid ""
-"❤️‍ It is a currency plugin, easy-to-use, with beautiful UI Currency Converter & "
-"Exchange Rates Widgets and with supported shortcode. Included exchange rates "
-"of 🏦 55 banks of the world."
+"Description: ❤️‍ It is a currency plugin, easy-to-use, with beautiful UI "
+"Widgets with shortcode supported. 🏦 Included exchange rates of 55 banks of "
+"the world."
 msgstr ""
-"❤️‍ It is a currency plugin, easy-to-use, with beautiful UI Currency Converter & "
-"Exchange Rates Widgets and with supported shortcode. Included exchange rates "
-"of 🏦 55 banks of the world."
+"Description: ❤️‍ It is a currency plugin, easy-to-use, with beautiful UI "
+"Widgets with shortcode supported. 🏦 Included exchange rates of 55 banks of "
+"the world."
 
 #. Author of the plugin/theme
 msgid "CurrencyRate.today"
