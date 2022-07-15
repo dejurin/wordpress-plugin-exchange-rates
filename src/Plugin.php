@@ -2,7 +2,12 @@
 
 namespace Dejurin\ExchangeRates;
 
+/**
+ * @version 1.0.1
+ */
+
 use Dejurin\ExchangeRates\Admin\Notices;
+
 
 class Plugin
 {

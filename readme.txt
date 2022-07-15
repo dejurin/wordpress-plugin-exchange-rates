@@ -3,7 +3,7 @@ Contributors: falselight
 Tags: currency converter, currency conversion, currency exchange, exchange rates, currencies, euro, dollar, 
 Requires at least: 5.4
 Tested up to: 6.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -345,14 +345,19 @@ We are collect data from multiple data sources and store them on our server, [ht
 
 == Changelog ==
 
-= 0.0.1 =
+= 1.0.1 =
+* Fixed: "amount form" - decimal comma format
+* CSS caption color fixed
 
+= 1.0.0 =
 * First release.
 
 == Upgrade Notice ==
 
-= 0.0.1 =
+= 1.0.1 =
+For uses decimal comma format
 
+= 1.0.0 =
 First release.
 
 

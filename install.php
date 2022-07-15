@@ -13,7 +13,7 @@ Plugin URI: https://wordpress.org/plugins/exchange-rates/
 Description: ❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 55 world banks.
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
-Version: 1.0.0
+Version: 1.0.1
 Text Domain: exchange-rates
 Domain Path: /languages
 Requires at least: 5.4
@@ -22,7 +22,7 @@ License: GPLv2 or later
 */
 
 /**
- * @version 1.0.0
+ * @version 1.0.1
  */
 require_once 'vendor/autoload.php';
 

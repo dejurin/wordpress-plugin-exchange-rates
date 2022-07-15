@@ -186,7 +186,8 @@
 }
 
 .cr-exchange-rates .exchange-rates-info-caption {
-	background-color: #ffffff;
+	background-color: #ffffff !important;
+	color: var(--lt-color-gray-700) !important;
 	padding: 8px !important;
 	border: var(--bs-table-striped-bg) solid 1px;
 	display: none;

@@ -45,7 +45,7 @@ class Currency
                     $fmt['decimal_point'],
                     $fmt['thousands_sep']),
                 '0'),
-            '.');
+            '.,');
     }
 
     public function set_currencies($base_currency, $currency)
