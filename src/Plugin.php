@@ -3,7 +3,7 @@
 namespace Dejurin\ExchangeRates;
 
 /**
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 use Dejurin\ExchangeRates\Admin\Notices;

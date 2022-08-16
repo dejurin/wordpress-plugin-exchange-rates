@@ -42,11 +42,11 @@ class Dev
                     .'rel="noreferrer noopener">'
                     .'%2$s</a>&nbsp;&middot;&nbsp;%3$s&nbsp;';
         }
-
+        
         $html .= sprintf(
             $template,
             $source['short'],
-            $parameters['base_currency'].(!is_null($quote_currency) ? '/'.$quote_currency: ''),
+            (!is_null($quote_currency) ? $parameters['base_currency'].'/'.$quote_currency : $parameters['base_currency']),
             $put_time->format('d M')
         );
 
@@ -62,6 +62,7 @@ class Dev
                 .'<b>'.esc_html__('Latest change:', 'exchange-rates').'</b> '.esc_html($local_time->format('d M Y H:i')).' UTC'
                 .'</div>'
                 .'<div><small><b>'.esc_html__('Disclaimers.', 'exchange-rates').'</b> '.esc_html__('This plugin or website cannot guarantee the accuracy of the exchange rates displayed. You should confirm current rates before making any transactions that could be affected by changes in the exchange rates.', 'exchange-rates').'</small></div>'
+                .'<div>⚡<small>'.esc_html__('You can install this WP plugin on your website from the WordPress official website:', 'exchange-rates').' <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank" rel="noreferrer noopener nofollow"><b>Exchange Rates</b></a></small>🚀</div>'
                 .'</div>';
 
         return $html;

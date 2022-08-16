@@ -290,6 +290,7 @@ class Emoji
         $emoji_flags['RUR'] = '1F3F4';
         $emoji_flags['XX'] = '1F47D';
         $emoji_flags['WAUA'] = '1F47D';
+        $emoji_flags['OECS'] = '1F47D';
         $emoji_flags['BNB'] = '1F47D';
 
         return $emoji_flags;

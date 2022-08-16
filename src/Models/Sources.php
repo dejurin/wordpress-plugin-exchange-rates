@@ -2,8 +2,6 @@
 
 namespace Dejurin\ExchangeRates\Models;
 
-use Dejurin\ExchangeRates\Plugin;
-
 class Sources
 {
     public static function get_list()
@@ -39,6 +37,7 @@ class Sources
             'tj-nbt' => ['name' => esc_html__('National Bank of Tajikistan', 'exchange-rates'), 'country' => 'tj', 'source_url' => 'https://www.nbt.tj/', 'short' => 'NBT'],
             'ge-nbg' => ['name' => esc_html__('The National Bank of Georgia', 'exchange-rates'), 'country' => 'ge', 'source_url' => 'https://nbg.gov.ge/', 'short' => 'NBG GE'],
             'ua-nbu' => ['name' => esc_html__('National Bank of Ukraine', 'exchange-rates'), 'country' => 'ua', 'source_url' => 'https://bank.gov.ua/', 'short' => 'NBU'],
+            'ua-privatbank'  => ['name' => esc_html__('PrivatBank', 'exchange-rates'), 'country' => 'ua', 'source_url' => 'https://privatbank.ua/', 'short' => 'PrivatBank'],
             'tr-tcmb' => ['name' => esc_html__('Central Bank of the Republic of Turkey', 'exchange-rates'), 'country' => 'tr', 'source_url' => 'https://www.tcmb.gov.tr/', 'short' => 'TCMB'],
             'cz-cnb' => ['name' => esc_html__('Czech National Bank', 'exchange-rates'), 'country' => 'cz', 'source_url' => 'https://www.bc.gob.cu/', 'short' => 'Czech Bank'],
             'ma-bkam' => ['name' => esc_html__('BANK AL-MAGHRIB', 'exchange-rates'), 'country' => 'ma', 'source_url' => 'https://www.bkam.ma/', 'short' => 'BKAM'],
@@ -64,9 +63,14 @@ class Sources
             'sg-mas' => ['name' => esc_html__('Monetary Authority of Singapore', 'exchange-rates'), 'country' => 'sg', 'source_url' => 'https://www.mas.gov.sg/', 'short' => 'MAS SG'],
             'al-boa' => ['name' => esc_html__('Bank of Albania', 'exchange-rates'), 'country' => 'al', 'source_url' => 'https://www.bankofalbania.org/', 'short' => 'Albania Bank'],
             'mm-cbm' => ['name' => esc_html__('Central Bank of Myanmar', 'exchange-rates'), 'country' => 'mm', 'source_url' => 'https://www.cbm.gov.mm/', 'short' => 'Myanmar Bank'],
+            'by-belta' => ['name' => esc_html__('National Bank of the Republic of Belarus (Belta)', 'exchange-rates'), 'country' => 'by', 'source_url' => 'https://eng.belta.by/', 'short' => 'NBRB (Belta)'],
+            'kr-smbs' => ['name' => esc_html__('Seoul Money Brokerage Services', 'exchange-rates'), 'country' => 'kr', 'source_url' => 'http://www.smbs.biz/', 'short' => 'SMBS'],
+            'oecs-eccb' => ['name' => esc_html__('Eastern Caribbean Central Bank', 'exchange-rates'), 'country' => 'kr', 'source_url' => 'https://www.eccb-centralbank.org/', 'short' => 'OECS'],
+            'ss-boss' => ['name' => esc_html__('Bank of South Sudan', 'exchange-rates'), 'country' => 'ss', 'source_url' => 'https://boss.gov.ss/', 'short' => 'Sudan'],
         ];
     }
 
+    # Sources
     public static $_new0 = 'currencyconvert.online';
     public static $_new1 = 'currencyrate.today';
     public static $_new2 = 'moneyconvert.net';

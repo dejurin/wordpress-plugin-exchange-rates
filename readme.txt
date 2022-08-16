@@ -3,11 +3,11 @@ Contributors: falselight
 Tags: currency converter, currency conversion, currency exchange, exchange rates, currencies, euro, dollar, 
 Requires at least: 5.4
 Tested up to: 6.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 55 world banks.
+❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 58 world banks.
 
 == 📌 About ==
 
@@ -49,61 +49,66 @@ Video demonstration of the settings and capabilities of the plugin.
 
 We are collect data from multiple data sources and store them on our server, [https://api-bank.fex.to/sources.html](https://api-bank.fex.to/sources.html). This plugin retrieve data  one request per hour by WordPress Cron. Our public API don't require any keys or passwords. Data providers, such as:
 
-1. 🇲🇦 BANK AL-MAGHRIB
-2. 🇧🇩 Bangladesh Bank
-3. 🇦🇱 Bank of Albania
-4. 🇰🇭 Bank of Cambodia
-5. 🇨🇦 Bank of Canada
-6. 🇬🇧 Bank of England
-7. 🇮🇱 Bank of Israel
-8. 🇲🇽 Bank of Mexico
-9. 🇲🇽 Bank of Mexico (FIX)
-10. 🇹🇭 Bank of Thailand
-11. 🇧🇬 Bulgarian National Bank
-12. 🇦🇷 Central Bank of Argentina (retail)
-13. 🇦🇷 Central Bank of Argentina (uva)
-14. 🇦🇷 Central Bank of Argentina (wholesale)
-15. 🇧🇭 Central Bank of Bahrain
-16. 🇨🇱 Central Bank of Chile
-17. 🇨🇺 Central Bank of Cuba
-18. 🇪🇬 Central Bank of Egypt
-19. 🇮🇸 Central Bank of Iceland
-20. 🇳🇬 Central Bank of Nigeria
-21. 🇹🇳 Central Bank of Tunisia
-22. 🇹🇲 Central Bank of Turkmenistan
-23. 🇮🇷 Central Bank of the Islamic Republic of Iran
-24. 🇵🇭 Central Bank of the Philippines
-25. 🇦🇿 Central Bank of the Republic of Azerbaijan
-26. 🇨🇳 Central Bank of the Republic of China
-27. 🇹🇷 Central Bank of the Republic of Turkey
-28. 🇦🇪 Central Bank of the UAE
-29. 🇻🇪 Central bank of Venezuela
-30. 🇭🇷 Croatian National Bank
-31. 💹 CurrencyRate.Today
-32. 🇨🇿 Czech National Bank
-33. 🇩🇰 Danmarks Nationalbank
-34. 🇪🇺 European Central Bank
-35. 🇮🇳 Financial Benchmarks India
-36. 🇭🇺 Hungarian National Bank
-37. 🇸🇬 Monetary Authority of Singapore
-38. 🇪🇹 National Bank of Ethiopia
-39. 🇰🇿 National Bank of Kazakhstan
-40. 🇲🇩 National Bank of Moldova
-41. 🇷🇴 National Bank of Romania
-42. 🇹🇯 National Bank of Tajikistan
-43. 🇺🇦 National Bank of Ukraine
-44. 🇳🇵 Nepal Rastra bank
-45. 🇵🇱 Polish National Bank
-46. 🇦🇺 Reserve Bank of Australia
-47. 🇸🇪 Riksbank
-48. 🇧🇹 Royal Monetary Authority of Bhutan
-49. 🇨🇭 Swiss National Bank
-50. 🇧🇦 The Central Bank of Bosnia and Herzegovina
-51. 🇺🇿 The Central Bank of the Republic of Uzbekistan
-52. 🇷🇺 The Central Bank of the Russian Federation
-53. 🇬🇪 The National Bank of Georgia
-54. 🇲🇲 Central Bank of Myanmar
-55. Transnistrian Republican Bank
+1. 🇲🇲 MM Central Bank of Myanmar
+2. 🏴 XX CurrencyRate.Today
+3. 🇪🇺 EU European Central Bank
+4. 🇩🇰 DK Danmarks Nationalbank
+5. 🇦🇪 AE Central Bank of the UAE
+6. 🇦🇺 AU Reserve Bank of Australia
+7. 🇦🇿 AZ Central Bank of the Republic of Azerbaijan
+8. 🇧🇩 BD Bangladesh Bank
+9. 🇧🇬 BG Bulgarian National Bank
+10. 🇨🇦 CA Bank of Canada
+11. 🇨🇭 CH Swiss National Bank
+12. 🇨🇺 CU Central Bank of Cuba
+13. 🇪🇬 EG Central Bank of Egypt
+14. 🇨🇿 CZ Czech National Bank
+15. 🇪🇹 ET National Bank of Ethiopia
+16. 🇬🇧 GB Bank of England
+17. 🇭🇷 HR Croatian National Bank
+18. 🇮🇱 IL Bank of Israel
+19. 🇮🇳 IN Financial Benchmarks India
+20. 🇮🇷 IR Central Bank of the Islamic Republic of Iran
+21. 🇮🇸 IS Central Bank of Iceland
+22. 🇰🇿 KZ National Bank of Kazakhstan
+23. 🇲🇩 MD National Bank of Moldova
+24. 🇻🇪 VE Central bank of Venezuela
+25. 🇺🇿 UZ The Central Bank of the Republic of Uzbekistan
+26. 🇺🇦 UA PrivatBank
+27. 🇺🇦 UA National Bank of Ukraine
+28. 🇹🇷 TR Central Bank of the Republic of Turkey
+29. 🇹🇼 TW Central Bank of the Republic of China
+30. 🇸🇬 SG Monetary Authority of Singapore
+31. 🇷🇺 RU The Central Bank of the Russian Federation
+32. 🇳🇵 NP Nepal Rastra bank
+33. 🇲🇽 MX Bank of Mexico
+34. 🇹🇲 TM Central Bank of Turkmenistan
+35. 🇹🇯 TJ National Bank of Tajikistan
+36. 🇲🇦 MA BANK AL-MAGHRIB
+37. 🇹🇭 TH Bank of Thailand
+38. 🇧🇭 BH Central Bank of Bahrain
+39. 🏴 XX Transnistrian Republican Bank
+40. 🇹🇳 TN Central Bank of Tunisia
+41. 🇨🇱 CL Central Bank of Chile
+42. 🇳🇬 NG Central Bank of Nigeria
+43. 🇰🇭 KH Bank of Cambodia
+44. 🇧🇹 BT Royal Monetary Authority of Bhutan
+45. 🇦🇷 AR Central Bank of Argentina (retail)
+46. 🇵🇭 PH Central Bank of the Philippines
+47. 🇬🇪 GE The National Bank of Georgia
+48. 🇷🇴 RO National Bank of Romania
+49. 🇸🇪 SE Riksbank
+50. 🇭🇺 HU Hungarian National Bank
+51. 🇦🇷 AR Central Bank of Argentina (uva)
+52. 🇦🇷 AR Central Bank of Argentina (wholesale)
+53. 🇧🇦 BA The Central Bank of Bosnia and Herzegovina
+54. 🇦🇱 AL Bank of Albania
+55. 🇧🇾 BY National Bank of the Republic of Belarus (Belta)
+56. 🇲🇽 MX Bank of Mexico (FIX)
+57. 🇵🇱 PL Polish National Bank
+58. 🇰🇷 KR Seoul Money Brokerage Services
+59. 🏴 OECS Eastern Caribbean Central Bank
+60. 🇸🇸 SS Bank of South Sudan
 
 = 💲 Supported Currencies 💲 =
 
@@ -345,6 +350,10 @@ We are collect data from multiple data sources and store them on our server, [ht
 
 == Changelog ==
 
+= 1.0.2 =
+* Add new sources
+* Minor Bug Fix
+
 = 1.0.1 =
 * Fixed: "amount form" - decimal comma format
 * CSS caption color fixed
@@ -353,6 +362,10 @@ We are collect data from multiple data sources and store them on our server, [ht
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Add new sources
+Minor Bug Fix
 
 = 1.0.1 =
 For uses decimal comma format
