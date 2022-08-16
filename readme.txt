@@ -47,7 +47,7 @@ Video demonstration of the settings and capabilities of the plugin.
 
 = 💱 Data sources 💱 =
 
-We are collect data from multiple data sources and store them on our server, [https://api-bank.fex.to/sources.html](https://api-bank.fex.to/sources.html). This plugin retrieve data  one request per hour by WordPress Cron. Our public API don't require any keys or passwords. Data providers, such as:
+We are collect data from multiple data sources and store them on our server, [https://api-bank.fex.to/](https://api-bank.fex.to/). This plugin retrieve data  one request per hour by WordPress Cron. Our public API don't require any keys or passwords. Data providers, such as:
 
 1. 🇲🇲 MM Central Bank of Myanmar
 2. 🏴 XX CurrencyRate.Today
