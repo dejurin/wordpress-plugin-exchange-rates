@@ -11,7 +11,7 @@ use Dejurin\ExchangeRates\Admin\Notices;
 
 class Plugin
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.0.2';
     public const NAME = 'Exchange Rates';
     public const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
