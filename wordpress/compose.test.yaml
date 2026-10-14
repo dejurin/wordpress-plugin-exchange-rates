@@ -1,0 +1,12 @@
+# Use only with a separate, disposable Compose project (see development.md).
+services:
+  wordpress:
+    environment:
+      EXCHANGE_RATES_TEST_MODE: "1"
+    volumes:
+      - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro
+  cli:
+    environment:
+      EXCHANGE_RATES_TEST_MODE: "1"
+    volumes:
+      - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro
