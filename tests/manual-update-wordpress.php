@@ -113,7 +113,10 @@ foreach ( array( 'UTC' => 0, 'UTC+3' => 3, 'UTC-5' => -5, 'UTC+5:45' => 5.75 ) a
 		$cases[ $zone . ' / ' . $elapsed . ' seconds' ] = array( 'offset' => $offset, 'elapsed' => $elapsed );
 	}
 }
-foreach ( array( 'Europe/Kyiv', 'America/New_York' ) as $zone ) {
+// Older supported PHP releases ship tzdb versions with the historical Kyiv identifier.
+$kyiv_zone = in_array( 'Europe/Kyiv', timezone_identifiers_list(), true ) ? 'Europe/Kyiv' : 'Europe/Kiev';
+WP_CLI::log( 'Kyiv timezone identifier in this runtime: ' . $kyiv_zone );
+foreach ( array( $kyiv_zone, 'America/New_York' ) as $zone ) {
 	$cases[ $zone . ' / 59 seconds' ] = array( 'zone' => $zone, 'elapsed' => 59 );
 	$cases[ $zone . ' / 60 seconds' ] = array( 'zone' => $zone, 'elapsed' => 60 );
 }
