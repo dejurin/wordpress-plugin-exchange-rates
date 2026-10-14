@@ -1,31 +1,77 @@
 # Exchange Rates
 
-[![CI](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml/badge.svg)](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml)
+[![CI on main](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml?query=branch%3Amain)
+[![Published plugin version](https://img.shields.io/wordpress/plugin/v/exchange-rates?label=WordPress.org&logo=wordpress)](https://wordpress.org/plugins/exchange-rates/)
+[![Requires WordPress 5.6 or later](https://img.shields.io/badge/WordPress-5.6%2B-21759B?logo=wordpress&logoColor=white)](plugin/trunk/readme.txt)
+[![Requires PHP 5.6 or later](https://img.shields.io/badge/PHP-5.6%2B-777BB4?logo=php&logoColor=white)](plugin/trunk/Install.php)
+[![License: GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)](LICENSE)
 
-The canonical public development repository for the **Exchange Rates** WordPress plugin.
-Install the published version from the [WordPress.org Plugin Directory](https://wordpress.org/plugins/exchange-rates/).
-The GitHub source archive of this entire repository is not an installable plugin ZIP.
+**Currency conversion, exchange-rate tables and price badges for WordPress.**
 
-The code in `plugin/trunk/` was imported unchanged from the official **1.3.2** release.
-The plugin provides currency converter, exchange-rate table and price badge widgets and shortcodes.
-See the [plugin readme](plugin/trunk/readme.txt) for features and data sources.
+Add currency tools to posts, pages and widget areas with configurable widgets and shortcodes. Choose a data source, customize the appearance and display exchange rates without an API key.
 
-All repository and plugin development uses **English**. Source UI strings remain translatable through WordPress; existing translations are preserved.
-Read the [development contract](CONTRIBUTING.md) before contributing. It defines WordPress conventions, DRY, security, compatibility, data integrity and review requirements. Automated agents must also read [AGENTS.md](AGENTS.md).
+[WordPress.org](https://wordpress.org/plugins/exchange-rates/) · [Live demo](https://yuri.ws/exchange-rates/) · [Installation](#installation) · [Development](#development-quick-start) · [Support](#support-and-useful-links)
 
-## Structure
+## Features
+
+- **Currency converter:** let visitors convert amounts between currencies.
+- **Exchange-rate tables:** display selected currencies, with optional previous-close and change columns when the source supplies that data.
+- **Price badges:** show an amount in multiple currencies inside a post or page.
+- **Widgets and shortcodes:** use widget areas or embed tools directly in content.
+- **Configurable display:** adjust currencies, decimal places, flags, colors and borders.
+- **Multiple data sources:** retrieve rates through the [data service](https://api-bank.fex.to/), with hourly updates scheduled through WordPress Cron.
+
+Available currencies and update freshness depend on the selected source and successful refreshes. See the [plugin readme](plugin/trunk/readme.txt) for source details and the changelog.
+
+## Installation
+
+### From the WordPress dashboard
+
+1. Open **Plugins → Add New Plugin** and search for **Exchange Rates**. Use the [official listing](https://wordpress.org/plugins/exchange-rates/) to identify the plugin.
+2. Click **Install Now**, then **Activate**.
+3. Open **Settings → Exchange Rates** to select the data source and configure the plugin.
+4. Add a shortcode to a post or page, or add a converter/table widget in a theme that supports widget areas.
+
+### From a ZIP file
+
+Download the published ZIP from [WordPress.org](https://wordpress.org/plugins/exchange-rates/), then use **Plugins → Add New Plugin → Upload Plugin → Install Now → Activate**.
+
+For a development build, follow [Checks and installable ZIP](#checks-and-installable-zip). Upload the generated `exchange-rates.<version>.zip`, not GitHub's **Code → Download ZIP** archive. The repository archive includes development files and is not an installable plugin package.
+
+## Shortcode examples
+
+Paste an example into a WordPress **Shortcode** block:
+
+**Currency converter**
 
 ```text
-plugin/trunk/          The single plugin source tree, including vendor
-wordpress/            Local WordPress, MariaDB and WP-CLI
-scripts/              Validation, packaging and local .env generation
-tests/                Isolated smoke checks with synthetic rates
-docs/                 Development, release and imported source provenance
-.github/workflows/    CI without WordPress SVN publishing
+[exchange-rates_currency-converter title="Currency converter" amount="100" from="USD" to="EUR"]
 ```
 
-SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not stored in Git.
-Edit code on the host in `plugin/trunk/`; containers use a read-only bind mount.
+**Exchange-rate table**
+
+```text
+[exchange-rates_currency-table base_currency="USD" currency_list="EUR,GBP,JPY"]
+```
+
+**Multi-currency price badge**
+
+```text
+[exchange-rates_badge amount="100" base_currency="USD" currency_list="EUR,GBP"]
+```
+
+The selected data source must provide the currencies used in the examples. Configure the source in the plugin settings before adding the shortcodes.
+
+## Requirements and verification
+
+| Scope | Version |
+| --- | --- |
+| Declared minimum WordPress | 5.6 |
+| Declared minimum PHP | 5.6 |
+| CI syntax checks | PHP 5.6, 8.3 and 8.4 |
+| CI runtime smoke | WordPress 7.1.3 / PHP 8.3 |
+
+The version badge tracks the published WordPress.org release; the CI badge tracks this repository's `main` branch. WordPress/PHP requirement badges reflect the plugin metadata, not a full runtime test matrix. Syntax checks do not establish runtime compatibility with every supported version.
 
 ## Development quick start
 
@@ -59,13 +105,45 @@ python3 scripts/plugin.py package
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
 Output: `dist/exchange-rates.1.3.2.zip`, containing an `exchange-rates/` directory.
-CI checks syntax on PHP 5.6, 8.3 and 8.4, runs smoke tests on WordPress 7.1.3 / PHP 8.3 and saves the ZIP as an artifact.
-Syntax checks do not establish full runtime compatibility with all those PHP versions.
+CI also saves the verified ZIP as an artifact. Download it from a successful [workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml); extract the outer Actions artifact archive and install the plugin ZIP inside it. See [packaging and release procedures](docs/release.md) for details.
 
-- [Development contract](CONTRIBUTING.md)
+## Repository and documentation
+
+This is the canonical public development repository. The single source tree in `plugin/trunk/` was imported unchanged from the official **1.3.2** release; provenance is recorded in [the normalization report](docs/normalization.md).
+
+```text
+plugin/trunk/          The single plugin source tree, including vendor
+wordpress/            Local WordPress, MariaDB and WP-CLI
+scripts/              Validation, packaging and local .env generation
+tests/                Isolated smoke checks with synthetic rates
+docs/                 Development, release and imported source provenance
+.github/workflows/    CI without WordPress SVN publishing
+```
+
+SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not stored in Git. Edit plugin code on the host in `plugin/trunk/`; containers use a read-only bind mount. **WordPress.org SVN is strictly read-only in this workflow.**
+
 - [Local development and smoke tests](docs/development.md)
 - [Packaging and release procedures](docs/release.md)
 - [Source provenance and deferred CSS change](docs/normalization.md)
+
+## Contributing
+
+All repository and plugin development uses **English**. Source UI strings remain translatable through WordPress; existing translations are preserved.
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for WordPress conventions, DRY, security, compatibility and review requirements. Automated agents must also follow [AGENTS.md](AGENTS.md). Submit focused pull requests with verification results and relevant documentation updates.
+
+## Support and useful links
+
+| Resource | Purpose |
+| --- | --- |
+| [WordPress.org plugin page](https://wordpress.org/plugins/exchange-rates/) | Published release, installation details and reviews |
+| [Live demo](https://yuri.ws/exchange-rates/) | See the plugin in use |
+| [WordPress support forum](https://wordpress.org/support/plugin/exchange-rates/) | Installation and usage questions |
+| [GitHub issues](https://github.com/dejurin/wordpress-plugin-exchange-rates/issues) | Reproducible bugs and development requests |
+| [Translate the plugin](https://translate.wordpress.org/projects/wp-plugins/exchange-rates/) | Contribute WordPress translations |
+| [CurrencyRate.Today](https://currencyrate.today/) | The project's currency data website |
+
+For bug reports, include WordPress/PHP/plugin versions, reproduction steps and sanitized error details. Never include credentials or your local `.env`.
 
 ## License
 
