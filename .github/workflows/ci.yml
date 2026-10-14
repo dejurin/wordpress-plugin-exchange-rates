@@ -91,7 +91,9 @@ jobs:
         if: failure()
         with:
           name: browser-regression-failures
-          path: tests/browser/test-results/
+          path: |
+            tests/browser/test-results/
+            !tests/browser/test-results/settings-labels-*/**
           if-no-files-found: ignore
           retention-days: 7
       - name: Remove this disposable CI environment

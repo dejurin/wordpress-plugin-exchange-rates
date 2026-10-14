@@ -131,10 +131,20 @@ The runner accepts only loopback HTTP URLs and blocks browser requests to other 
 
 The fix scopes settings and rate-cell updates to the input's containing table. It changes two selectors in `assets/js/public/common.js`; formulas, markup, public attributes, saved settings and version metadata are unchanged. There is no migration. Reverting that fix restores the old behavior without a database rollback. No WordPress.org release is published by this workflow.
 
+## Settings label regressions
+
+The same `npm test --prefix tests/browser` command also runs eight settings-page tests. Keep the disposable `COMPOSE_PROJECT_NAME`, `COMPOSE_FILE` and `WP_PORT` exports active: the runner uses WP-CLI to create a dedicated test administrator and signs in through the normal WordPress login endpoint. The helper refuses non-test environments and mismatched site URLs. Its generated password and session cookies stay in memory; no ordinary administrator credentials are read. Authenticated traces are disabled. CI excludes settings-page diagnostics from uploaded artifacts because page snapshots can contain nonce-bearing admin links.
+
+The tests check the native `label.control` association for Source, Formatting and Decimals; unchanged field IDs and submitted names; click-to-focus without changing values; and the Sources link's existing `#source-table` navigation by mouse and Enter. Clicking this link must not focus the source selector or change settings. A save/restore round trip checks that saved values survive reopening the page and remain editable through the existing form. The table fixture's subsequent `verify` checks all saved plugin options, rates, widget data and page content after both browser suites.
+
+Seed the table fixture before replacing plugin files for an upgrade check, then run all 16 browser tests and `verify` without reseeding. The settings save test restores its original format and precision after checking different values. Use only the disposable site; it intentionally saves settings during that test.
+
+The label fix changes only three `label_for` values to match existing control IDs. It preserves input names, IDs, translations, the Sources link, validation, saved data and release metadata. Revert these three changes to roll back; no data migration is needed. The synthetic HTTP fixture and browser authentication helper are not shipped in the plugin ZIP.
+
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, and formatter regression tests.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation regressions, saved-data preservation and HTTP availability of assets.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation and settings-label regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
