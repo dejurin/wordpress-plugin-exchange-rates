@@ -7,7 +7,7 @@ jQuery(document).ready(function () {
       if (jQuery(this).data("display") == "show") {
         display = "";
       }
-      for (i = 0; i < jQuery(this).find("tbody tr").length; i++) {
+      for (var i = 0; i < jQuery(this).find("tbody tr").length; i++) {
         if (i >= jQuery(this).data("rows")) {
           jQuery(this).find("tbody tr")[i].style.display = display;
         }
@@ -87,7 +87,7 @@ jQuery(document).ready(function () {
         if (attrName === "currency_list") {
           currency_list += attr.value + ",";
         } else {
-          value = attr.value;
+          var value = attr.value;
           line += attrName + '="' + value + '" ';
         }
       }

@@ -36,6 +36,30 @@ add_filter('pre_http_request', function ($preempt, $args, $url) {
         'response' => array('code' => 200, 'message' => 'OK'), 'cookies' => array());
 }, 10, 3);
 
+// Exercise the actual widget forms without depending on the active theme's widget screen.
+add_action( 'admin_menu', function () {
+	add_management_page( 'Widget form regressions', 'Widget form regressions', 'manage_options', 'exchange-rates-test-widget-forms', function () {
+		$table_options = get_option( 'widget_exchange-rates_currency-table' );
+		$fixtures = array(
+			'table' => array( new \Dejurin\ExchangeRates\Widgets\Table(), $table_options[2] ),
+			'converter' => array( new \Dejurin\ExchangeRates\Widgets\Converter(), array( 'title' => 'Test converter', 'amount' => 7, 'from' => 'USD', 'to' => 'EUR' ) ),
+		);
+		foreach ( $fixtures as $name => $fixture ) {
+			$widget = $fixture[0];
+			$widget->_set( 2 );
+			echo '<form id="test-widget-' . esc_attr( $name ) . '">';
+			echo '<input type="hidden" name="id_base" value="' . esc_attr( $widget->id_base ) . '">';
+			$widget->form( $fixture[1] );
+			echo '</form>';
+		}
+	} );
+} );
+add_action( 'admin_enqueue_scripts', function ( $hook ) {
+	if ( 'tools_page_exchange-rates-test-widget-forms' === $hook ) {
+		$GLOBALS['dejurin_exchange_rates']->register_admin_script_style( 'widgets.php' );
+	}
+} );
+
 // Browser-only fixtures render the real shortcodes and widget, not copied markup.
 add_shortcode( 'exchange_rates_table_test', function ( $attributes ) {
 	$mode = isset( $attributes['mode'] ) ? $attributes['mode'] : 'mixed';
