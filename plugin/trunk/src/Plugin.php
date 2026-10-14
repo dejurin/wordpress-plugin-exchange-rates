@@ -46,7 +46,9 @@ class Plugin
          * If WP Cron work fine, you need to commented or delete this one code below.
          */
         $settings = get_option(Models\Settings::$option_name, []);
-        if (!empty($settings) && isset($settings['update_timestamp']) && intval($settings['update_timestamp']) + HOUR_IN_SECONDS < time()) {
+        if ( ! empty( $settings ) && isset( $settings['update_timestamp'] )
+            && intval( $settings['update_timestamp'] ) > 0
+            && intval( $settings['update_timestamp'] ) + HOUR_IN_SECONDS < time() ) {
             Service\UpdateDataSources::update();
         }
         /*

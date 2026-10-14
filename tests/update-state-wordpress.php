@@ -37,7 +37,8 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		if ( ! in_array( $url, array( 'https://api-bank.fex.to/rates/currencyrate.json', 'https://api-bank.fex.to/rates/eu-ecb.json' ), true ) ) {
 			return $response;
 		}
-		$requests[] = array( 'url' => $url, 'stored_source' => get_option( Settings::$option_name )['source_id'] );
+		$stored = get_option( Settings::$option_name, array() );
+		$requests[] = array( 'url' => $url, 'stored_source' => isset( $stored['source_id'] ) ? $stored['source_id'] : null );
 		if ( 'failure' === $case['provider'] ) {
 			return new WP_Error( 'test_provider_failure', 'Synthetic provider failure.' );
 		}
@@ -90,8 +91,12 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		ob_start();
 		\Dejurin\ExchangeRates\Admin\Settings\General\Page::render();
 		$finish( ob_get_clean() );
+	} elseif ( 'service-form' === $case['operation'] ) {
+		$status = UpdateDataSources::update();
+		update_option( Settings::$option_name, $case['input'] );
+		$finish( $status );
 	} else {
-		$finish( UpdateDataSources::update() );
+		$finish( UpdateDataSources::update( isset( $case['force_source'] ) ? $case['force_source'] : null ) );
 	}
 	return;
 }
@@ -200,6 +205,23 @@ try {
 		update_state_check( false === $result['body']['success'], 'Rejected ' . $target . ' write must not report success' );
 		update_state_check( $before['settings']['update_timestamp'] === $result['state']['settings']['update_timestamp'], 'Rejected ' . $target . ' write must not advance successful time' );
 	}
+	update_state_seed( $now - 61 );
+	$form = update_state_request( array( 'operation' => 'service-form', 'input' => array( 'source_id' => 'currencyrate', 'currency_format' => 3, 'decimals' => 2, 'base_currency' => 'JPY', 'update_timestamp' => $now + 99999, 'rates_available' => false ) ) );
+	update_state_success( $form, $now, 'USD', 'currencyrate', 'form after service in the same request' );
+	update_state_check( true === $form['body'] && 1 === count( $form['requests'] ), 'Same-request form cannot inject service metadata or trigger another fetch' );
+	update_state_seed( $now - 61 );
+	$forced = update_state_request( array( 'operation' => 'service', 'force_source' => 'eu-ecb' ) );
+	update_state_success( $forced, $now, 'EUR', 'eu-ecb', 'explicit source argument' );
+	update_state_check( 'currencyrate' === $forced['state']['settings']['source_id'], 'Explicit source argument retains the saved source selection' );
+	$invalid = update_state_request( array( 'operation' => 'service', 'force_source' => 'invalid-test-source' ) );
+	$expected = $forced['state'];
+	$expected['settings']['rates_available'] = false;
+	update_state_check( false === $invalid['body'] && ! $invalid['requests'] && $expected === $invalid['state'], 'Unknown source preserves cached data/time and clears availability without HTTP' );
+	update_state_seed( null );
+	delete_option( Settings::$option_name );
+	$created = update_state_request();
+	update_state_check( true === $created['body']['success'] && 1 === count( $created['requests'] ), 'Missing option permits the first authorized update' );
+	update_state_check( is_array( $created['state']['settings'] ) && isset( $created['state']['settings']['update_timestamp'] ) && $now === $created['state']['settings']['update_timestamp'] && true === $created['state']['settings']['rates_available'] && 'USD' === $created['state']['settings']['base_currency'], 'Initial add_option path persists all service fields' );
 	foreach ( array( 'success', 'failure' ) as $provider ) {
 		$before = update_state_seed( $now - 61 );
 		$result = update_state_request( array( 'operation' => 'form', 'provider' => $provider, 'input' => array( 'source_id' => 'eu-ecb', 'currency_format' => 3, 'decimals' => 2 ) ) );
@@ -208,6 +230,9 @@ try {
 			update_state_success( $result, $now, 'EUR', 'eu-ecb', 'source change' );
 		} else {
 			$before['settings']['source_id'] = 'eu-ecb';
+			// wp_parse_args() may reorder associative settings; compare every value and type.
+			ksort( $before['settings'] );
+			ksort( $result['state']['settings'] );
 			update_state_check( $before === $result['state'], 'source change failure: cached rates and last success metadata preserved' );
 		}
 	}
@@ -220,7 +245,9 @@ try {
 		$html = update_state_request( array( 'operation' => 'render', 'seed' => $render_settings ) );
 		update_state_check( false === strpos( $html['body'], 'Last successful update:' ), 'Unknown success time is not rendered as now or 1970' );
 	}
-	$before = update_state_seed( $now - HOUR_IN_SECONDS - 1 );
+	$before = update_state_seed( $now - 61 );
+	// Do not let plugin bootstrap refresh an expired fixture before the child installs its clock.
+	$before['settings']['update_timestamp'] = $now - HOUR_IN_SECONDS - 1;
 	$result = update_state_request( array( 'operation' => 'bootstrap', 'admin' => false, 'seed' => $before['settings'] ) );
 	update_state_check( 1 === count( $result['requests'] ), 'Existing expired positive timestamp still triggers the hourly fallback' );
 	update_state_success( $result, $now, 'USD', 'currencyrate', 'hourly fallback' );

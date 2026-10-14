@@ -61,14 +61,13 @@ class Admin
                 }
 
                 wp_send_json_success(esc_html__('Successful updating data.', 'exchange-rates'));
-                update_option('exchange_rates_force_data_update_time', $current_time);
             }
             catch (\Exception $e) {
                 wp_send_json_error(esc_html__('Unable to update exchange-rate data. Please try again later.', 'exchange-rates'));
             }
         });
 
-        add_action('update_option', function($option_name, $old_value, $new_value) {
+        add_action('updated_option', function($option_name, $old_value, $new_value) {
             if ($option_name === \Dejurin\ExchangeRates\Models\Settings::$option_name) {
                 $old_value = wp_parse_args($old_value, \Dejurin\ExchangeRates\Models\Settings::get_defaults());
                 $new_value = wp_parse_args($new_value, \Dejurin\ExchangeRates\Models\Settings::get_defaults());

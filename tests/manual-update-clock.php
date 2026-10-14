@@ -1,5 +1,5 @@
 <?php
-/** Freeze the administrative comparison and settings defaults in the isolated CLI process. */
+/** Freeze the administrative comparison, defaults and service writes in the isolated CLI process. */
 
 namespace Dejurin\ExchangeRates\Admin;
 

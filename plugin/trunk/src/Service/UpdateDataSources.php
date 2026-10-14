@@ -33,8 +33,7 @@ class UpdateDataSources
         }
 
         if (!isset(Sources::get_list()[$source_id])) {
-            $settings['rates_available'] = false;
-            update_option(Settings::$option_name, $settings);
+            self::save_state( array( 'rates_available' => false ) );
 
             self::$req_rates = [
                 'status' => false,
@@ -56,17 +55,55 @@ class UpdateDataSources
             }
         }
 
-        $settings['rates_available'] = self::$req_rates['status'];
-
+        $state = array();
         if (self::$req_rates['status']) {
             update_option(self::$rates_option_name, self::$req_rates['data']);
-            $settings['base_currency'] = self::$req_rates['data']['base'];
-            $settings['update_timestamp'] = time();
+            if ( get_option( self::$rates_option_name ) !== self::$req_rates['data'] ) {
+                self::$req_rates['status'] = false;
+                self::$req_rates['error'] = 'Unable to save exchange-rate data.';
+            } else {
+                $state['base_currency'] = self::$req_rates['data']['base'];
+                $state['update_timestamp'] = time();
+            }
         }
 
-        // $result = 
-        update_option(Settings::$option_name, $settings);
+        $state['rates_available'] = self::$req_rates['status'];
+        if ( ! self::save_state( $state ) ) {
+            self::$req_rates['status'] = false;
+            self::$req_rates['error'] = 'Unable to save exchange-rate settings.';
+        }
 
         return self::$req_rates['status'];
+    }
+
+    /**
+     * Persist only service-owned fields without opening them to settings-form input.
+     *
+     * @param array $state Availability and, after a validated success, base and UTC time.
+     * @return bool Whether the requested state is stored, including an unchanged value.
+     */
+    private static function save_state( array $state )
+    {
+        $settings = wp_parse_args( get_option( Settings::$option_name, array() ), Settings::get_defaults() );
+        // The form sanitizer remains active. This scoped filter adds only our internal patch.
+        $apply_state = static function ( $value ) use ( $state ) {
+            return is_array( $value ) ? array_merge( $value, $state ) : $value;
+        };
+        $filter = 'sanitize_option_' . Settings::$option_name;
+        add_filter( $filter, $apply_state, 20 );
+        try {
+            update_option( Settings::$option_name, array_merge( $settings, $state ) );
+        } finally {
+            remove_filter( $filter, $apply_state, 20 );
+        }
+
+        // update_option() also returns false for an unchanged value; verify the actual state.
+        $saved = get_option( Settings::$option_name, array() );
+        foreach ( $state as $key => $value ) {
+            if ( ! is_array( $saved ) || ! array_key_exists( $key, $saved ) || $saved[ $key ] !== $value ) {
+                return false;
+            }
+        }
+        return true;
     }
 }
