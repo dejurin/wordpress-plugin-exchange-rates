@@ -42,12 +42,12 @@ jQuery(document).ready(function() {
 
     jQuery('.widget-exchange-rates-currency-table input').on('input', function(event) {
         var amount = parseFloat(jQuery(this).val());
-        var settings = jQuery('.widget-exchange-rates-currency-table table');
+        var settings = jQuery(this).closest('table');
 
         amount = (amount > 0) ? amount : 1;
 
         jQuery(this).data('amount', amount);
-        jQuery('.widget-exchange-rates-currency-table table tbody td[data-rate]').each(function(index, value) {
+        settings.find('tbody td[data-rate]').each(function(index, value) {
             var rate = jQuery(value).data('rate');
             var pre = jQuery(value).data('symbol');
             var after = '';
