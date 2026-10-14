@@ -51,16 +51,21 @@ class Currency
     public static function for_format($value, $currency_format, $decimals)
     {
         $fmt = self::get_fmt($currency_format);
+        $decimals = max( 0, min( 7, (int) $decimals ) );
 
         if ($value === null) {
             $value = 0;
+        }
+
+        if ( 0 === $decimals ) {
+            return number_format( $value, 0, $fmt['decimal_point'], $fmt['thousands_sep'] );
         }
 
         return rtrim(
             rtrim(
                 number_format(
                     $value,
-                    max(0, min(7, (int) $decimals)),
+                    $decimals,
                     $fmt['decimal_point'],
                     $fmt['thousands_sep']),
                 '0'),
