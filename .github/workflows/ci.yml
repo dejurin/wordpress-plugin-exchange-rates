@@ -32,6 +32,7 @@ jobs:
       - run: php tests/formatting.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
+      - run: php -l tests/browser-admin.php
 
   package:
     runs-on: ubuntu-24.04
