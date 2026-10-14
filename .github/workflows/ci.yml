@@ -94,6 +94,7 @@ jobs:
           path: |
             tests/browser/test-results/
             !tests/browser/test-results/settings-labels-*/**
+            !tests/browser/test-results/admin-globals-*/**
           if-no-files-found: ignore
           retention-days: 7
       - name: Remove this disposable CI environment
