@@ -149,10 +149,28 @@ The tests use the real settings page and a test-only Tools page that renders the
 
 The production fix adds only two local `var` declarations in `assets/js/admin/common.js`. It preserves the existing JavaScript syntax level, algorithms, generated text, field names, options and release metadata. Seed saved fixtures before replacing plugin files, then run the browser suite and saved-data verification without reseeding. Rollback is reverting the two declarations; no database migration is needed.
 
+## Manual update cooldown regressions
+
+Run the AJAX-handler suite only in the separate synthetic environment, with its Compose exports still active:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
+```
+
+The 28 cases dispatch the shipped `wp_ajax_exchange_rates_force_data_update` callback in separate WP-CLI processes. They use real WordPress nonce/capability checks, the registered settings sanitizer, JSON response functions and the synthetic HTTP fixture. A test-only namespaced clock freezes the administrative comparison and settings defaults; the local offset is derived from WordPress. The JSON termination handler exits normally rather than throwing an exception that the plugin could catch. No test clock or helper is included in the installable package.
+
+Coverage includes UTC, UTC+3, UTC-5, UTC+5:45, Europe/Kyiv and America/New_York; the 0/59/60/61-second boundaries; stored numeric strings, future and missing timestamps; subscriber and nonce rejection before the cooldown; successful updates and provider failure. Assertions check exact response bodies, the number of rate requests, unchanged user settings, unchanged rates on refusal/failure and receipt of the synthetic rates after success. The suite creates dedicated disposable users, restores the original plugin settings/rates and fails on PHP warnings. Named zones use their offset at execution time; this is not an exhaustive daylight-saving transition test.
+
+This is handler integration coverage, not an HTTP login or browser-click test of the update button. Run it before the saved-data formatting/browser fixtures in CI. For an upgrade check, seed the table fixture before changing plugin files, run this suite and the existing browser suite after the change, and verify the saved table fixture without reseeding.
+
+The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
+
+The separate sanitizer defect that discards updated service fields, including `update_timestamp`, remains unresolved. These tests seed the stored timestamp to isolate clock comparison; they do not establish that a successful AJAX update persists a fresh timestamp or that consecutive updates are reliably throttled. Retry/backoff, parallel requests and source/cache consistency are outside this fix.
+
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, and formatter regression tests.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation, settings-label and administrative JavaScript regressions, saved-data preservation and HTTP availability of assets.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown regressions, saved-data formatting regressions, Chromium table-isolation, settings-label and administrative JavaScript regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
