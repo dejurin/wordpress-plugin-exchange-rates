@@ -86,10 +86,33 @@ It prints the URL of the `Exchange Rates Smoke - synthetic data` page when finis
 Open that page and the administration UI: check the converter, table and badge, settings persistence, CSS/JS loading and absence of PHP/browser errors.
 The synthetic smoke test does not establish the availability or correctness of live external sources.
 
+## Number-formatting regression tests
+
+Run the dependency-free formatter suite with PHP 5.6 or newer:
+
+```sh
+php tests/formatting.php
+```
+
+Its 841 assertions cover all eight format IDs, precision 0 through 7, integer zeros, negative values, rounding boundaries, numeric strings, null, precision clamping and the existing unknown-format fallback. Explicit expected strings protect the fractional output as well as the fixed integer output. PHP's historical negative-zero behavior is preserved (see the [PHP changelog](https://www.php.net/manual/en/function.number-format.php#refsect1-function.number-format-changelog)).
+
+For WordPress integration, use only the separate synthetic environment described above. After initialization, run:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php verify
+```
+
+`seed` writes synthetic saved settings, cached rates, a widget instance and a shortcode page to the disposable database. `verify` runs 116 assertions across all format IDs, checks the existing zero placeholders, and confirms that settings, widget options, source data and stored shortcodes are unchanged. It does not resave them. For an upgrade regression, seed while running the released source, replace only the plugin files with the candidate, and run `verify` without seeding again. Do not run the general smoke between these two steps: it deliberately replaces rates through the update path.
+
+Open the printed fixture URL to check browser parity: the saved table amount/current/previous values should be `1,000`, the badge should be `100`, and entering `1000` in the table should keep its values at `1,000`. This covers the repaired integer path; the change does not claim complete PHP/JavaScript rounding parity for all floating-point inputs.
+
+The fix changes only zero-precision formatting: integer zeros are retained and zero is returned as `"0"`. Existing callers can therefore apply their normal dash/null zero placeholders instead of receiving an empty string. Fractional trimming, format IDs, separators, rounding, option keys and stored values are preserved. There is no data migration. Reverting the fix restores the old formatter and its bug without a database rollback. The development ZIP still carries the current version metadata; it is not a new published release.
+
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke and HTTP availability of assets.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, and formatter regression tests.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by runtime tests. Normalization does not change the imported release's minimum requirements.
