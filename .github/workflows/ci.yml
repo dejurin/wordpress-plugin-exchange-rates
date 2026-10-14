@@ -33,6 +33,7 @@ jobs:
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
       - run: php -l tests/browser-admin.php
+      - run: php -l tests/manual-update-wordpress.php && php -l tests/manual-update-clock.php
 
   package:
     runs-on: ubuntu-24.04
@@ -68,6 +69,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env up -d --wait --wait-timeout 180
       - run: docker compose --env-file wordpress/.env run --rm --entrypoint sh cli /opt/dev/init.sh
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php verify
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/table-isolation-wordpress.php seed

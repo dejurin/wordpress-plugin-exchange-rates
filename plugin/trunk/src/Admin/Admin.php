@@ -38,7 +38,7 @@ class Admin
             $settings = get_option(\Dejurin\ExchangeRates\Models\Settings::$option_name, []);
             $settings = wp_parse_args($settings, \Dejurin\ExchangeRates\Models\Settings::get_defaults());
 
-            $current_time = current_time('timestamp');
+            $current_time = time();
             $last_update_time = isset($settings['update_timestamp']) ? (int) $settings['update_timestamp'] : 0;
             $update_delay_seconds = 60;
 
