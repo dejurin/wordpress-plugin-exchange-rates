@@ -1,0 +1,73 @@
+name: ${COMPOSE_PROJECT_NAME:-exchange-rates-dev}
+
+x-wordpress-environment: &wordpress-environment
+  WORDPRESS_DB_HOST: db:3306
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:?Run python3 scripts/dev-env.py first}
+  WORDPRESS_DEBUG: "1"
+  DEV_SITE_URL: http://127.0.0.1:${WP_PORT:-18972}
+  WORDPRESS_CONFIG_EXTRA: |
+    define('WP_ENVIRONMENT_TYPE', 'local');
+    define('WP_HOME', getenv('DEV_SITE_URL'));
+    define('WP_SITEURL', getenv('DEV_SITE_URL'));
+    define('WP_DEBUG_LOG', true);
+    define('WP_DEBUG_DISPLAY', false);
+    define('DISALLOW_FILE_MODS', true);
+    define('AUTOMATIC_UPDATER_DISABLED', true);
+    define('DISABLE_WP_CRON', true);
+
+services:
+  db:
+    image: mariadb:11.4.8@sha256:bc474f00629f0123c10f9e1bca193a45d18af15a274cf0656acda64f1086c3b6
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Run python3 scripts/dev-env.py first}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Run python3 scripts/dev-env.py first}
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  wordpress:
+    image: wordpress:7.1.3-php8.3-apache@sha256:81a34254acaa6ff3b9a67268c2745e9a041c4094cbe5ccd35b75ed3bbdc033b5
+    ports:
+      - "127.0.0.1:${WP_PORT:-18972}:80"
+    environment: *wordpress-environment
+    volumes:
+      - site:/var/www/html
+      - ../plugin/trunk:/var/www/html/wp-content/plugins/exchange-rates:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, php, -r, "exit(is_file('/var/www/html/wp-config.php') && @fsockopen('127.0.0.1', 80) ? 0 : 1);"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  cli:
+    image: wordpress:cli-2.12.0-php8.3@sha256:36243da432a0f0a3b56dc3240ecee9b159108d71305e7c064d987a20a465bfde
+    profiles: [tools]
+    user: "33:33"
+    environment:
+      <<: *wordpress-environment
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-developer}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:?Run python3 scripts/dev-env.py first}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-developer@example.test}
+    volumes:
+      - site:/var/www/html
+      - ../plugin/trunk:/var/www/html/wp-content/plugins/exchange-rates:ro
+      - ./init.sh:/opt/dev/init.sh:ro
+      - ../tests:/opt/tests:ro
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
+volumes:
+  database:
+  site:
