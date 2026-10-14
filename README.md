@@ -2,32 +2,35 @@
 
 [![CI](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml/badge.svg)](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml)
 
-Основной публичный репозиторий разработки WordPress-плагина **Exchange Rates**.
-Опубликованную версию устанавливайте из [каталога WordPress.org](https://wordpress.org/plugins/exchange-rates/).
-GitHub ZIP исходников всего репозитория не является установочным ZIP плагина.
+The canonical public development repository for the **Exchange Rates** WordPress plugin.
+Install the published version from the [WordPress.org Plugin Directory](https://wordpress.org/plugins/exchange-rates/).
+The GitHub source archive of this entire repository is not an installable plugin ZIP.
 
-Код в `plugin/trunk/` импортирован из официального релиза **1.3.2** без изменений.
-Плагин предоставляет виджеты и шорткоды конвертера, таблицы курсов и ценовых бейджей.
-Описание функций и источников данных находится в [readme плагина](plugin/trunk/readme.txt).
+The code in `plugin/trunk/` was imported unchanged from the official **1.3.2** release.
+The plugin provides currency converter, exchange-rate table and price badge widgets and shortcodes.
+See the [plugin readme](plugin/trunk/readme.txt) for features and data sources.
 
-## Структура
+All repository and plugin development uses **English**. Source UI strings remain translatable through WordPress; existing translations are preserved.
+Read the [development contract](CONTRIBUTING.md) before contributing. It defines WordPress conventions, DRY, security, compatibility, data integrity and review requirements. Automated agents must also read [AGENTS.md](AGENTS.md).
+
+## Structure
 
 ```text
-plugin/trunk/          Единственная рабочая копия плагина, включая vendor
-wordpress/            Локальные WordPress, MariaDB и WP-CLI
-scripts/              Проверка, упаковка и создание локального .env
-tests/                Изолированные smoke-проверки с синтетическими курсами
-docs/                 Разработка, выпуск и происхождение импортированного кода
-.github/workflows/    CI без публикации в WordPress SVN
+plugin/trunk/          The single plugin source tree, including vendor
+wordpress/            Local WordPress, MariaDB and WP-CLI
+scripts/              Validation, packaging and local .env generation
+tests/                Isolated smoke checks with synthetic rates
+docs/                 Development, release and imported source provenance
+.github/workflows/    CI without WordPress SVN publishing
 ```
 
-SVN `tags/`, `.svn`, WordPress core, БД и реальные `.env` в Git не хранятся.
-Код редактируется на хосте в `plugin/trunk/`; контейнер видит его через read-only bind mount.
+SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not stored in Git.
+Edit code on the host in `plugin/trunk/`; containers use a read-only bind mount.
 
-## Быстрый запуск разработки
+## Development quick start
 
-Нужны Git, Python 3.9+, Docker Engine/Desktop и Docker Compose v2 с поддержкой `up --wait`.
-Команды выполняются из корня репозитория:
+Requirements: Git, Python 3.9+, Docker Engine/Desktop and Docker Compose v2 with `up --wait` support.
+Run commands from the repository root:
 
 ```sh
 python3 scripts/dev-env.py
@@ -35,18 +38,18 @@ docker compose --env-file wordpress/.env -f wordpress/compose.yaml up -d --wait 
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm --entrypoint sh cli /opt/dev/init.sh
 ```
 
-Сайт: <http://127.0.0.1:18972>, админка: <http://127.0.0.1:18972/wp-admin/>.
-Логин и сгенерированный пароль находятся в локальном `wordpress/.env`.
-Генератор не перезаписывает существующий `.env`; при повторном запуске этот шаг пропускается.
-Обычный режим получает реальные курсы по HTTP из API плагина. Синтетический тестовый режим включается отдельно.
+Site: <http://127.0.0.1:18972>; administration: <http://127.0.0.1:18972/wp-admin/>.
+The username and generated password are in the local `wordpress/.env`.
+The generator does not overwrite an existing `.env`; skip that step on subsequent starts.
+Normal mode fetches real rates over HTTP from the plugin's API. Synthetic test mode is enabled separately.
 
-Остановка сохраняет БД и файлы сайта:
+Stop containers while preserving the database and site files:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml down
 ```
 
-## Проверки и установочный ZIP
+## Checks and installable ZIP
 
 ```sh
 python3 scripts/plugin.py check
@@ -54,16 +57,17 @@ python3 scripts/plugin.py lint
 python3 scripts/plugin.py package
 ```
 
-Lint требует установленный PHP. ZIP и SHA-256 создаются в `dist/`; повторная упаковка заменяет только эти сборочные файлы.
-Результат: `dist/exchange-rates.1.3.2.zip`, внутри — каталог `exchange-rates/`.
-CI проверяет синтаксис на PHP 5.6, 8.3 и 8.4, выполняет smoke на WordPress 7.1.3 / PHP 8.3 и сохраняет ZIP как артефакт.
-Проверка синтаксиса не означает полной runtime-совместимости со всеми этими версиями PHP.
+Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
+Output: `dist/exchange-rates.1.3.2.zip`, containing an `exchange-rates/` directory.
+CI checks syntax on PHP 5.6, 8.3 and 8.4, runs smoke tests on WordPress 7.1.3 / PHP 8.3 and saves the ZIP as an artifact.
+Syntax checks do not establish full runtime compatibility with all those PHP versions.
 
-- [Разработка и smoke](docs/development.md)
-- [Упаковка и порядок выпуска](docs/release.md)
-- [Происхождение кода и отложенная CSS-правка](docs/normalization.md)
+- [Development contract](CONTRIBUTING.md)
+- [Local development and smoke tests](docs/development.md)
+- [Packaging and release procedures](docs/release.md)
+- [Source provenance and deferred CSS change](docs/normalization.md)
 
-## Лицензия
+## License
 
-GPL version 2 or later, как указано в заголовках опубликованного плагина; текст GPLv2 — в [LICENSE](LICENSE).
-Сторонние библиотеки сохраняют собственные лицензии в `plugin/trunk/vendor/`.
+GPL version 2 or later, as declared in the published plugin headers; see [LICENSE](LICENSE) for the GPLv2 text.
+Third-party libraries retain their own licenses in `plugin/trunk/vendor/`.

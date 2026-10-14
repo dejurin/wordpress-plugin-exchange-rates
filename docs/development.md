@@ -1,16 +1,18 @@
-# Локальная разработка
+# Local development
 
-## Назначение и границы
+Follow the [development contract](../CONTRIBUTING.md) for language, WordPress conventions, security and compatibility requirements.
 
-`plugin/trunk/` — единственный источник кода. В Git не входят установленный WordPress, содержимое volumes, локальные секреты и результаты сборки.
-`wordpress/compose.yaml` запускает отдельные WordPress, MariaDB и WP-CLI. Образы закреплены версией и manifest digest; обновлять оба значения нужно осознанно с повторным smoke.
+## Purpose and boundaries
 
-По умолчанию используется проект Compose `exchange-rates-dev`, порт `127.0.0.1:18972`, WordPress 7.1.3, PHP 8.3, MariaDB 11.4.8 и WP-CLI 2.12.0.
-БД не публикует порт на хосте. Образы имеют варианты amd64 и arm64.
+`plugin/trunk/` is the single source of plugin code. Installed WordPress files, volume contents, local secrets and build outputs are excluded from Git.
+`wordpress/compose.yaml` runs separate WordPress, MariaDB and WP-CLI containers. Images are pinned by version and manifest digest; update both deliberately and repeat the smoke test.
 
-## Запуск
+Defaults: Compose project `exchange-rates-dev`, address `127.0.0.1:18972`, WordPress 7.1.3, PHP 8.3, MariaDB 11.4.8 and WP-CLI 2.12.0.
+The database has no published host port. Images support amd64 and arm64.
 
-Из корня репозитория:
+## Startup
+
+From the repository root:
 
 ```sh
 python3 scripts/dev-env.py
@@ -19,24 +21,24 @@ docker compose --env-file wordpress/.env -f wordpress/compose.yaml up -d --wait 
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm --entrypoint sh cli /opt/dev/init.sh
 ```
 
-Генератор создаёт `.env` с правами `0600` и случайными паролями. Существующий файл не заменяется.
-При ручной настройке можно скопировать `.env.example` в `.env` и заполнить три пустых пароля; Compose откажется запускаться с пустыми значениями.
-Не публикуйте `.env`, вывод `docker compose config` без `--quiet` или environment контейнеров.
+The generator creates `.env` with mode `0600` and random passwords. It does not replace an existing file; skip this step when the file already exists.
+For manual configuration, copy `wordpress/.env.example` to `wordpress/.env` and fill in the three empty password values; Compose refuses to start with empty values.
+Do not publish `.env`, container environments or the output of `docker compose config` without `--quiet`.
 
-Инициализация устанавливает WordPress только при отсутствии установки, не меняет пароль существующего пользователя и активирует плагин.
-Имя пользователя — `WP_ADMIN_USER`, пароль — `WP_ADMIN_PASSWORD` из `.env`.
-При активации обычного окружения плагин запрашивает реальные курсы с `https://api-bank.fex.to/`.
-Отсутствие сети или данных не исправляется подстановкой тестовых курсов.
+Initialization installs WordPress only if it is not already installed, preserves existing user passwords and activates the plugin.
+Credentials are `WP_ADMIN_USER` and `WP_ADMIN_PASSWORD` from `.env`.
+Activation in the normal environment requests real rates from `https://api-bank.fex.to/`.
+Network failures or missing data are not masked by substituting test rates.
 
-Редактирование `plugin/trunk/` на хосте сразу видно контейнерам; обновление/изменение файлов через админку отключено.
-Автоматическое обновление WordPress и автоматический WP-Cron отключены для воспроизводимости.
-Часовой HTTP-fallback самого плагина остаётся неизменным. Ручной запуск его события:
+Edits to `plugin/trunk/` on the host are immediately visible to containers; file updates and modifications through the administration UI are disabled.
+Automatic WordPress updates and automatic WP-Cron are disabled for reproducibility.
+The plugin's own hourly HTTP fallback remains unchanged. To run its cron event manually:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli cron event run exchange-rates_data_update
 ```
 
-## Логи и остановка
+## Logs and shutdown
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml ps
@@ -45,23 +47,23 @@ docker compose --env-file wordpress/.env -f wordpress/compose.yaml exec wordpres
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml down
 ```
 
-`down` сохраняет оба named volume. **Не добавляйте `--volumes` для обычной остановки: это удалит локальную БД и сайт.**
-Смена паролей в `.env` не меняет уже созданного пользователя БД: сначала требуется согласованное изменение пользователя внутри БД. Генератор поэтому не заменяет `.env`.
+`down` preserves both named volumes. **Do not add `--volumes` for an ordinary shutdown: it deletes the local database and site.**
+Changing passwords in `.env` does not change an existing database user: coordinate the corresponding change inside the database first. This is why the generator does not replace `.env`.
 
-Порт выбирайте до первой установки. Если меняете `WP_PORT` у существующего сайта, пересоздайте контейнеры и обновите сохранённый URL перед повторной инициализацией, например для порта 18973:
+Choose the port before the first installation. If changing `WP_PORT` for an existing site, recreate the containers and update the stored URL before running initialization again. For example, when moving to port 18973:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml up -d --wait
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli search-replace http://127.0.0.1:18972 http://127.0.0.1:18973 --all-tables-with-prefix --skip-columns=guid
 ```
 
-Эта команда изменяет URL в **локальной БД выбранного Compose-проекта**. Не используйте её для удалённых сайтов.
+This command changes URLs in the **local database of the selected Compose project**. Do not use it for remote sites.
 
-## Изолированный smoke с синтетическими курсами
+## Isolated smoke with synthetic rates
 
-Используйте отдельное имя проекта; тесты создают страницу и записывают тестовые курсы в его БД.
-Если обычный стенд уже запущен, остановите его или выберите свободный порт для QA.
-Следующие команды используют отдельные volumes и порт 18973:
+Use a separate project name; tests create a page and write synthetic rates to its database.
+If the normal environment is already running, stop it or select an available QA port.
+These commands use separate volumes and port 18973:
 
 ```sh
 export COMPOSE_PROJECT_NAME=exchange-rates-qa
@@ -74,22 +76,22 @@ docker compose --env-file wordpress/.env down
 unset COMPOSE_PROJECT_NAME COMPOSE_FILE WP_PORT
 ```
 
-Override подключает MU-плагин только в тестовом окружении. Он отвечает синтетическим JSON на точные endpoints `rates/currencyrate.json` и `sources.json` сервиса `api-bank.fex.to` и блокирует остальные исходящие запросы WordPress HTTP API.
-Проверки обновлений WordPress, тем и плагинов на `admin_init` в тестовом режиме отключены, чтобы они не создавали предупреждения из-за заблокированной сети.
-Синтетические значения не предназначены для финансового использования и не попадают в ZIP плагина.
-Обычный Compose не подключает fixture. Не используйте одни и те же volumes для тестового и обычного режимов: сохранённые тестовые курсы останутся в БД.
+The override loads an MU plugin only in the test environment. It returns synthetic JSON for the exact `rates/currencyrate.json` and `sources.json` endpoints on `api-bank.fex.to` and blocks all other outbound WordPress HTTP API requests.
+WordPress core, theme and plugin update probes on `admin_init` are disabled in test mode to avoid warnings caused by the blocked network.
+Synthetic values are not intended for financial use and are excluded from the plugin ZIP.
+The normal Compose configuration does not load the fixture. Do not reuse volumes between test and normal modes: stored test rates would remain in the database.
 
-Smoke проверяет активацию `exchange-rates/Install.php`, автозагрузку, регистрацию cron, обновление данных через HTTP API WordPress, три шорткода, два виджета, рендер настроек и область загрузки admin CSS.
-В конце он выводит URL страницы `Exchange Rates Smoke - synthetic data`.
-Откройте страницу и админку: проверьте работу конвертера, таблицы и бейджа, сохранение настроек, загрузку CSS/JS и отсутствие ошибок PHP/браузера.
-Синтетический smoke не подтверждает доступность или корректность реальных внешних источников.
+The smoke test checks activation of `exchange-rates/Install.php`, autoloading, cron registration, data updates through the WordPress HTTP API, three shortcodes, two widgets, settings rendering and admin CSS loading scope.
+It prints the URL of the `Exchange Rates Smoke - synthetic data` page when finished.
+Open that page and the administration UI: check the converter, table and badge, settings persistence, CSS/JS loading and absence of PHP/browser errors.
+The synthetic smoke test does not establish the availability or correctness of live external sources.
 
-## CI и ограничения
+## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: синтаксис всех 56 PHP-файлов плагина, включая поставляемый vendor.
-- WordPress 7.1.3 / PHP 8.3: изолированный runtime smoke и HTTP-доступность ресурсов.
-- Упаковка: согласованность версии и точное совпадение содержимого ZIP с `plugin/trunk/`.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke and HTTP availability of assets.
+- Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
-Старые версии WordPress и полный диапазон PHP не проверяются runtime-тестом. Минимальные требования исходного релиза не изменяются в рамках нормализации.
-CI имеет только `contents: read`, не использует SVN-секреты и не публикует релизы.
-Очистка с `down --volumes` в CI применяется только к временному проекту с уникальным именем конкретного запуска.
+Older WordPress versions and the full PHP range are not covered by runtime tests. Normalization does not change the imported release's minimum requirements.
+CI has only `contents: read`, uses no SVN secrets and publishes no releases. PHPCS/WPCS and comprehensive security checks are not currently automated; see the [validation contract](../CONTRIBUTING.md#validation-and-review).
+CI cleanup with `down --volumes` applies only to the disposable project with a unique name for that specific run.
