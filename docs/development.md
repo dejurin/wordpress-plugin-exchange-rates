@@ -109,12 +109,34 @@ Open the printed fixture URL to check browser parity: the saved table amount/cur
 
 The fix changes only zero-precision formatting: integer zeros are retained and zero is returned as `"0"`. Existing callers can therefore apply their normal dash/null zero placeholders instead of receiving an empty string. Fractional trimming, format IDs, separators, rounding, option keys and stored values are preserved. There is no data migration. Reverting the fix restores the old formatter and its bug without a database rollback. The development ZIP still carries the current version metadata; it is not a new published release.
 
+## Table amount isolation regressions
+
+The browser suite uses the real WordPress-rendered shortcodes and saved widget with the plugin's public JavaScript and WordPress jQuery. It requires Node.js 20 or newer, npm and Chromium; CI uses Node.js 24. Dependencies are pinned under `tests/browser/` and are excluded from the plugin ZIP.
+
+Initialize the **separate synthetic environment** above, keeping its `COMPOSE_PROJECT_NAME`, `COMPOSE_FILE` and `WP_PORT` exports active. Then run from the repository root:
+
+```sh
+npm ci --ignore-scripts --prefix tests/browser
+npm exec --prefix tests/browser -- playwright install chromium
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/table-isolation-wordpress.php seed
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/table-isolation-wordpress.php verify
+```
+
+`seed` creates three pages, a saved widget and synthetic settings/rates in the disposable database. The fixture temporarily filters formatting settings per rendered table without persisting those overrides. `verify` confirms that settings, rates, widget options and saved page content are unchanged. For an upgrade check, seed before changing plugin files and run the browser suite and `verify` afterwards without seeding again. Run the general smoke and formatting fixture before this seed/verify sequence: they deliberately write their own test data.
+
+The eight Chromium tests cover a single table, mixed shortcode/widget tables in both DOM orders, repeated edits, a table without an amount input, independent precision/separators/symbol position, current and previous-close values, trend images, click/blur and the existing amount-one fallback for empty, zero, negative or invalid input. Snapshots protect the other table inputs and values, badge and converter. Captions are excluded because WordPress asynchronously replaces their emoji text with images. The suite preserves existing rendering behavior, including the lack of a symbol on the initial previous-close value. It does not attempt unrelated formatting fixes.
+
+The runner accepts only loopback HTTP URLs and blocks browser requests to other origins. Use only a disposable test site. Retries are disabled; failed runs retain screenshots and traces in the ignored `tests/browser/test-results/` directory. CI uploads those diagnostics on failure.
+
+The fix scopes settings and rate-cell updates to the input's containing table. It changes two selectors in `assets/js/public/common.js`; formulas, markup, public attributes, saved settings and version metadata are unchanged. There is no migration. Reverting that fix restores the old behavior without a database rollback. No WordPress.org release is published by this workflow.
+
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, and formatter regression tests.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions and HTTP availability of assets.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
-Older WordPress versions and the full PHP range are not covered by runtime tests. Normalization does not change the imported release's minimum requirements.
+Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
 CI has only `contents: read`, uses no SVN secrets and publishes no releases. PHPCS/WPCS and comprehensive security checks are not currently automated; see the [validation contract](../CONTRIBUTING.md#validation-and-review).
 CI cleanup with `down --volumes` applies only to the disposable project with a unique name for that specific run.
