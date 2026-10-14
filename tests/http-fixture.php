@@ -7,6 +7,11 @@ if (!defined('ABSPATH') || '1' !== getenv('EXCHANGE_RATES_TEST_MODE') || 'local'
     return;
 }
 
+// The isolated fixture cannot answer update checks against WordPress.org.
+foreach (array('_maybe_update_core', '_maybe_update_plugins', '_maybe_update_themes') as $callback) {
+    remove_action('admin_init', $callback);
+}
+
 add_filter('pre_http_request', function ($preempt, $args, $url) {
     if (!in_array($url, array('https://api-bank.fex.to/rates/currencyrate.json', 'https://api-bank.fex.to/sources.json'), true)) {
         return new WP_Error('test_network_disabled', 'Outbound WordPress HTTP requests are disabled in this test environment.');
