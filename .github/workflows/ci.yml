@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   lint:
-    name: PHP ${{ matrix.php }} syntax
+    name: PHP ${{ matrix.php }} syntax and formatting
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
@@ -29,6 +29,8 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
       - run: python3 scripts/plugin.py lint
+      - run: php tests/formatting.php
+      - run: php -l tests/formatting-wordpress.php
 
   package:
     runs-on: ubuntu-24.04
@@ -57,6 +59,8 @@ jobs:
       - run: docker compose --env-file wordpress/.env up -d --wait --wait-timeout 180
       - run: docker compose --env-file wordpress/.env run --rm --entrypoint sh cli /opt/dev/init.sh
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php verify
       - name: Check HTTP and plugin assets
         run: |
           set -euo pipefail
