@@ -137,14 +137,22 @@ The same `npm test --prefix tests/browser` command also runs eight settings-page
 
 The tests check the native `label.control` association for Source, Formatting and Decimals; unchanged field IDs and submitted names; click-to-focus without changing values; and the Sources link's existing `#source-table` navigation by mouse and Enter. Clicking this link must not focus the source selector or change settings. A save/restore round trip checks that saved values survive reopening the page and remain editable through the existing form. The table fixture's subsequent `verify` checks all saved plugin options, rates, widget data and page content after both browser suites.
 
-Seed the table fixture before replacing plugin files for an upgrade check, then run all 16 browser tests and `verify` without reseeding. The settings save test restores its original format and precision after checking different values. Use only the disposable site; it intentionally saves settings during that test.
+Seed the table fixture before replacing plugin files for an upgrade check, then run the full browser suite and `verify` without reseeding. The settings save test restores its original format and precision after checking different values. Use only the disposable site; it intentionally saves settings during that test.
 
 The label fix changes only three `label_for` values to match existing control IDs. It preserves input names, IDs, translations, the Sources link, validation, saved data and release metadata. Revert these three changes to roll back; no data migration is needed. The synthetic HTTP fixture and browser authentication helper are not shipped in the plugin ZIP.
+
+## Administrative JavaScript regressions
+
+Eight additional tests in `admin-globals.spec.js` bring the browser suite to 24 tests. Four cases verify that `i` and `value` neither appear on `window` nor overwrite another script's values, both during initialization and after repeated input and expand/collapse events. Compatibility cases preserve exact badge, table and converter shortcode text, nested widget field names, multiple currencies, checkbox/range handling, independent forms and the five-row table limit. Unexpected browser page errors fail these tests.
+
+The tests use the real settings page and a test-only Tools page that renders the actual Table and Converter widget forms with the shipped admin JavaScript. The page requires `manage_options` and exists only with the guarded synthetic HTTP fixture loaded. It reads the saved table fixture without saving widget changes. This covers form rendering and generator interactions, not the complete WordPress block-widget editor. Authentication is shared with the settings-label tests; authenticated traces are disabled and CI excludes these page diagnostics from uploaded artifacts.
+
+The production fix adds only two local `var` declarations in `assets/js/admin/common.js`. It preserves the existing JavaScript syntax level, algorithms, generated text, field names, options and release metadata. Seed saved fixtures before replacing plugin files, then run the browser suite and saved-data verification without reseeding. Rollback is reverting the two declarations; no database migration is needed.
 
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, and formatter regression tests.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation and settings-label regressions, saved-data preservation and HTTP availability of assets.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, saved-data formatting regressions, Chromium table-isolation, settings-label and administrative JavaScript regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
