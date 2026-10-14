@@ -74,10 +74,19 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 			$after = get_option( Settings::$option_name );
 			$user_settings = array( 'source_id', 'currency_format', 'decimals' );
 			$keys = array_flip( $user_settings );
+			$expected = $settings;
+			if ( $requests ) {
+				$expected['rates_available'] = 1.25 === get_option( UpdateDataSources::$rates_option_name )['data'][0]['rates']['EUR'];
+				if ( $expected['rates_available'] ) {
+					$expected['base_currency'] = 'USD';
+					$expected['update_timestamp'] = $GLOBALS['exchange_rates_test_now'];
+				}
+			}
 			echo wp_json_encode( array(
 				'body' => $body,
 				'requests' => $requests,
 				'settings_unchanged' => $after === $settings,
+				'state_saved' => $after === $expected,
 				'user_settings_unchanged' => array_intersect_key( $after, $keys ) === array_intersect_key( $settings, $keys ),
 				'rates_unchanged' => get_option( UpdateDataSources::$rates_option_name ) === $rates,
 				'eur' => get_option( UpdateDataSources::$rates_option_name )['data'][0]['rates']['EUR'],
@@ -122,7 +131,7 @@ foreach ( array( $kyiv_zone, 'America/New_York' ) as $zone ) {
 }
 $cases['Stored numeric string'] = array( 'offset' => 3, 'elapsed' => 59, 'timestamp' => 'string' );
 $cases['Future timestamp retains existing wait'] = array( 'elapsed' => -30 );
-$cases['Missing timestamp retains default wait'] = array( 'timestamp' => 'missing' );
+$cases['Missing timestamp allows the first update'] = array( 'timestamp' => 'missing' );
 $cases['Subscriber denied before cooldown'] = array( 'user' => $users['subscriber'], 'elapsed' => 59 );
 $cases['Invalid nonce denied before cooldown'] = array( 'nonce' => 'invalid', 'elapsed' => 59 );
 $cases['Missing nonce denied before cooldown'] = array( 'nonce' => 'missing', 'elapsed' => 59 );
@@ -140,7 +149,7 @@ try {
 		$case = array_merge( $defaults, $overrides );
 		$nonce_denied = 'valid' !== $case['nonce'];
 		$capability_denied = $case['user'] !== $users['administrator'];
-		$elapsed = 'missing' === $case['timestamp'] ? 0 : $case['elapsed'];
+		$elapsed = $case['elapsed'];
 		$blocked = $elapsed < 60;
 		$expected_requests = ( $nonce_denied || $capability_denied || $blocked ) ? 0 : 1;
 		$success = 1 === $expected_requests && 'success' === $case['provider'];
@@ -165,7 +174,8 @@ try {
 		$passed = 0 === $result->return_code && '' === trim( $result->stderr ) && is_array( $actual )
 			&& $expected_body === $actual['body'] && $expected_requests === $actual['requests']
 			&& $actual['user_settings_unchanged']
-			&& ( $success ? ( ! $actual['rates_unchanged'] && 1.25 === $actual['eur'] ) : ( $actual['rates_unchanged'] && $actual['settings_unchanged'] ) );
+			&& $actual['state_saved']
+			&& ( $success ? ( ! $actual['rates_unchanged'] && 1.25 === $actual['eur'] ) : $actual['rates_unchanged'] );
 		if ( ! $passed ) {
 			++$failed;
 			WP_CLI::log( 'FAIL: ' . $name . '; expected body=' . $expected_body . '; actual=' . $result->stdout . '; stderr=' . $result->stderr );

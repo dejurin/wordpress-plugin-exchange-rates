@@ -23,3 +23,9 @@ namespace Dejurin\ExchangeRates\Models;
 function time() {
 	return $GLOBALS['exchange_rates_test_now'];
 }
+
+namespace Dejurin\ExchangeRates\Service;
+
+function time() {
+	return $GLOBALS['exchange_rates_test_now'];
+}
