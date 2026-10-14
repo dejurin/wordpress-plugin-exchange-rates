@@ -32,6 +32,7 @@ jobs:
       - run: php tests/formatting.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
+      - run: php -l tests/browser-admin.php
 
   package:
     runs-on: ubuntu-24.04
@@ -90,7 +91,9 @@ jobs:
         if: failure()
         with:
           name: browser-regression-failures
-          path: tests/browser/test-results/
+          path: |
+            tests/browser/test-results/
+            !tests/browser/test-results/settings-labels-*/**
           if-no-files-found: ignore
           retention-days: 7
       - name: Remove this disposable CI environment

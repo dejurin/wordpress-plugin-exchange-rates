@@ -21,7 +21,7 @@ class Decimals
             'decimals',
             [
                 'id' => 'decimals',
-                'label_for' => Plugin::PLUGIN_SLUG.'[decimals]',
+                'label_for' => Plugin::PLUGIN_SLUG . '-decimals',
             ]
         );
     }

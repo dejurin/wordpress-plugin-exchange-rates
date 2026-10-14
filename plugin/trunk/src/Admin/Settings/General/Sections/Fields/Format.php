@@ -22,7 +22,7 @@ class Format
             'currency_format',
             [
                 'id' => 'currency_format',
-                'label_for' => Plugin::PLUGIN_SLUG.'[currency_format]',
+                'label_for' => Plugin::PLUGIN_SLUG . '-currency_format',
             ]
         );
     }
