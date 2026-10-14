@@ -31,8 +31,14 @@ async function setDecimals(page, value) {
 }
 
 async function save(page) {
-  await page.locator('form[action="options.php"] input[type="submit"]').click();
-  await expect(page).toHaveURL(/settings-updated=true/);
+  // Core removes settings-updated from the address bar; inspect the response instead.
+  const [response] = await Promise.all([
+    page.waitForResponse(response => response.request().isNavigationRequest()
+      && new URL(response.url()).searchParams.get('settings-updated') === 'true'),
+    page.locator('form[action="options.php"] input[type="submit"]').click(),
+  ]);
+  expect(response.ok()).toBeTruthy();
+  await page.waitForLoadState('load');
   await page.goto(settingsPath);
 }
 
