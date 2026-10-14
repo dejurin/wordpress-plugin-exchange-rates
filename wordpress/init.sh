@@ -11,11 +11,14 @@ if ! wp core is-installed --skip-plugins --skip-themes; then
 fi
 
 printf '[2/3] Checking URL and activating Exchange Rates\n'
-stored_url=$(wp option get home --skip-plugins --skip-themes)
+# Read the stored value; WP_HOME filters get_option('home') to the current URL.
+stored_url=$(wp eval 'global $wpdb; echo $wpdb->get_var($wpdb->prepare("SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", "home"));' --skip-plugins --skip-themes)
 if [ "$stored_url" != "$DEV_SITE_URL" ]; then
     printf 'Existing site URL differs: %s. See docs/development.md before changing the port.\n' "$stored_url" >&2
     exit 1
 fi
-wp plugin activate exchange-rates
+if ! wp plugin is-active exchange-rates; then
+    wp plugin activate exchange-rates
+fi
 printf '[3/3] Complete in %ss. Site: %s; admin: %s/wp-admin/\n' \
     "$(($(date +%s) - started))" "$DEV_SITE_URL" "$DEV_SITE_URL"
