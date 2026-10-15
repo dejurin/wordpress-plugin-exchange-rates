@@ -104,7 +104,7 @@ python3 scripts/plugin.py package
 ```
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
-Output: `dist/exchange-rates.1.3.2.zip`, containing an `exchange-rates/` directory.
+Output: `dist/exchange-rates.1.4.0.zip`, containing an `exchange-rates/` directory.
 CI also saves the verified ZIP as an artifact. Download it from a successful [workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml); extract the outer Actions artifact archive and install the plugin ZIP inside it. See [packaging and release procedures](docs/release.md) for details.
 
 ## Repository and documentation
