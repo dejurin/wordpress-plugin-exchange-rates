@@ -17,7 +17,7 @@ Help visitors understand prices and convert currencies without leaving your webs
 
 Exchange Rates adds currency converters, exchange-rate tables, and compact price badges to WordPress. Display the currencies your audience uses, let visitors calculate amounts, and customize the presentation to suit your content.
 
-Choose your site's exchange-rate source from a catalog of 86 providers, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates keep your site supplied with data from the source you select.
+Choose your site's exchange-rate source from a catalog of 86 sources, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates keep your site supplied with data from the source you select.
 
 No API key or account is required.
 
