@@ -15,7 +15,7 @@ Help visitors convert currencies and compare prices. Converters, tables, and bad
 
 Exchange Rates adds **currency converters**, **exchange-rate tables**, and **compact price badges** to WordPress. Help visitors understand prices and calculate amounts without leaving your website.
 
-Choose from **86 exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates keep your site supplied with data from the source you select.
+Choose from a catalog of **86 exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates retrieve rates through CurrencyRate.today using the source you select.
 
 **No API key or account is required.**
 
@@ -49,7 +49,9 @@ Different websites need different rates.
 
 Choose a central bank for its published reference rates, a commercial bank or exchange service for its quoted rates, or an alternative market source where available.
 
-Your selected source supplies the plugin's converters, tables, and badges. Currency coverage and publication schedules depend on that source.
+Converters, tables, and badges share the same source selection. Currency coverage, availability, and publication schedules depend on that source.
+
+Source captions include a rate date and links to currency-rate information, helping visitors understand where the displayed rates come from.
 
 The complete source catalog is available in the FAQ below.
 
@@ -138,6 +140,12 @@ Review the currency list and rate information shown on the settings page to chec
 
 The selected source is shared by the plugin's converters, tables, and badges. You can use different display settings and currency lists for individual displays.
 
+= What should I check after changing a source? =
+
+After saving, confirm that the update succeeded in Settings → Exchange Rates. Review the source name, rate dates, and available currencies before using the displayed conversions.
+
+In version 1.4.0, a failed source change can leave previously stored rates displayed with incorrect source attribution or conversion. Do not rely on those conversions until the selected source updates successfully. Retry with Force Data Update when available, or reselect the previous source and confirm that its update succeeds.
+
 = Can I refresh the data manually? =
 
 Yes. Open Settings → Exchange Rates and use Force Data Update when the button is available.
@@ -172,6 +180,12 @@ Yes. Tables can use different currency lists, starting amounts, and display sett
 
 Changing the amount in one table recalculates that table only.
 
+= How should visitors enter amounts in an editable table? =
+
+Enter positive numbers without thousands separators or currency symbols. Use a period for decimals, for example 1000 or 1000.50.
+
+In version 1.4.0, table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
+
 = Does this change my store's checkout currency or product prices? =
 
 No. Exchange Rates displays conversions and reference amounts. It does not change your store's checkout currency, payment processing, or stored product prices.
@@ -192,15 +206,25 @@ Yes. A page cache or CDN can continue serving a previously generated page after 
 
 Configure the cache lifetime or purge the relevant pages so visitors receive updated content.
 
+After updating the plugin, purge cached pages and regenerate combined or minified assets so visitors receive the updated scripts.
+
+= Why are there source links below the displays? =
+
+Converters, tables, and badges include source captions to explain the origin and date of the rates. These captions link to currency-rate information on CurrencyRate.today or CurrencyConvert.online.
+
+The source-information panel also includes a link to the source website, check and latest-change times, and the API provider. It contains a rate disclaimer and a link to the plugin's WordPress.org page.
+
 = Which external services does the plugin use? =
 
-Exchange-rate data and source information are retrieved from the CurrencyRate API at https://api-bank.fex.to/.
+Exchange-rate data and source information are retrieved through [api-bank.fex.to](https://api-bank.fex.to/), the API interface for CurrencyRate.today.
 
-Requests are made from your WordPress server. A rate request identifies the selected source. The plugin uses the WordPress HTTP API and its standard request headers.
+Requests are made from your WordPress server. Rate requests can occur on activation, scheduled updates, source changes, manual refreshes, or a page load when the last successful update is more than an hour old. The settings page also requests source information when its cached copy needs refreshing.
+
+A rate request identifies the selected source. By default, the WordPress HTTP API sends the site's URL and WordPress version in the User-Agent header. The API server also receives the requesting server's IP address.
 
 Amounts entered into the converter are calculated in the visitor's browser; they are not sent to the exchange-rate API.
 
-When emoji flags are selected, flag images are loaded from s.w.org. Other flag styles are included with the plugin.
+When emoji flags are selected, the visitor's browser loads flag images from s.w.org, which receives the visitor's IP address and the browser's request headers. Other flag styles are included with the plugin.
 
 For information about the data provider, see [CurrencyRate.Today](https://currencyrate.today/), its [Privacy Policy](https://currencyrate.today/page/privacy), and its [Legal Disclaimer](https://currencyrate.today/page/disclaimer).
 
