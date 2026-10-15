@@ -9,13 +9,13 @@ Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Help visitors convert currencies and compare prices. Converters, tables, and badges, with 86 data sources to choose from. No API key required.
+Help visitors convert currencies and compare prices. Converters, tables, and badges, with 80+ data sources to choose from. No API key required.
 
 == Description ==
 
 Exchange Rates adds **currency converters**, **exchange-rate tables**, and **compact price badges** to WordPress. Help visitors understand prices and calculate amounts without leaving your website.
 
-Choose from a catalog of **86 exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates retrieve rates through CurrencyRate.today using the source you select.
+Choose from a catalog of **80+ exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates retrieve rates through CurrencyRate.today using the source you select.
 
 **No API key or account is required.**
 
@@ -230,7 +230,7 @@ For information about the data provider, see [CurrencyRate.Today](https://curren
 
 = Which data sources are included? =
 
-The plugin's source catalog contains the following 86 entries.
+The catalog below lists the sources included in this plugin version. Availability may change over time.
 
 Data is delivered through the CurrencyRate service. Source availability, currency coverage, and publication schedules may vary. This catalog includes central banks, commercial banks, exchange services, alternative market sources, and a virtual currency source.
 
