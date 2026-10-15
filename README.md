@@ -124,6 +124,7 @@ SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not s
 
 - [Local development and smoke tests](docs/development.md)
 - [Packaging and release procedures](docs/release.md)
+- [1.4.0 compatibility acceptance and known issues](docs/releases/1.4.0.md)
 - [Source provenance and deferred CSS change](docs/normalization.md)
 
 ## Contributing
