@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * @version 1.3.2
+ * @version 1.4.0
  */
 
 use Dejurin\ExchangeRates\Admin\Notices;
@@ -15,7 +15,7 @@ use Dejurin\ExchangeRates\Admin\Notices;
 
 class Plugin
 {
-    const VERSION = '1.3.2';
+    const VERSION = '1.4.0';
     const NAME = 'Exchange Rates';
     const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';

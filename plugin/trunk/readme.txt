@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -363,6 +363,15 @@ We are collect data from multiple data sources and store them on our server, [ht
 
 == Changelog ==
 
+= 1.4.0 =
+* Preserve trailing integer zeros when formatting amounts with zero decimal places.
+* Keep amount changes and number formatting local to the edited exchange-rate table.
+* Associate settings labels with their existing controls while preserving the Sources link.
+* Keep administrative JavaScript loop variables local to avoid overwriting other scripts' globals.
+* Compare manual-update timestamps in UTC so the one-minute interval is independent of the site timezone.
+* Persist successful update metadata through settings sanitization, verify stored data before reporting success, and retain the last successful timestamp after provider failures.
+* Refresh a newly selected source after saving the selection, and display unknown update time without inventing a successful-update date.
+
 = 1.3.2 =
 * Fixed admin stylesheet and script loading scope: plugin admin assets now load only on the plugin settings page and the widgets screen, so they no longer get injected into the WordPress 7.1 block editor iframe.
 * Verified compatibility with WordPress 7.1.
@@ -454,6 +463,9 @@ We are collect data from multiple data sources and store them on our server, [ht
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Maintenance release for number formatting, independent tables, settings accessibility and reliable manual-update state. Existing settings, shortcodes and widgets are retained; no data migration is required.
 
 = 1.3.1 =
 Compatibility and security hardening release for WordPress 7.0. Recommended for all users.
