@@ -13,15 +13,13 @@ Help visitors convert currencies and compare prices. Converters, tables, and bad
 
 == Description ==
 
-Help visitors understand prices and convert currencies without leaving your website.
+Exchange Rates adds **currency converters**, **exchange-rate tables**, and **compact price badges** to WordPress. Help visitors understand prices and calculate amounts without leaving your website.
 
-Exchange Rates adds currency converters, exchange-rate tables, and compact price badges to WordPress. Display the currencies your audience uses, let visitors calculate amounts, and customize the presentation to suit your content.
+Choose from **86 exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates keep your site supplied with data from the source you select.
 
-Choose your site's exchange-rate source from a catalog of 86 sources, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates keep your site supplied with data from the source you select.
+**No API key or account is required.**
 
-No API key or account is required.
-
-[View demo](https://yuri.ws/wordpress-plugins/exchange-rates/) | [Watch video](https://www.youtube.com/watch?v=FTxvE9oeDyU) | [Get support](https://wordpress.org/support/plugin/exchange-rates/)
+[See the converter, table, and badges in action](https://yuri.ws/wordpress-plugins/exchange-rates/), or [watch the video walkthrough](https://www.youtube.com/watch?v=FTxvE9oeDyU).
 
 = Three ways to bring currencies into your content =
 
@@ -57,12 +55,12 @@ The complete source catalog is available in the FAQ below.
 
 = Make the display your own =
 
-* Select the currencies and starting amounts relevant to your content.
-* Adjust decimal precision and number formatting.
-* Customize table columns, headings, borders, and display options.
-* Choose rectangular, square, circular, or emoji flags, or hide flags where supported.
-* Configure badge colors and currency labels.
-* Use widgets in your theme's widget areas or shortcodes in posts and pages.
+* **Currencies and amounts:** select the currencies and starting amounts relevant to your content.
+* **Number formatting:** choose decimal precision and separator styles.
+* **Table layout:** customize columns, headings, borders, and display options.
+* **Currency icons:** choose rectangular, square, circular, or emoji flags, or hide flags where supported.
+* **Badge appearance:** configure colors and currency labels.
+* **Flexible placement:** use widgets in your theme's widget areas or shortcodes in posts and pages.
 
 = Common use cases =
 
