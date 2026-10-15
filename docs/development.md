@@ -32,7 +32,7 @@ Network failures or missing data are not masked by substituting test rates.
 
 Edits to `plugin/trunk/` on the host are immediately visible to containers; file updates and modifications through the administration UI are disabled.
 Automatic WordPress updates and automatic WP-Cron are disabled for reproducibility.
-The plugin's own hourly HTTP fallback remains unchanged. To run its cron event manually:
+The plugin's hourly HTTP fallback runs only for a known, expired successful-update timestamp. Missing or zero timestamps are recovered by cron or a manual update. To run its cron event manually:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli cron event run exchange-rates_data_update
@@ -157,20 +157,38 @@ Run the AJAX-handler suite only in the separate synthetic environment, with its 
 docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
 ```
 
-The 28 cases dispatch the shipped `wp_ajax_exchange_rates_force_data_update` callback in separate WP-CLI processes. They use real WordPress nonce/capability checks, the registered settings sanitizer, JSON response functions and the synthetic HTTP fixture. A test-only namespaced clock freezes the administrative comparison and settings defaults; the local offset is derived from WordPress. The JSON termination handler exits normally rather than throwing an exception that the plugin could catch. No test clock or helper is included in the installable package.
+The 28 cases dispatch the shipped `wp_ajax_exchange_rates_force_data_update` callback in separate WP-CLI processes. They use real WordPress nonce/capability checks, the registered settings sanitizer, JSON response functions and the synthetic HTTP fixture. A test-only namespaced clock freezes the administrative comparison, defaults and service writes; the local offset is derived from WordPress. The JSON termination handler exits normally rather than throwing an exception that the plugin could catch. No test clock or helper is included in the installable package.
 
-Coverage includes UTC, UTC+3, UTC-5, UTC+5:45, Europe/Kyiv and America/New_York; the 0/59/60/61-second boundaries; stored numeric strings, future and missing timestamps; subscriber and nonce rejection before the cooldown; successful updates and provider failure. Older PHP timezone databases use the historical `Europe/Kiev` identifier; the suite prints which identifier it uses. Assertions check exact response bodies, the number of rate requests, unchanged user settings, unchanged rates on refusal/failure and receipt of the synthetic rates after success. The suite creates dedicated disposable users, restores the original plugin settings/rates and fails on PHP warnings. Named zones use their offset at execution time; this is not an exhaustive daylight-saving transition test.
+Coverage includes UTC, UTC+3, UTC-5, UTC+5:45, Europe/Kyiv and America/New_York; the 0/59/60/61-second boundaries; stored numeric strings, future and missing timestamps; subscriber and nonce rejection before the cooldown; successful updates and provider failure. Older PHP timezone databases use the historical `Europe/Kiev` identifier; the suite prints which identifier it uses. Assertions check exact response bodies, the number of rate requests, unchanged user settings, unchanged rates on refusal/failure, persisted service metadata and receipt of the synthetic rates after success. The suite creates dedicated disposable users, restores the original plugin settings/rates and fails on PHP warnings. Named zones use their offset at execution time; this is not an exhaustive daylight-saving transition test.
 
-This is handler integration coverage, not an HTTP login or browser-click test of the update button. Run it before the saved-data formatting/browser fixtures in CI. For an upgrade check, seed the table fixture before changing plugin files, run this suite and the existing browser suite after the change, and verify the saved table fixture without reseeding.
+This suite covers handler integration. The browser test described below also exercises the real update button over HTTP. Run it before the saved-data formatting/browser fixtures in CI. For an upgrade check, seed the table fixture before changing plugin files, run this suite and the existing browser suite after the change, and verify the saved table fixture without reseeding.
 
 The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
 
-The separate sanitizer defect that discards updated service fields, including `update_timestamp`, remains unresolved. These tests seed the stored timestamp to isolate clock comparison; they do not establish that a successful AJAX update persists a fresh timestamp or that consecutive updates are reliably throttled. Retry/backoff, parallel requests and source/cache consistency are outside this fix.
+## Persisted update-state regressions
+
+Run the persistence suite in the same disposable environment, before the formatting and table fixtures:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
+```
+
+The 309 assertions cover sequential requests in separate WordPress processes without reseeding between requests: a successful update at `t`, refusals at `t+1` and `t+59`, another success at `t+60`, and a refusal at `t+61` measured against that new success. The matrix includes four UTC offsets, integer/numeric-string timestamps, missing timestamps and zero. Further cases cover failed/malformed providers, rejected option writes, administrative and CLI service calls, cron, explicit source arguments, a missing settings option, source changes, unknown-time rendering and the hourly fallback. Form input cannot supply service metadata, including after a service update in the same request. Unknown existing settings are preserved. The suite restores its original options and fails on PHP warnings.
+
+The internal writer saves only `rates_available`, `base_currency` and `update_timestamp` through the existing WordPress option API. A temporary sanitizer filter overlays trusted service fields and is removed in `finally`; the form sanitizer remains active. A successful response requires readback of both rates and metadata. The last successful UTC timestamp advances only after a validated, stored rates response. Provider failure retains the cached rates, base and previous successful timestamp while clearing availability. Source-change refreshes run on `updated_option`, after the selected source has been stored, to avoid an outer form write overwriting the new metadata.
+
+Missing or zero time means no known successful update. It allows the first authorized manual attempt, does not display a fabricated date and does not trigger the hourly fallback on every page load. Known expired positive timestamps still trigger that fallback. No migration, new production option or version change is introduced. Nonces, capabilities, response messages and the 60-second interval remain unchanged.
+
+`manual-update-state.spec.js` adds a 25th Chromium test: sign in, click the actual update button, verify persisted metadata after the page reload, click again immediately and verify refusal without changing the successful state. It forwards the real AJAX response unchanged; only provider HTTP is synthetic. Its dedicated fixture restores the original settings and rates. Authenticated traces are disabled and CI excludes its screenshots from uploaded diagnostics.
+
+For an upgrade/rollback check, seed saved options, pages and both widget types on the published 1.3.2 baseline, replace only plugin files, and compare raw saved values and rendered output without reseeding or reactivation. Run the state suites and browser suite, verify restoration, then restore the old files and verify the saved content again. Rollback needs no data migration but reintroduces the old persistence bug.
+
+Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Concurrent requests are not serialized; retry/backoff and cache/source consistency after a failed source change need separate work. Synthetic fixtures do not establish live-provider availability.
 
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown regressions, saved-data formatting regressions, Chromium table-isolation, settings-label and administrative JavaScript regressions, saved-data preservation and HTTP availability of assets.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.

@@ -48,3 +48,5 @@ Do not copy SVN `tags/` directories into Git; Git retains the history.
 Publishing the next version is a separate, explicitly authorized operation after ZIP verification. This repository has no automatic SVN deployment or corresponding secrets.
 
 Revert repository changes with `git revert` of the selected commit through a PR, without force-pushing. A GitHub rollback does not change plugins installed on sites or the published WordPress.org release.
+
+For the update-state fix, rollback changes plugin files only: option names and shapes, widget data and page content remain compatible, with no migration. Reverting restores the old state-persistence defect. Before release, verify a saved 1.3.2 fixture through upgrade and rollback as described in [persisted update-state regressions](development.md#persisted-update-state-regressions). This check is separate from live-provider acceptance and publication authorization.

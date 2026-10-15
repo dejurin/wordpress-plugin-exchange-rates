@@ -1,5 +1,5 @@
 <?php
-/** Freeze the administrative comparison and settings defaults in the isolated CLI process. */
+/** Freeze the administrative comparison, defaults and service writes in the isolated CLI process. */
 
 namespace Dejurin\ExchangeRates\Admin;
 
@@ -19,6 +19,12 @@ function current_time( $type, $gmt = false ) {
 }
 
 namespace Dejurin\ExchangeRates\Models;
+
+function time() {
+	return $GLOBALS['exchange_rates_test_now'];
+}
+
+namespace Dejurin\ExchangeRates\Service;
 
 function time() {
 	return $GLOBALS['exchange_rates_test_now'];

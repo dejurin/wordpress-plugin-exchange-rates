@@ -46,7 +46,7 @@ class Page
 			<div class="row">
 				<div class="col">
 					<p><?php esc_html_e('Advice! If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today.', 'exchange-rates'); ?></p>
-					<?php if ($settings['rates_available']) { ?>
+					<?php if ( $settings['rates_available'] && (int) $settings['update_timestamp'] > 0 ) { ?>
 					<p><b><?php esc_html_e('Last successful update:', 'exchange-rates'); ?></b> 
 					<?php echo esc_html(gmdate('r', $settings['update_timestamp'])); ?></p>
 					<?php } ?>
