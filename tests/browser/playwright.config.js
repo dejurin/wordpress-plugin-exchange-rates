@@ -15,6 +15,7 @@ module.exports = defineConfig({
   timeout: 15000,
   expect: { timeout: 3000 },
   reporter: 'list',
+  snapshotPathTemplate: '{testDir}/test-results/css-references/{projectName}/{testFilePath}/{testName}/{arg}{ext}',
   use: {
     baseURL,
     browserName: 'chromium',
