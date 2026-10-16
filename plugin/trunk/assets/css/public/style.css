@@ -132,6 +132,10 @@
 	text-align: left !important;
 }
 
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-table table th:first-child {
+	text-align: right !important;
+}
+
 .cr-exchange-rates .widget-exchange-rates-currency-table table caption {
 	background-color: transparent !important;
 }
