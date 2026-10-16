@@ -4,11 +4,13 @@ services:
     environment:
       EXCHANGE_RATES_TEST_MODE: "1"
     volumes:
+      - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro
       - ../tests/browser-rtl.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-rtl.php:ro
       - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro
   cli:
     environment:
       EXCHANGE_RATES_TEST_MODE: "1"
     volumes:
+      - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro
       - ../tests/browser-rtl.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-rtl.php:ro
       - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro
