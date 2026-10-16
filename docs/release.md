@@ -47,7 +47,7 @@ Do not copy SVN `tags/` directories into Git; Git retains the history.
 **The current workflow does not publish anything to WordPress.org.** SVN is used only for read-only inspection and comparison.
 Publishing the next version is a separate, explicitly authorized operation after ZIP verification. This repository has no automatic SVN deployment or corresponding secrets.
 
-For the frozen 1.4.0 scope, exact package identity, compatibility evidence and known issues, see the [1.4.0 acceptance report](releases/1.4.0.md).
+For the initial 1.4.0 candidate and known issues, see the [historical acceptance report](releases/1.4.0.md). Later release work is documented in the [CSS cleanup acceptance](releases/1.4.0-css-audit.md), including the merged RTL/SVG reference and its separate candidate identity. Match the evidence to the exact payload being reviewed.
 
 ### Updating a site with caches
 

@@ -2,6 +2,20 @@
 
 Follow the [development contract](../CONTRIBUTING.md) for language, WordPress conventions, security and compatibility requirements.
 
+## CSS parity checks
+
+`tests/browser/css-parity.spec.js` compares the candidate public stylesheet against immutable Git CSS from `cb097af1d04153dd8132a6a0214642491b5c5557`, the merged 1.4.0 snapshot before CSS cleanup. Keep this reference pinned. The WordPress CI checkout includes history so the reference is available without a second source copy.
+
+On a dedicated, seeded test environment, run:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:19249 npm --prefix tests/browser test -- css-parity.spec.js
+```
+
+The suite covers tables, native widgets, converters, badges, flags/regions, trend arrows, expanded source information, input edits, hover/focus, currency swaps, LTR/RTL, 320/1064 px, and custom theme rules/properties. Every comparison requires identical computed styles, values and geometry for all plugin elements. Expected screenshots are generated from the pinned reference CSS in the same DOM/state, stored under ignored `test-results/`, and compared with Playwright's image comparator (`threshold: 0.05`, `maxDiffPixels: 0`). The small color/antialiasing allowance addresses observed Chromium SVG-edge rasterization differences on identical CSS; computed-style and geometry comparisons have no tolerance. A deliberate height mutation verifies that the comparison detects a visible regression.
+
+`CSS_REFERENCE=legacy` selects immutable 1.3.2 CSS and LTR scenarios. Run this mode only with the actual 1.3.2 plugin installed in the disposable environment: its PNG markup must remain the baseline. To check cleaned 1.4.0 CSS against legacy markup in RTL as well, run the default `release` reference mode on that same 1.3.2 installation. Direct equality to old RTL CSS is intentionally not asserted because the approved 1.4.0 bidi fixes change its rendering.
+
 ## Purpose and boundaries
 
 `plugin/trunk/` is the single source of plugin code. Installed WordPress files, volume contents, local secrets and build outputs are excluded from Git.
