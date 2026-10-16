@@ -194,3 +194,19 @@ Rates and settings remain two separate option writes, not an atomic transaction.
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
 CI has only `contents: read`, uses no SVN secrets and publishes no releases. PHPCS/WPCS and comprehensive security checks are not currently automated; see the [validation contract](../CONTRIBUTING.md#validation-and-review).
 CI cleanup with `down --volumes` applies only to the disposable project with a unique name for that specific run.
+
+## RTL numeric direction regressions
+
+`tests/browser/rtl-numbers.spec.js` runs 66 cases against the real plugin renderers in the guarded, read-only `tests/browser-rtl.php` fixture. It covers all eight number formats, RTL/LTR, 320px/1064px widths, both symbol positions, shortcode and native widget tables/converters, badges, previous-close cells, static base amounts, input click/blur, recalculation and negative converter results. Character `Range` coordinates detect visual reordering that correct DOM strings alone cannot detect. Native input values and computed direction are checked separately. No synthetic fixture is shipped in the ZIP.
+
+After seeding rates with the isolated smoke, run:
+
+```sh
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-numbers
+```
+
+The fixture is loaded only by the test Compose override. It filters formatting options for the current request without saving them and retains the page's RTL direction for labels, tables and currency selectors. It does not change the site's language. Existing table-shortcode behavior (no symbol attribute), initial previous-close symbol omission and the converter's empty-group-separator fallback are intentionally preserved.
+
+The fix adds scoped RTL CSS for numeric cells, amount inputs, converter results and badge values. It keeps numeric runs left-to-right and isolated while retaining the previous input/badge alignment. PHP, JavaScript, calculations, format IDs, output strings, data attributes, option keys, shortcode/widget registrations and version 1.4.0 remain unchanged. No migration is required. Reverting this CSS change restores the previous display without changing saved data. Existing mobile table overflow, label alignment and mixed-direction captions are separate issues.
+
+Before publishing the still-unreleased 1.4.0, build a new ZIP from the merged revision and purge cached/minified CSS in the release smoke; older 1.4.0 candidate ZIPs do not contain this fix. This workflow does not publish to WordPress.org.
