@@ -374,3 +374,21 @@
 	margin-bottom: 0.8rem;
 }
 /* Widget Currency Converter -  Style end */
+/* Keep numeric runs intact without reversing the surrounding RTL layout. */
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-table tbody td.text-right,
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-table input,
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-converter input,
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-converter .result,
+[dir="rtl"] .cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders > span + span {
+	direction: ltr;
+	unicode-bidi: isolate;
+}
+
+/* Preserve the existing visual alignment after isolating numeric direction. */
+[dir="rtl"] .cr-exchange-rates .widget-exchange-rates-currency-converter input {
+	text-align: right;
+}
+
+[dir="rtl"] .cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders > span + span {
+	text-align: left;
+}
