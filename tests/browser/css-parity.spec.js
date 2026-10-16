@@ -122,6 +122,9 @@ for (const direction of directions) {
           }
           const converter = page.locator('.widget-exchange-rates-currency-converter').first();
           if (await converter.count()) {
+            await converter.locator('input').hover();
+            await converter.locator('input').focus();
+            await compare(page, testInfo, 'converter input hover and focus');
             await converter.locator('select').first().hover();
             await compare(page, testInfo, 'select hover');
             await converter.locator('button.swap').hover();
