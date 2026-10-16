@@ -36,6 +36,7 @@ jobs:
       - run: php -l tests/manual-update-wordpress.php && php -l tests/manual-update-clock.php
       - run: php -l tests/update-state-wordpress.php
       - run: php -l tests/browser-update.php
+      - run: php -l tests/browser-rtl.php
 
   package:
     runs-on: ubuntu-24.04
