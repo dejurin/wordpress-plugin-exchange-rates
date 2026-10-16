@@ -151,6 +151,13 @@
 	width: fit-content !important;
 }
 
+.cr-exchange-rates .widget-exchange-rates-currency-table table img.exchange-rates-trend {
+	width: 14px !important;
+	height: 14px !important;
+	margin-inline-start: 4px;
+	vertical-align: -2px;
+}
+
 .cr-exchange-rates .widget-exchange-rates-currency-table table td {
 	white-space: nowrap;
 }

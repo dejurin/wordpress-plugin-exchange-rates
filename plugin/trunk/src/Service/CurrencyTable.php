@@ -105,7 +105,7 @@ class CurrencyTable
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
 
                 $class_trend = '';
-                $svg_trend = '<img width="12" height="12" alt="%1$s" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.png" />';
+                $svg_trend = '<img class="exchange-rates-trend" width="14" height="14" alt="%1$s" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.svg" />';
 
                 if (1 === $currency->get_trend()) {
                     $svg_trend = sprintf($svg_trend, 'up');

@@ -201,6 +201,16 @@ In Chromium, before the fix, both published 1.3.2 and the preceding 1.4.0 candid
 
 Firefox has a separately reproduced, pre-existing full-width region-layout defect: region text can be positioned outside the visible table in both LTR and RTL. The same LTR failures occur on published 1.3.2. This patch does not change that layout algorithm. The region assertions intentionally remain active and report the failures; they are soft assertions so all flag/name groups are still checked. Chromium CI passing must not be described as full Firefox visual acceptance.
 
+## Trend arrow regressions
+
+`trend-arrows.spec.js` exercises real shortcode and native Table widget output in full and compact widths. The guarded `browser-trends.php` fixture supplies growth, decline, unchanged and missing previous rates without writing options. Four legacy-contract cases also pass on published 1.3.2: numeric values, trend direction (including inverse quotes), existing `up`/`down` alternative text and absence of an arrow for unchanged/missing data are preserved.
+
+The 24 presentation cases cover LTR/RTL, 1064/320/360 px viewports, normal/inverse quotes and symbols before/after values. They verify loaded same-origin SVG assets, 14 px dimensions, a 4 px gap, vertical alignment, unchanged 16 px flags, row height, contained overflow, repeated amount changes and isolation from other tables. Run them in the disposable environment with `WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- trend-arrows.spec.js`.
+
+The production change replaces only the trend image template and adds scoped CSS plus two local SVG assets and their license. The existing PNG paths remain available. Public JavaScript still clones the same `img` element when recalculating a table; rate calculations, options, shortcodes, widgets and the 1.4.0 version are unchanged. The icons use Lucide paths with customized colours and stroke weight; provenance and license notices are shipped beside the assets in `assets/img/LICENSE-lucide.txt`.
+
+Rollback reverts the trend image template and CSS; no database migration is needed. Purge stale HTML/CSS and regenerate optimizer bundles when installing a rebuilt 1.4.0 candidate. Passing this fixture does not establish compatibility with every theme, physical device or cache configuration.
+
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
