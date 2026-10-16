@@ -185,6 +185,22 @@ For an upgrade/rollback check, seed saved options, pages and both widget types o
 
 Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Concurrent requests are not serialized; retry/backoff and cache/source consistency after a failed source change need separate work. Synthetic fixtures do not establish live-provider availability.
 
+## RTL flag and label alignment regressions
+
+`rtl-labels.spec.js` adds 40 cases using the guarded, read-only RTL fixture. The matrix covers LTR and RTL at 1064px and 320px, shortcode and native tables, full and compact widths, all five flag modes, 16px/64px flags, codes/names, regions on/off, the base row, Arabic/Hebrew text and long labels. Emoji images are supplied locally by the test runner; this does not test the availability of WordPress.org's emoji CDN.
+
+The tests measure the rendered text with DOM `Range` rectangles, not just the full-width label container. They require a small non-overlapping flag/text gap, aligned region labels, unchanged Latin code order, retained ellipsis/overflow behavior and no document-level horizontal overflow. Run them in the disposable environment after seeding the table fixture:
+
+```sh
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-labels.spec.js
+```
+
+The production fix overrides the first table header cell's alignment only under an RTL ancestor. The leading flag remains on the right and the label/region align next to it. LTR rules, PHP, JavaScript, HTML, attributes and stored settings are unchanged. Reverting the four added CSS lines rolls back the display change without a database migration. This fix is part of unreleased 1.4.0; rebuild the final ZIP and invalidate cached/minified CSS after the reviewed changes are merged.
+
+In Chromium, before the fix, both published 1.3.2 and the preceding 1.4.0 candidate fail the 20 RTL cases and pass the 20 LTR cases. For compatibility verification, seed on the immutable 1.3.2 baseline, switch only plugin files, run browser regressions and compare stored options, both widget types, pages and registrations without reseeding. Rollback should preserve that state too. These checks do not certify every third-party theme, physical device or nested mixed-direction container.
+
+Firefox has a separately reproduced, pre-existing full-width region-layout defect: region text can be positioned outside the visible table in both LTR and RTL. The same LTR failures occur on published 1.3.2. This patch does not change that layout algorithm. The region assertions intentionally remain active and report the failures; they are soft assertions so all flag/name groups are still checked. Chromium CI passing must not be described as full Firefox visual acceptance.
+
 ## CI and limitations
 
 - PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
