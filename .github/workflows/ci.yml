@@ -30,6 +30,7 @@ jobs:
           coverage: none
       - run: python3 scripts/plugin.py lint
       - run: php tests/formatting.php
+      - run: php tests/change-percentage.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
       - run: php -l tests/browser-admin.php

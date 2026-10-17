@@ -11,9 +11,15 @@ add_action( 'init', function () {
 	}
 	$GLOBALS['wp_locale']->text_direction = isset( $_GET['direction'] ) && 'rtl' === $_GET['direction'] ? 'rtl' : 'ltr';
 	add_filter( 'pre_option_exchange-rates', function () {
-		return array_merge( \Dejurin\ExchangeRates\Models\Settings::get_defaults(), array( 'source_id' => 'currencyrate', 'base_currency' => 'USD', 'currency_format' => 3, 'decimals' => 2, 'rates_available' => true, 'update_timestamp' => time() ) );
+		return array_merge( \Dejurin\ExchangeRates\Models\Settings::get_defaults(), array( 'source_id' => 'currencyrate', 'base_currency' => 'USD', 'currency_format' => isset( $_GET['changes'], $_GET['format'] ) ? max( 0, min( 7, (int) $_GET['format'] ) ) : 3, 'decimals' => isset( $_GET['changes'] ) && isset( $_GET['precision'] ) ? max( 0, min( 7, (int) $_GET['precision'] ) ) : 2, 'rates_available' => true, 'update_timestamp' => time() ) );
 	} );
 	add_filter( 'pre_option_exchange-rates_rates', function () {
+        if ( isset( $_GET['changes'] ) ) {
+            return array( 'source' => 'currencyrate', 'base' => 'USD', 'data' => array(
+                array( 'rates' => array( 'USD' => 1, 'EUR' => 1.25, 'GBP' => 0.9, 'AUD' => 1.236, 'JPY' => 0.01, 'BRL' => 1, 'CAD' => 1, 'CHF' => 1000000.01 ) ),
+                array( 'rates' => array( 'USD' => 1, 'EUR' => 1.2, 'GBP' => 1, 'AUD' => 1.234, 'JPY' => 0.009, 'BRL' => 1, 'CHF' => 1000000 ) ),
+            ) );
+        }
 		return array( 'source' => 'currencyrate', 'base' => 'USD', 'data' => array(
 			array( 'local_time' => '2026-01-02 12:00:00', 'put_time' => '2026-01-02 12:01:00', 'rates' => array( 'USD' => 1, 'EUR' => 1.25, 'GBP' => 1.5, 'AUD' => 0.75, 'BRL' => 0.2, 'JPY' => 0.01 ) ),
 			array( 'local_time' => '2026-01-01 12:00:00', 'put_time' => '2026-01-01 12:01:00', 'rates' => array( 'USD' => 1, 'EUR' => 1, 'GBP' => 2, 'AUD' => 0.75, 'BRL' => 0.25 ) ),
@@ -34,7 +40,7 @@ add_action( 'template_redirect', function () {
 	echo '<style>body{margin:16px;font-family:Arial,sans-serif;font-size:15px}section{max-width:640px;margin-bottom:24px}img{max-width:100%;height:auto;width:32px}td img{margin:0}</style></head><body>';
 	echo '<h1>Trend arrow regression fixture</h1><p>Local synthetic rates: growth, decline, unchanged and missing previous data.</p>';
 	foreach ( array( true, false ) as $full_width ) {
-		$attributes = array( 'amount' => 1, 'base_currency' => 'USD', 'currency_list' => 'EUR,GBP,AUD,BRL,JPY', 'base_show' => true, 'amount_active' => true, 'code' => true, 'flag_type' => 'rectangular', 'flag_size' => 16, 'full_width' => $full_width, 'inverse' => $inverse, 'table_headers_previous_close_show' => true );
+		$attributes = array( 'amount' => 1, 'base_currency' => 'USD', 'currency_list' => isset( $_GET['changes'] ) ? 'EUR,GBP,AUD,JPY,BRL,CAD,CHF' : 'EUR,GBP,AUD,BRL,JPY', 'base_show' => true, 'amount_active' => true, 'code' => true, 'flag_type' => 'rectangular', 'flag_size' => 16, 'full_width' => $full_width, 'inverse' => $inverse, 'table_headers_previous_close_show' => true, 'table_headers_changes_show' => isset( $_GET['changes'] ) );
 		$suffix = $full_width ? 'full' : 'compact';
 		$shortcode = '[exchange-rates_currency-table';
 		foreach ( $attributes as $name => $value ) {
