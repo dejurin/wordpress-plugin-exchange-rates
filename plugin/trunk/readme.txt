@@ -549,6 +549,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.0 =
+* Calculate percentage changes relative to previous close; show unsigned percentages with trend colors and keep existing arrows consistent with displayed precision when amounts change.
 * Preserve trailing integer zeros when formatting amounts with zero decimal places.
 * Keep amount changes and number formatting local to the edited exchange-rate table.
 * Associate settings labels with their existing controls while preserving the Sources link.

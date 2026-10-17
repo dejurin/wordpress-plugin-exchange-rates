@@ -250,3 +250,16 @@ The fixture is loaded only by the test Compose override. It filters formatting o
 The fix adds scoped RTL CSS for numeric cells, amount inputs, converter results and badge values. It keeps numeric runs left-to-right and isolated while retaining the previous input/badge alignment. PHP, JavaScript, calculations, format IDs, output strings, data attributes, option keys, shortcode/widget registrations and version 1.4.0 remain unchanged. No migration is required. Reverting this CSS change restores the previous display without changing saved data. Existing mobile table overflow, label alignment and mixed-direction captions are separate issues.
 
 Before publishing the still-unreleased 1.4.0, build a new ZIP from the merged revision and purge cached/minified CSS in the release smoke; older 1.4.0 candidate ZIPs do not contain this fix. This workflow does not publish to WordPress.org.
+
+
+## Percentage and visible-change regressions
+
+Run `php tests/change-percentage.php` with PHP 5.6 or newer. The 1,157 assertions use literal expected results for growth/decline, previous-close denominators, inverse pairs, invalid/missing previous rates, small percentages, all eight format IDs, precisions 0/2/7 and amounts 1/100. It does not bootstrap WordPress or write data.
+
+`change-percentage.spec.js` adds 14 browser scenarios using the guarded `?er-trend-test=1&changes=1` fixture. They cover shortcode/native-widget tables, LTR/RTL, 1280px/320px, decimal comma/point, precision 0/2/4/7, repeated amount changes and neighbouring table isolation. Initial PHP output and subsequent JavaScript updates must agree on percentage visibility, class and accessible label.
+
+Percentage magnitude is `abs((current - previous) / previous * 100)` for the displayed currency direction. It has no plus/minus sign; existing Price arrows and Changes colors convey direction. A positive percentage that would round to zero is displayed as `<0.01%` (localized separator). Missing previous data and unchanged rates retain a dash.
+
+The renderer compares the two formatted prices, not the rounded absolute difference. Equal displayed prices suppress both percentage and arrow, with an accessible below-precision explanation; crossing a rounding boundary still shows the direction. Only the edited table is updated. The percentage and source direction are independent of amount, so PHP supplies escaped metadata and translated labels for JavaScript to show/hide. Old cached markup without this metadata retains the previous input behavior and requires normal cache invalidation to receive the fix.
+
+This intentionally corrects values previously shown in Changes and replaces signed percentages with magnitude plus direction. It preserves rate/amount formatting, saved options/rates/widgets/pages, shortcode attributes, public method signatures and the existing 14px SVG assets. There is no migration. Revert the fix to roll back; the incorrect percentage formula and rounded-direction bug then return. The version remains unreleased 1.4.0; an older release ZIP does not contain this fix and must not be mistaken for the new candidate after merge.
