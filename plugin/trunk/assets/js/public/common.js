@@ -16,6 +16,33 @@ jQuery(document).ready(function() {
 
         return t.join(ts) + (n[1] ? dp + n[1] : '');
     }
+    function updateChange(cell, amount, settings) {
+        // Cached legacy markup has no change metadata; keep its existing behavior.
+        if (typeof cell.attr('data-change-trend') === 'undefined') return;
+
+        var trend = Number(cell.attr('data-change-trend'));
+        var current = formatNumber(cell.data('rate'), amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
+        var previous = formatNumber(Number(cell.attr('data-previous-rate')), amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
+        var visible = trend !== 0 && current !== previous;
+        var label = cell.attr(visible ? 'data-change-label' : 'data-change-hidden-label');
+        var icon = cell.find('img.exchange-rates-trend');
+
+        if (!visible) {
+            icon.remove();
+        } else if (!icon.length) {
+            jQuery('<img>').attr({
+                'class': 'exchange-rates-trend', width: 14, height: 14,
+                alt: trend > 0 ? 'up' : 'down', src: cell.attr('data-trend-src')
+            }).appendTo(cell);
+        }
+        cell.attr('title', label);
+        var change = cell.closest('tr').find('td[data-change]');
+        change.text(visible ? cell.attr('data-change-percent') : '\u2013')
+            .removeClass('table-success table-danger')
+            .attr({ 'aria-label': label, title: label });
+        if (visible) change.addClass(trend > 0 ? 'table-success' : 'table-danger');
+    }
+
     /* Caption - start */
     jQuery('span.exchange-rates-caption-button, strong.exchange-rates-caption-button').on('click', function(event) {
         if (jQuery('#' + jQuery(this).data('caption-id')).css('display') === 'none') {
@@ -61,6 +88,7 @@ jQuery(document).ready(function() {
             var img = jQuery(value).find('img').clone();
             jQuery(value).html(result);
             img.appendTo(value);
+            updateChange(jQuery(value), amount, settings);
         });
     });
     /* Currency Table - end */

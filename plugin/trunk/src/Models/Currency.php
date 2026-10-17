@@ -178,44 +178,34 @@ class Currency
         $rate_1 = $this->get_rate(1);
 
         if ($this->currency !== $this->base_currency &&
-            $this->has_previous_rate() &&
-            0 !== $rate_0 && 0 !== $rate_1) {
-            $pre = '';
-            $decimal = 0;
-            $value = (100 - ((100 * $rate_1) / $rate_0));
-
-            $value_abs = abs($value);
-
-            if ($value_abs > 99) {
-                $decimal = 0;
-            } elseif ($value_abs > 9) {
-                $decimal = 1;
-            } elseif ($value_abs > 0) {
-                $decimal = 2;
-            } else {
-                return '&ndash;';
+            $this->has_rate() && $this->has_previous_rate() &&
+            $rate_0 > 0 && $rate_1 > 0 && is_finite($rate_0) && is_finite($rate_1)) {
+            // Previous close is the reference; direction is rendered separately.
+            $value = abs((($rate_0 - $rate_1) / $rate_1) * 100);
+            if (!is_finite($value) || 0.0 === $value) {
+                return $this->zero_symbol;
             }
-            $pre = (1 === $this->get_trend()) ? '+' : '';
-            $result = self::for_format($value, $this->settings['currency_format'], $decimal);
 
-            return strcmp($result, '0') ? $pre.$result.'&#x25;' : $this->zero_symbol;
-        } else {
-            return '&ndash;';
+            $decimal = ($value > 99) ? 0 : (($value > 9) ? 1 : 2);
+            $result = self::for_format($value, $this->settings['currency_format'], $decimal);
+            if ('0' === $result) {
+                return '&lt;'.self::for_format(0.01, $this->settings['currency_format'], 2).'&#x25;';
+            }
+
+            return $result.'&#x25;';
         }
+
+        return $this->zero_symbol;
     }
 
     public function get_trend()
     {
-        if ($this->has_previous_rate() && !is_null($this->get_change_format($raw = true))) {
+        // Direction must not disappear when the absolute difference rounds to zero.
+        if ($this->currency !== $this->base_currency && $this->has_rate() && $this->has_previous_rate()) {
             $rate_0 = $this->get_rate(0);
             $rate_1 = $this->get_rate(1);
-
-            if ($rate_0 > $rate_1 && 0 !== strcmp($rate_0, $rate_1)) {
-                return 1;
-            } elseif ($rate_0 === $rate_1 || 0 === strcmp($rate_0, $rate_1)) {
-                return 0;
-            } else {
-                return -1;
+            if ($rate_0 > 0 && $rate_1 > 0 && is_finite($rate_0) && is_finite($rate_1) && $rate_0 !== $rate_1) {
+                return ($rate_0 > $rate_1) ? 1 : -1;
             }
         }
 

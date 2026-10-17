@@ -104,18 +104,21 @@ class CurrencyTable
                 $currency_region = $get_currencies[$currency_code]['region'];
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
 
-                $class_trend = '';
-                $svg_trend = '<img class="exchange-rates-trend" width="14" height="14" alt="%1$s" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/%1$s.svg" />';
-
-                if (1 === $currency->get_trend()) {
-                    $svg_trend = sprintf($svg_trend, 'up');
-                    $class_trend = ' table-success';
-                } elseif (-1 === $currency->get_trend()) {
-                    $svg_trend = sprintf($svg_trend, 'down');
-                    $class_trend = ' table-danger';
-                } else {
-                    $svg_trend = '';
+                $trend = $currency->get_trend();
+                $change_visible = $trend && $currency->get_rate_format(0, true) !== $currency->get_rate_format(1, true);
+                $percentage = $currency->get_change_percentage();
+                $percentage_text = html_entity_decode($percentage, ENT_QUOTES, 'UTF-8');
+                $change_label = $currency->has_previous_rate() ? __('No change.', 'exchange-rates') : __('Previous rate unavailable.', 'exchange-rates');
+                if ($trend) {
+                    /* translators: %s: Unsigned, localized percentage. */
+                    $change_label = sprintf(1 === $trend ? __('Increase: %s', 'exchange-rates') : __('Decrease: %s', 'exchange-rates'), $percentage_text);
                 }
+                $hidden_label = $trend ? __('Change is below display precision.', 'exchange-rates') : $change_label;
+                $visible_label = $change_visible ? $change_label : $hidden_label;
+                $trend_name = (1 === $trend) ? 'up' : 'down';
+                $trend_src = $trend ? plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/img/'.$trend_name.'.svg' : '';
+                $class_trend = $change_visible ? ((1 === $trend) ? ' table-success' : ' table-danger') : '';
+                $svg_trend = $change_visible ? '<img class="exchange-rates-trend" width="14" height="14" alt="'.$trend_name.'" src="'.esc_url($trend_src).'" />' : '';
 
                 $output_data[0]['data'] = $start_template;
 
@@ -169,11 +172,14 @@ class CurrencyTable
                     'data-rate' => $currency->get_rate(0),
                     'data-symbol' => $symbol,
                     'class' => 'text-right',
+                    'data-previous-rate' => $currency->has_previous_rate() ? esc_attr($currency->get_rate(1)) : '',
+                    'data-change-trend' => (int) $trend,
+                    'data-change-percent' => esc_attr($percentage_text),
+                    'data-change-label' => esc_attr($change_label),
+                    'data-change-hidden-label' => esc_attr($hidden_label),
+                    'data-trend-src' => esc_url($trend_src),
+                    'title' => esc_attr($visible_label),
                 ];
-
-                if ($currency->has_previous_rate() && $currency->get_change()) {
-                    $output_data[2]['title'] = $currency->get_change_percentage();
-                }
 
                 if ($show_previous_close) {
                     $output_data[3] = [
@@ -186,12 +192,12 @@ class CurrencyTable
 
                 if ($show_changes) {
                     $output_data[4] = [
-                        'data' => $currency->has_previous_rate() ? $currency->get_change_percentage() : '&ndash;',
-                        'class' => 'text-right'.((0 === $currency->get_change()) ? '' : $class_trend),
+                        'data' => $change_visible ? $percentage : '&ndash;',
+                        'class' => 'text-right'.$class_trend,
+                        'data-change' => '1',
+                        'aria-label' => esc_attr($visible_label),
+                        'title' => esc_attr($visible_label),
                     ];
-                    if ($currency->has_previous_rate() && $currency->get_change()) {
-                        $output_data[4]['title'] = $currency->get_change_format();
-                    }
                 }
 
                 $this->table->add_row($output_data);
