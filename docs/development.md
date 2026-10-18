@@ -46,7 +46,7 @@ Network failures or missing data are not masked by substituting test rates.
 
 Edits to `plugin/trunk/` on the host are immediately visible to containers; file updates and modifications through the administration UI are disabled.
 Automatic WordPress updates and automatic WP-Cron are disabled for reproducibility.
-The plugin's hourly HTTP fallback runs only for a known, expired successful-update timestamp. Missing or zero timestamps are recovered by cron or a manual update. To run its cron event manually:
+Page rendering uses saved rates without contacting the rate provider. Expired or missing data queues a WP-Cron refresh; the existing hourly event remains scheduled. Because automatic WP-Cron is disabled in this local setup, run its cron event manually:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli cron event run exchange-rates_data_update
@@ -187,17 +187,17 @@ Run the persistence suite in the same disposable environment, before the formatt
 docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
 ```
 
-The 309 assertions cover sequential requests in separate WordPress processes without reseeding between requests: a successful update at `t`, refusals at `t+1` and `t+59`, another success at `t+60`, and a refusal at `t+61` measured against that new success. The matrix includes four UTC offsets, integer/numeric-string timestamps, missing timestamps and zero. Further cases cover failed/malformed providers, rejected option writes, administrative and CLI service calls, cron, explicit source arguments, a missing settings option, source changes, unknown-time rendering and the hourly fallback. Form input cannot supply service metadata, including after a service update in the same request. Unknown existing settings are preserved. The suite restores its original options and fails on PHP warnings.
+The 306 assertions cover sequential requests in separate WordPress processes without reseeding between requests: a successful update at `t`, refusals at `t+1` and `t+59`, another success at `t+60`, and a refusal at `t+61` measured against that new success. The matrix includes four UTC offsets, integer/numeric-string timestamps, missing timestamps and zero. Further cases cover failed/malformed providers, rejected option writes, administrative and CLI service calls, cron, explicit source arguments, a missing settings option, source changes, unknown-time rendering and the absence of synchronous HTTP during expired-cache page bootstrap. Form input cannot supply service metadata, including after a service update in the same request. Unknown existing settings are preserved. The suite restores its original options and fails on PHP warnings.
 
 The internal writer saves only `rates_available`, `base_currency` and `update_timestamp` through the existing WordPress option API. A temporary sanitizer filter overlays trusted service fields and is removed in `finally`; the form sanitizer remains active. A successful response requires readback of both rates and metadata. The last successful UTC timestamp advances only after a validated, stored rates response. Provider failure retains the cached rates, base and previous successful timestamp while clearing availability. Source-change refreshes run on `updated_option`, after the selected source has been stored, to avoid an outer form write overwriting the new metadata.
 
-Missing or zero time means no known successful update. It allows the first authorized manual attempt, does not display a fabricated date and does not trigger the hourly fallback on every page load. Known expired positive timestamps still trigger that fallback. No migration, new production option or version change is introduced. Nonces, capabilities, response messages and the 60-second interval remain unchanged.
+Missing or zero time means no known successful update. It allows the first authorized manual attempt and does not display a fabricated date. Page rendering queues background recovery for an unknown or expired timestamp; it never fetches rates synchronously. The state writer needs no migration. Nonces, capabilities, response messages and the 60-second interval remain unchanged.
 
 `manual-update-state.spec.js` adds a 25th Chromium test: sign in, click the actual update button, verify persisted metadata after the page reload, click again immediately and verify refusal without changing the successful state. It forwards the real AJAX response unchanged; only provider HTTP is synthetic. Its dedicated fixture restores the original settings and rates. Authenticated traces are disabled and CI excludes its screenshots from uploaded diagnostics.
 
 For an upgrade/rollback check, seed saved options, pages and both widget types on the published 1.3.2 baseline, replace only plugin files, and compare raw saved values and rendered output without reseeding or reactivation. Run the state suites and browser suite, verify restoration, then restore the old files and verify the saved content again. Rollback needs no data migration but reintroduces the old persistence bug.
 
-Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Concurrent requests are not serialized; retry/backoff and cache/source consistency after a failed source change need separate work. Synthetic fixtures do not establish live-provider availability.
+Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Background refreshes are serialized and use retry/backoff as described below. Explicit manual/source-change requests retain their existing service path; concurrency with those requests and cache/source consistency after a failed source change remain separate concerns. Synthetic fixtures do not establish live-provider availability.
 
 ## RTL flag and label alignment regressions
 
@@ -280,3 +280,23 @@ WP_TEST_URL=http://127.0.0.1:19260 npm test --prefix tests/browser -- table-colu
 The fixture filters options for one HTTP request only. It does not save settings, widgets, rates or pages. The full browser suite still needs its normal seeded table/admin fixtures. Tests intentionally fail on unmodified 1.3.2 and the preceding 1.4.0 snapshot; keep the immutable baseline unchanged.
 
 Compact table captions now follow the logical start edge; full-width tables, converters and badges retain their caption behavior. Full-width tables give spare width to Currency and keep other columns content-sized; the Code header follows the same logical edge as its values. New table label classes provide a 12ch minimum, normal wrapping and non-shrinking flags; region text is smaller and regular weight. Base-row filler cells use the count of visible history columns, independently of title mode or whether headers are displayed. No public attributes, option keys, data migrations, calculations, JavaScript, translations or version metadata change. See the [acceptance report](releases/1.4.0-table-layout.md) for compatibility evidence, intentional visual differences and rollback.
+
+## Background rate refresh
+
+Rendering a page never calls the rate provider. Existing cached rates, source information and their original date remain visible when a refresh fails. With no current rates, all three shortcodes and both native widgets show the existing translated unavailable-data message. No frontend AJAX or polling is added, and an already open page does not replace its rates after a background update. Reload to read the newly saved data.
+
+The existing `exchange-rates_data_update` hourly event is retained and repaired if absent. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless an hourly event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
+
+Background scheduling and workers share a per-site, five-minute lease in the non-autoloaded `exchange-rates_refresh_lock` option. A unique database insert and compare-and-swap on expiry avoid relying on persistent object-cache behavior or the `add_option()` upsert. Release checks token ownership. A killed worker therefore cannot block refresh permanently. The transient `exchange-rates_refresh_after` records retry timing separately from success metadata. Deactivation removes both cron hooks and these internal scheduling values while preserving user settings and rates. No tables or data migrations are introduced.
+
+WP-Cron normally starts on site requests, not on a wall-clock timer. Updating a quiet site independently of visitors requires the site's system scheduler to run WordPress cron. If cron is disabled or loopback requests fail, old rates remain visible but do not become fresh automatically. Full-page/CDN caches also need their own expiry or purge policy; this change does not invalidate externally cached HTML.
+
+Run on the disposable environment before seeding browser fixtures:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/background-refresh-wordpress.php
+```
+
+The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, hourly scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
+
+For rollback to 1.3.2, deactivate the candidate, replace only the plugin files and reactivate 1.3.2. Deactivation clears the new internal scheduling state but keeps rates, widgets, settings and posts. The old synchronous loading behavior returns with the old code. See the background-refresh acceptance report for the exact versions and results tested.

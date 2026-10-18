@@ -28,6 +28,9 @@ class CurrencyTable
         $settings = get_option(Settings::$option_name, []);
         $this->settings = wp_parse_args($settings, Settings::get_defaults());
         $rates = RatesData::get();
+        if ( ! RatesData::has_current_rates( $rates ) ) {
+            return Dev::rates_unavailable();
+        }
         $has_previous_rates = RatesData::has_previous_rates($rates);
         $show_previous_close = !empty($this->parameters['table_headers_previous_close_show']) && $has_previous_rates;
         $show_changes = !empty($this->parameters['table_headers_changes_show']) && $has_previous_rates;

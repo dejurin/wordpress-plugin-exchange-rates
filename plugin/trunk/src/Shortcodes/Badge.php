@@ -198,6 +198,9 @@ class Badge
 
     public function shortcode($attr)
     {
+        if ( ! \Dejurin\ExchangeRates\Service\RatesData::has_current_rates() ) {
+            return Dev::rates_unavailable();
+        }
         $caption = null;
         $currency = null;
         $caption_currency = null;

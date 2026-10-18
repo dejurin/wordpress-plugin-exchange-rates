@@ -11,6 +11,11 @@ use Dejurin\ExchangeRates\Plugin;
 
 class Dev
 {
+	/** Render the existing unavailable message when no current cache exists. */
+	public static function rates_unavailable() {
+		return '<b>' . Plugin::NAME . '</b> ' . esc_html__( 'Error: exchange-rate data is not available yet.', 'exchange-rates' );
+	}
+
     public static function caption($parameters, $time, $widget_nubmer, $widget_slug, $source_id, $dev = 1)
     {
         // $get_currencies = Currencies::get_currencies();
