@@ -56,7 +56,7 @@ async function openFixture(page, baseURL, direction, width, theme) {
     }
     // Detect accidental global resets outside the converter scope.
     const control = document.createElement('input'); control.id = 'outside-converter';
-    control.style.cssText = 'box-sizing:content-box;height:20px;padding:5px;border:1px solid';
+    control.style.cssText = 'height:20px;padding:5px;border:1px solid';
     document.body.append(control);
   }, { css, theme, themeStyle: themeCSS(theme) });
   await page.evaluate(async () => { await document.fonts.ready; });
@@ -98,8 +98,8 @@ for (const direction of ['ltr', 'rtl']) {
             expect(control.x + control.width).toBeLessThanOrEqual(result.root.x + result.root.width + 1);
           }
         }
-        await expect(page.locator('#outside-converter')).toHaveCSS('box-sizing', 'content-box');
-        expect((await page.locator('#outside-converter').boundingBox()).height).toBe(32);
+        await expect(page.locator('#outside-converter')).toHaveCSS('box-sizing', theme === 'bare' ? 'content-box' : 'border-box');
+        expect((await page.locator('#outside-converter').boundingBox()).height).toBe(theme === 'bare' ? 32 : 20);
       });
     }
   }

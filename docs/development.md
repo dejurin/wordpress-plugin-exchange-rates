@@ -333,3 +333,20 @@ docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/backg
 The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, hourly scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
 
 For rollback to 1.3.2, deactivate the candidate, replace only the plugin files and reactivate 1.3.2. Deactivation clears the new internal scheduling state but keeps rates, widgets, settings and posts. The old synchronous loading behavior returns with the old code. See the [background-refresh acceptance report](releases/1.4.0-background-refresh.md) for the exact versions and results tested.
+
+
+## Converter control box sizing
+
+`tests/browser/converter-box-sizing.spec.js` checks shortcode and native-widget converters in LTR/RTL at 320, 390 and 1064 CSS pixels. Input, swap button and selects retain the existing 40px height with a consistent border box; the site's 44px minimum remains effective. The suite also checks control containment, icon alignment, unrelated inputs, amount changes, swaps, currency selection, zero, neighbouring converters and the original caption/link contract.
+
+Run after seeding the disposable synthetic WordPress environment:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- converter-box-sizing.spec.js
+```
+
+CI uses deterministic bare, Astra-reset and site-minimum CSS patterns. To test captured full theme styles without external network dependencies, set `CONVERTER_THEME_CSS_DIR` to a local directory containing `astra-main.css`, `astra-settings.css`, `wp-global.css`, `fonts-local.css`, `yuri-page.css` and the referenced `font-N.ttf` files. These optional local captures are not shipped or committed. This does not replace a check with the actual theme active in WordPress.
+
+For the functional 1.3.2 baseline, install its immutable plugin export on a separate disposable site, then run with `CONVERTER_REFERENCE=legacy` and `--grep 'legacy contract'`. The sizing regression is intentionally expected to fail on unmodified 1.3.2 and the preceding 1.4.0 candidate. CSS parity normalizes only this known reference defect; all remaining computed styles and geometry are compared exactly, with the existing screenshot antialiasing tolerance.
+
+The production change only adds `box-sizing: border-box` to converter inputs, selects and swap buttons. No font, padding, height, SVG, PHP, JavaScript, saved data or public interface changes. Removing the rule restores the old box model without a migration. See [the acceptance report](releases/1.4.0-converter-box-sizing.md) for tested versions and limitations.
