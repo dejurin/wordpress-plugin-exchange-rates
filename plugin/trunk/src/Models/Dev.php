@@ -43,7 +43,12 @@ class Dev
         $_base_currency = 'USD' === $base_currency && is_null($quote_currency) ? 'usd' : strtolower($base_currency);
         $_quote_currency = !is_null($quote_currency) && $base_currency !== $quote_currency ? strtolower($quote_currency) : '';
 
-        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div class="d-flex exchange-rates exchange-rates-caption">';
+        // Keep compact table captions at the table's leading edge without changing other widgets.
+        $caption_class = '';
+        if ( 'widget-' . Plugin::PLUGIN_SLUG . '-currency-table' === $widget_slug && isset( $parameters['full_width'] ) && ! $parameters['full_width'] ) {
+            $caption_class = ' exchange-rates-caption-start';
+        }
+        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div class="d-flex exchange-rates exchange-rates-caption'.$caption_class.'">';
 
         if (1 === $dev) {
             $template = '%3$s&nbsp;&middot;&nbsp;<a href="'

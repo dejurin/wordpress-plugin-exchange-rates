@@ -208,6 +208,56 @@
 .cr-exchange-rates .widget-exchange-rates-currency-table input:focus {
 	outline: none;
 }
+/* Readable labels for current markup; retain the legacy helpers for cached HTML. */
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-full {
+	width: 100%;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-full th:first-child {
+	width: 100%;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-full thead th {
+	text-align: start;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label > img {
+	flex-shrink: 0;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label .d-flex-wrap {
+	display: block !important;
+	min-width: 12ch;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label .text-element,
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label .text-truncate {
+	display: block !important;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label .text-truncate {
+	white-space: normal !important;
+	text-overflow: clip !important;
+	overflow: visible !important;
+	overflow-wrap: break-word;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-region {
+	align-items: flex-start !important;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-region > img {
+	margin-top: 0.25em;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-region .small {
+	font-size: 0.8em;
+	font-weight: normal;
+	line-height: 1.35;
+	color: #667085 !important;
+	margin-top: 2px;
+}
+
 /* Widget Currency Table - Style end */
 
 /* Caption - Style start */
@@ -215,6 +265,10 @@
 	padding: 0;
 	margin: 0;
 	justify-content: flex-end !important;
+}
+
+.cr-exchange-rates .exchange-rates-caption.exchange-rates-caption-start {
+	justify-content: flex-start !important;
 }
 
 .cr-exchange-rates .exchange-rates-caption a:link,

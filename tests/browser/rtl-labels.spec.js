@@ -87,8 +87,8 @@ for (const direction of ['ltr', 'rtl']) {
               // so an unrelated region-layout failure cannot hide label checks.
               expect.soft(Math.abs(row.region[edge] - row.label[edge]), `${id}: region leading edge`).toBeLessThanOrEqual(1);
             }
-            expect(row.overflow).toBe('hidden');
-            expect(row.ellipsis).toBe('ellipsis');
+            expect(row.overflow).toBe('visible');
+            expect(row.ellipsis).toBe('clip');
             if (!parameters.names) {
               for (let i = 1; i < row.characters.length; i++) {
                 expect(row.characters[i].x).toBeGreaterThan(row.characters[i - 1].x);

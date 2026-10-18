@@ -39,6 +39,7 @@ jobs:
       - run: php -l tests/browser-update.php
       - run: php -l tests/browser-rtl.php
       - run: php -l tests/browser-trends.php
+      - run: php -l tests/browser-layout.php
 
   package:
     runs-on: ubuntu-24.04
