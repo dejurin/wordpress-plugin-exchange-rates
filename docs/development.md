@@ -179,6 +179,18 @@ This suite covers handler integration. The browser test described below also exe
 
 The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
 
+## API payload validation regressions
+
+Run `php tests/payload-validation.php` on PHP 5.6 or newer. On the isolated synthetic WordPress site, also run:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/payload-validation-wordpress.php
+```
+
+The tests reject malformed current/previous rates, non-finite values and overflowing cross-rates, unknown or mismatched sources, invalid base metadata, missing dates, relative dates, calendar normalization and invalid timezone offsets. Valid numeric strings, absolute ISO/SQL/RFC dates, and absent/null/empty previous-close records remain supported. The update service passes its requested source to the existing validator; one-argument validator calls remain supported.
+
+The WordPress suite uses real HTTP interception, option persistence and separate requests. Rejected responses preserve the full last payload, original dates/base/success time, preferences and seven rendering paths. Cron failure schedules a retry and releases its lease. First-load failure retains the existing unavailable message; a later valid response recovers normally. Existing saved payloads are not migrated or revalidated as a whole. Invalid non-finite individual cached rates are no longer usable for arithmetic. See [the validation acceptance report](releases/1.4.0-payload-validation.md) for baseline compatibility and rollback limits.
+
 ## Failed source selection and retained-rate identity
 
 `tests/source-identity-wordpress.php` exercises real settings sanitization and the source-change hook across separate WP-CLI processes. It checks both CurrencyRate-to-ECB and ECB-to-CurrencyRate failures, repeated failure, a later successful update, missing legacy source metadata, and restoration of the original fixture state. Seven render paths cover tables, converters, badges, inverse displays, and both native widgets.
