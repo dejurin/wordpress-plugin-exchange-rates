@@ -31,6 +31,7 @@ jobs:
       - run: python3 scripts/plugin.py lint
       - run: php tests/payload-validation.php
       - run: php -l tests/payload-validation-wordpress.php
+      - run: php -l tests/source-directory-wordpress.php
       - run: php tests/formatting.php
       - run: php tests/change-percentage.php
       - run: php -l tests/formatting-wordpress.php
@@ -83,6 +84,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env run --rm --entrypoint sh cli /opt/dev/init.sh
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/payload-validation-wordpress.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-directory-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-identity-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
