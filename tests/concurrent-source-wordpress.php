@@ -80,7 +80,10 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		$is_sql = 0 === strpos( $case['boundary'], 'sql:' );
 		$option = $is_sql ? substr( $case['boundary'], 4 ) : $case['boundary'];
 		add_filter( $is_sql ? 'query' : 'pre_update_option_' . $option, function ( $value ) use ( &$boundary, $case, $is_sql, $option ) {
-			if ( $is_sql && ( ! preg_match( '/^(UPDATE|INSERT)\b/i', $value ) || false === strpos( $value, "'" . $option . "'" ) ) ) {
+			// The guarded rates query also names the settings row in its JOIN.
+			// Match the target WHERE clause so each write boundary is exercised.
+			$target = '/^UPDATE\b[\s\S]*\bWHERE\s+(?:target\.)?`?option_name`?\s*=\s*' . preg_quote( "'" . $option . "'", '/' ) . '/i';
+			if ( $is_sql && ! preg_match( $target, $value ) ) {
 				return $value;
 			}
 			if ( null === $boundary ) {
