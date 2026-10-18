@@ -32,6 +32,7 @@ jobs:
       - run: php tests/payload-validation.php
       - run: php -l tests/payload-validation-wordpress.php
       - run: php -l tests/source-directory-wordpress.php
+      - run: php -l tests/deactivation-inflight-wordpress.php
       - run: php tests/formatting.php
       - run: php tests/change-percentage.php
       - run: php -l tests/formatting-wordpress.php
