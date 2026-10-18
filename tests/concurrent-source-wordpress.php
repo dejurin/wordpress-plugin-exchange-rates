@@ -46,6 +46,13 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 	$case = json_decode( base64_decode( $args[1] ), true );
 	$requests = 0;
 	$boundary = null;
+	if ( 'stale-cache' === $case['operation'] ) {
+		$cached = er_source_settings( 'currencyrate' );
+		add_filter( 'alloptions', function ( $options ) use ( $cached ) {
+			$options['exchange-rates'] = maybe_serialize( $cached );
+			return $options;
+		}, 90 );
+	}
 	add_filter( 'pre_http_request', function ( $response, $http_args, $url ) use ( $case, &$requests ) {
 		if ( 0 !== strpos( $url, 'https://api-bank.fex.to/rates/' ) ) {
 			return $response;
@@ -89,7 +96,7 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		update_option( 'exchange-rates', array( 'source_id' => $case['source'], 'currency_format' => 0, 'decimals' => 6 ) );
 	} elseif ( 'hourly' === $case['operation'] ) {
 		$success = UpdateRates::run_hourly();
-	} elseif ( 'direct' === $case['operation'] ) {
+	} elseif ( in_array( $case['operation'], array( 'direct', 'stale-cache' ), true ) ) {
 		$success = UpdateDataSources::update();
 	}
 	echo wp_json_encode( array( 'success' => $success, 'state' => er_race_state(), 'requests' => $requests, 'boundary' => $boundary ) );
@@ -168,6 +175,11 @@ function er_race_overlap( $old, $next, $old_provider, $new_provider, $operation 
 	er_race_check( true === $recovery['success'] && $next === $recovery['state']['rates']['source'], $label . ': next ordinary refresh recovers selected source' );
 }
 try {
+	er_race_seed( 'eu-ecb' );
+	$stale = er_race_request( array( 'operation' => 'stale-cache', 'provider' => 'success' ) );
+	$fresh = er_race_request( array( 'operation' => 'snapshot', 'provider' => 'success' ) );
+	er_race_check( true === $stale['success'], 'An obsolete alloptions cache does not prevent updating the persisted selection' );
+	er_race_check( 'eu-ecb' === $fresh['state']['settings']['source_id'] && 'eu-ecb' === $fresh['state']['rates']['source'], 'Database selection wins over an obsolete alloptions cache' );
 	foreach ( array( 'currencyrate' => 'eu-ecb', 'eu-ecb' => 'currencyrate' ) as $old => $next ) {
 		foreach ( array( 'success', 'failure' ) as $old_provider ) {
 			foreach ( array( 'success', 'failure' ) as $new_provider ) {
