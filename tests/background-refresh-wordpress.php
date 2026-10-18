@@ -74,7 +74,9 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		}
 		update_option( 'exchange-rates', $settings );
 		update_option( 'exchange-rates_rates', ! empty( $case['empty'] ) ? array() : background_payload( 1.25 ) );
-		wp_schedule_event( $case['now'] + 1800, 'hourly', 'exchange-rates_data_update' );
+		if ( empty( $case['no_hourly'] ) ) {
+			wp_schedule_event( $case['now'] + 1800, 'hourly', 'exchange-rates_data_update' );
+		}
 	}
 	if ( isset( $case['lock'] ) ) {
 		update_option( 'exchange-rates_refresh_lock', $case['lock'], false );
@@ -86,6 +88,9 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 			return $response;
 		}
 		$requests[] = array( 'url' => $url, 'timeout' => $http_args['timeout'] );
+		if ( ! empty( $case['replace_lock'] ) ) {
+			update_option( 'exchange-rates_refresh_lock', ( $case['now'] + 600 ) . ':successor', false );
+		}
 		if ( ! empty( $case['hold'] ) ) {
 			update_option( 'exchange_rates_test_worker_started', true );
 		}
@@ -100,6 +105,9 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 	}, 30, 3 );
 	$started = microtime( true );
 	require WP_PLUGIN_DIR . '/exchange-rates/Install.php';
+	// This child loads the plugin after core init; initialize its deferred shortcode.
+	$table_shortcode = new \Dejurin\ExchangeRates\Shortcodes\CurrencyTable();
+	$table_shortcode->init();
 	do_action( 'widgets_init' );
 	$page_elapsed = microtime( true ) - $started;
 	$initial_requests = count( $requests );
@@ -184,6 +192,9 @@ function background_join( $process ) {
 }
 try {
 	$fresh = background_request( array( 'seed' => 10 ) );
+	foreach ( $fresh['html'] as $i => $html ) {
+		background_check( false !== strpos( $html, 'cr-exchange-rates' ) && false === strpos( $html, '[exchange-rates_' ), 'Renderer ' . $i . ' produces real plugin markup' );
+	}
 	background_check( ! $fresh['requests'] && ! background_retry_events( $fresh ), 'Fresh cached data needs no HTTP request or retry event' );
 	$stale = background_request( array( 'seed' => 3700, 'provider' => 'failure', 'delay' => 250000 ) );
 	background_check( ! $stale['requests'] && $stale['page_elapsed'] < 0.2, 'Expired page bootstrap must not wait for or call the provider' );
@@ -209,6 +220,9 @@ try {
 	$updated_page = background_request( array( 'now' => $now + 301 ) );
 	background_check( ! $updated_page['requests'] && $updated_page['html'] === $recovery['html'] && $updated_page['html'] !== $fresh['html'], 'Next page sees newly persisted rates without another HTTP call' );
 	foreach ( array( 'missing', 0 ) as $unknown ) {
+		$legacy = background_request( array( 'seed' => 3700, 'unknown' => $unknown, 'provider' => 'failure' ) );
+		background_check( ! $legacy['requests'] && $legacy['html'] === $fresh['html'] && 1 === count( background_retry_events( $legacy ) ), 'Legacy cache with unknown successful time renders immediately and queues recovery' );
+		background_check( background_same_data( $legacy['before'], $legacy['after'] ), 'Unknown legacy metadata remains unchanged during rendering' );
 		$empty = background_request( array( 'seed' => 3700, 'empty' => true, 'unknown' => $unknown, 'provider' => 'failure' ) );
 		background_check( ! $empty['requests'] && 1 === count( background_retry_events( $empty ) ), 'First install with unknown time queues recovery without blocking' );
 		foreach ( $empty['html'] as $i => $html ) {
@@ -217,6 +231,9 @@ try {
 		$first = background_request( array( 'operation' => 'retry' ) );
 		background_check( 1 === count( $first['requests'] ) && true === $first['after']['settings']['rates_available'], 'First installation recovers when the queued request succeeds' );
 	}
+	$repair = background_request( array( 'seed' => 10, 'no_hourly' => true ) );
+	$repair_again = background_request();
+	background_check( 1 === count( $repair['events'] ) && 'hourly' === $repair['events'][0]['schedule'] && $repair['events'] === $repair_again['events'], 'Missing hourly schedule is restored once without fetching rates' );
 	$hourly = background_request( array( 'seed' => 10, 'operation' => 'hourly' ) );
 	background_check( 1 === count( $hourly['requests'] ), 'Existing hourly hook still runs its update independently of page traffic' );
 	$hourly_events = array_values( array_filter( $hourly['events'], function ( $e ) { return 'exchange-rates_data_update' === $e['hook']; } ) );
@@ -226,6 +243,8 @@ try {
 	background_check( 1 === count( $manual['requests'] ) && true === $manual['after']['settings']['rates_available'], 'Explicit manual refresh is not blocked by background backoff' );
 	$queued_after_manual = background_request( array( 'now' => $now + 300, 'operation' => 'retry' ) );
 	background_check( ! $queued_after_manual['requests'], 'Pending retry does not refetch a cache already updated manually' );
+	$successor = background_request( array( 'seed' => 10, 'operation' => 'hourly', 'replace_lock' => true ) );
+	background_check( ( $now + 600 ) . ':successor' === $successor['lock'], 'An older worker cannot remove a successor lease' );
 	$locked = background_request( array( 'seed' => 3700, 'lock' => ( $now + 60 ) . ':other-worker', 'operation' => 'hourly' ) );
 	background_check( ! $locked['requests'] && $locked['lock'] === ( $now + 60 ) . ':other-worker', 'A live lease prevents overlapping background requests and is not removed' );
 	$expired = background_request( array( 'seed' => 3700, 'lock' => ( $now - 1 ) . ':dead-worker', 'operation' => 'hourly' ) );
