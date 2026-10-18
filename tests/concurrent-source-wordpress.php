@@ -70,7 +70,12 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		return array( 'headers' => array(), 'body' => wp_json_encode( $payload ), 'response' => array( 'code' => 200, 'message' => 'OK' ), 'cookies' => array() );
 	}, 60, 3 );
 	if ( isset( $case['boundary'] ) ) {
-		add_filter( 'pre_update_option_' . $case['boundary'], function ( $value ) use ( &$boundary, $case ) {
+		$is_sql = 0 === strpos( $case['boundary'], 'sql:' );
+		$option = $is_sql ? substr( $case['boundary'], 4 ) : $case['boundary'];
+		add_filter( $is_sql ? 'query' : 'pre_update_option_' . $option, function ( $value ) use ( &$boundary, $case, $is_sql, $option ) {
+			if ( $is_sql && ( ! preg_match( '/^(UPDATE|INSERT)\b/i', $value ) || false === strpos( $value, "'" . $option . "'" ) ) ) {
+				return $value;
+			}
 			if ( null === $boundary ) {
 				$boundary = er_race_request( array( 'operation' => 'switch', 'source' => 'eu-ecb', 'provider' => $case['next_provider'] ) );
 			}
@@ -119,8 +124,9 @@ function er_race_seed( $source ) {
 	delete_option( 'er_race_ready' );
 	delete_option( 'er_race_release' );
 }
-function er_race_overlap( $old, $next, $old_provider, $new_provider, $operation = 'hourly', $change = 'switch' ) {
+function er_race_overlap( $old, $next, $old_provider, $new_provider, $operation = 'hourly', $change = 'switch', $empty = false ) {
 	er_race_seed( $old );
+	if ( $empty ) { delete_option( 'exchange-rates_rates' ); }
 	$case = array( 'operation' => $operation, 'provider' => $old_provider, 'hold' => true );
 	$command = escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $_SERVER['argv'][0] ) . ' ' . er_race_command( $case );
 	$pipes = array();
@@ -151,7 +157,7 @@ function er_race_overlap( $old, $next, $old_provider, $new_provider, $operation 
 		throw new RuntimeException( 'Old worker failed: ' . $out . $err );
 	}
 	$after = er_race_request( array( 'operation' => 'snapshot', 'provider' => 'success' ) );
-	$label = $old . '/' . $next . '/' . $old_provider . '/' . $new_provider . '/' . $operation . '/' . $change;
+	$label = $old . '/' . $next . '/' . $old_provider . '/' . $new_provider . '/' . $operation . '/' . $change . ( $empty ? '/empty' : '' );
 	er_race_check( 1 === $worker['requests'], $label . ': one old provider request' );
 	er_race_check( ( 'switch' === $change ? 1 : 0 ) === $changed['requests'], $label . ': new settings request count' );
 	er_race_check( $next === $after['state']['settings']['source_id'], $label . ': selected source survives old completion' );
@@ -170,7 +176,10 @@ try {
 	}
 	er_race_overlap( 'currencyrate', 'eu-ecb', 'success', 'success', 'direct' );
 	er_race_overlap( 'currencyrate', 'currencyrate', 'success', 'success', 'hourly', 'preferences' );
-	foreach ( array( 'exchange-rates_rates', 'exchange-rates' ) as $option ) {
+	foreach ( array( 'success', 'failure' ) as $provider ) {
+		er_race_overlap( 'currencyrate', 'eu-ecb', 'success', $provider, 'hourly', 'switch', true );
+	}
+	foreach ( array( 'exchange-rates_rates', 'exchange-rates', 'sql:exchange-rates_rates', 'sql:exchange-rates' ) as $option ) {
 		foreach ( array( 'success', 'failure' ) as $provider ) {
 			er_race_seed( 'currencyrate' );
 			$r = er_race_request( array( 'operation' => 'direct', 'provider' => 'success', 'boundary' => $option, 'next_provider' => $provider ) );
