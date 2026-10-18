@@ -36,6 +36,18 @@ add_action( 'template_redirect', function () {
 		'full' => array( 'code' => true, 'region' => true, 'flag_type' => 'circular', 'flag_size' => 32, 'table_headers_code_show' => true, 'table_headers_previous_close_show' => true, 'table_headers_changes_show' => true ),
 		'amount' => array( 'amount_active' => true, 'symbol' => true, 'after' => true, 'table_headers_previous_close_show' => true, 'table_headers_changes_show' => true ),
 	);
+	if ( isset( $_GET['columns'] ) ) {
+		$cases = array( 'columns' => array(
+			'region' => true,
+			'table_headers_code_show' => ! isset( $_GET['no-code'] ),
+			'table_headers_show' => ! isset( $_GET['no-headers'] ),
+			'table_headers_previous_close_show' => isset( $_GET['history'] ),
+			'table_headers_changes_show' => isset( $_GET['history'] ),
+			'amount_active' => true,
+			'symbol' => true,
+			'after' => true,
+		) );
+	}
 	if ( isset( $_GET['grid'] ) ) {
 		$cases = array();
 		for ( $mask = 0; $mask < 32; $mask++ ) {
