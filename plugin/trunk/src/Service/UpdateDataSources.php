@@ -48,7 +48,7 @@ class UpdateDataSources
         self::$req_rates = $req->data();
 
         if (self::$req_rates['status']) {
-            $payload_error = RatesData::validate_payload(self::$req_rates['data']);
+            $payload_error = RatesData::validate_payload(self::$req_rates['data'], $source_id);
             if ('' !== $payload_error) {
                 self::$req_rates['status'] = false;
                 self::$req_rates['error'] = $payload_error;

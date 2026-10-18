@@ -553,6 +553,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.0 =
+* Reject invalid API rates, mismatched sources, and missing or invalid rate dates without replacing the last saved rates; sources without previous-close data remain supported.
 * Render cached rates immediately and refresh expired or missing data through WordPress Cron without frontend AJAX; retain hourly updates and retry failed background requests after five minutes.
 * Calculate percentage changes relative to previous close; show unsigned percentages with trend colors and keep existing arrows consistent with displayed precision when amounts change.
 * Preserve trailing integer zeros when formatting amounts with zero decimal places.
