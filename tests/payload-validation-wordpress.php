@@ -64,6 +64,12 @@ try {
 	er_payload_check( $r['retry'] > time() && ! $r['lock'], 'Cron schedules retry and releases lease after validation failure' );
 	$reload = er_payload_request( $old, 'currencyrate', 'render' );
 	er_payload_check( 0 === $reload['requests'] && $reference['html'] === $reload['html'], 'Next request renders old data without provider HTTP' );
+	er_payload_state();
+	$empty_settings = $settings; $empty_settings['update_timestamp'] = 0; $empty_settings['rates_available'] = false;
+	update_option( 'exchange-rates', $empty_settings ); update_option( 'exchange-rates_rates', array() );
+	$first = er_payload_request( $bad, 'currencyrate' );
+	er_payload_check( false === $first['success'] && array() === $first['state']['rates'] && 0 === $first['state']['settings']['update_timestamp'], 'Invalid first response does not invent rates or success time' );
+	foreach ( $first['html'] as $html ) { er_payload_check( false !== strpos( $html, 'Error: exchange-rate data is not available yet.' ), 'Empty cache retains the existing unavailable message' ); }
 	foreach ( er_validation_valid() as $name => $payload ) {
 		$r = er_payload_request( $payload, $payload['source'] );
 		er_payload_check( true === $r['success'] && $payload === $r['state']['rates'], $name . ': recovery stores exact supported payload' );

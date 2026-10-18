@@ -29,7 +29,7 @@ function er_validation_invalid() {
 		foreach ( array( 'local_time', 'put_time' ) as $key ) {
 			$p = er_validation_payload(); unset( $p['data'][ $index ][ $key ] );
 			$cases[ 'missing-' . $key . '-' . $index ] = array( $p, 'currencyrate' );
-			foreach ( array( '', 'now', 'tomorrow', 'not-a-date', '2026-02-30T12:00:00Z', '2026-01-02T25:00:00Z', '2026-01-02 12:00:00 +1 day', null, 1767355200, array() ) as $i => $date ) {
+			foreach ( array( '', 'now', 'tomorrow', 'not-a-date', '2026-02-30T12:00:00Z', '2026-01-02T25:00:00Z', '2026-01-02T12:00:00+24:00', 'Thu, 02 Jan 2026 12:00:00 +0000', '2026-01-02 12:00:00 +1 day', null, 1767355200, array() ) as $i => $date ) {
 				$p = er_validation_payload(); $p['data'][ $index ][ $key ] = $date;
 				$cases[ 'date-' . $index . '-' . $key . '-' . $i ] = array( $p, 'currencyrate' );
 			}
