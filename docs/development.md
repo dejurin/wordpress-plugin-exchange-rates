@@ -179,6 +179,12 @@ This suite covers handler integration. The browser test described below also exe
 
 The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
 
+## Concurrent source selection
+
+Run `docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php` only on the disposable synthetic site. Separate PHP processes overlap an old hourly/direct request with a real settings save, in both source directions and with successful or failed responses. The suite also switches sources immediately before option filters and SQL writes, covers an absent rate cache, an obsolete alloptions cache and unrelated preference changes, then verifies recovery and restoration from fresh requests.
+
+The updater conditionally saves rates and service metadata against the serialized settings captured before HTTP. A changed snapshot rejects the obsolete write instead of reverting user fields. Each SQL write checks its predicate atomically; clearing an option cache alone is not a concurrency guard. The request source and write values come from that database snapshot, not a potentially stale option cache. Existing hourly scheduling, five-minute retry, manual refresh authorization, option keys, sanitizer/veto hooks, successful-write notifications and widget/shortcode contracts remain. See [the scoped acceptance report](releases/1.4.0-concurrent-source.md).
+
 ## API payload validation regressions
 
 Run `php tests/payload-validation.php` on PHP 5.6 or newer. On the isolated synthetic WordPress site, also run:
