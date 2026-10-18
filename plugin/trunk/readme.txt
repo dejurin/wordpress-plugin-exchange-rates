@@ -148,7 +148,7 @@ The selected source is shared by the plugin's converters, tables, and badges. Yo
 
 After saving, confirm that the update succeeded in Settings → Exchange Rates. Review the source name, rate dates, and available currencies before using the displayed conversions.
 
-In version 1.4.0, a failed source change can leave previously stored rates displayed with incorrect source attribution or conversion. Do not rely on those conversions until the selected source updates successfully. Retry with Force Data Update when available, or reselect the previous source and confirm that its update succeeds.
+If the selected source cannot be loaded, previously stored rates retain their original source, conversion direction, and rate dates. The selection remains saved for the next update; it does not relabel or reinterpret the stored rates. Retry with Force Data Update when available and confirm that the selected source updates successfully.
 
 = Can I refresh the data manually? =
 
@@ -562,6 +562,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Compare manual-update timestamps in UTC so the one-minute interval is independent of the site timezone.
 * Persist successful update metadata through settings sanitization, verify stored data before reporting success, and retain the last successful timestamp after provider failures.
 * Refresh a newly selected source after saving the selection, and display unknown update time without inventing a successful-update date.
+* Preserve the cached source, conversion direction, and attribution when loading a newly selected source fails.
 
 = 1.3.2 =
 * Fixed admin stylesheet and script loading scope: plugin admin assets now load only on the plugin settings page and the widgets screen, so they no longer get injected into the WordPress 7.1 block editor iframe.

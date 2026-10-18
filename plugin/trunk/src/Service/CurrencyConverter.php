@@ -35,6 +35,7 @@ class CurrencyConverter
 
         $get_currencies = Currencies::get_list();
         $rates = RatesData::get();
+        $source_id = RatesData::get_source($rates, $this->settings['source_id']);
         $currency_list = RatesData::get_rate_codes($rates);
 
         if (empty($currency_list)) {
@@ -48,7 +49,7 @@ class CurrencyConverter
         $data_attr = '';
 
         unset($this->parameters['quote_currency']);
-        $this->parameters['base_currency'] = $this->settings['base_currency'];
+        $this->parameters['base_currency'] = RatesData::get_base($rates, $this->settings['base_currency']);
 
         foreach ($this->parameters as $key => $value) {
             if (!empty($value) && !is_array($value) && !is_object($value)) {
@@ -75,7 +76,7 @@ class CurrencyConverter
 
             $arr[$value] = [
                 'name' => $get_currencies[$value]['name'],
-                'rate' => ('currencyrate' === $this->settings['source_id']) ? 1 / $rate : $rate,
+                'rate' => ('currencyrate' === $source_id) ? 1 / $rate : $rate,
                 'symbol' => CurrencySymbols::get_list($value),
             ];
         }
@@ -95,7 +96,7 @@ class CurrencyConverter
             $currency->get_date(),
             $widget_number,
             self::WIDGET_SLUG,
-            $this->settings['source_id'],
+            $source_id,
             1
         );
 

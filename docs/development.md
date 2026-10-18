@@ -179,6 +179,21 @@ This suite covers handler integration. The browser test described below also exe
 
 The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
 
+## Failed source selection and retained-rate identity
+
+`tests/source-identity-wordpress.php` exercises real settings sanitization and the source-change hook across separate WP-CLI processes. It checks both CurrencyRate-to-ECB and ECB-to-CurrencyRate failures, repeated failure, a later successful update, missing legacy source metadata, and restoration of the original fixture state. Seven render paths cover tables, converters, badges, inverse displays, and both native widgets.
+
+Use only the dedicated local test environment with `wordpress/compose.test.yaml` and an explicit disposable Compose project. Then run:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-identity-wordpress.php
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- source-identity.spec.js
+```
+
+The browser fixture `?er-source-test=1` supplies deterministic rates without saving options. Its 16 Chromium cases cover LTR/RTL at 320px and 1064px, matching-source legacy behavior, mismatched source/base metadata, table amount entry, converter amount/swap, captions, and dates. `--grep 'legacy matching-source contract'` selects the eight cases expected to pass on published 1.3.2 as well.
+
+The fix reads source identity from the retained payload for calculation and attribution, and the converter also reads its base metadata from that payload. Existing helpers preserve the previous settings fallback when legacy metadata is missing. No settings schema, shortcode attributes, widget identifiers, retrieval scheduling, or frontend assets change. See the [source-identity acceptance report](releases/1.4.0-source-identity.md) for evidence and limitations.
+
 ## Persisted update-state regressions
 
 Run the persistence suite in the same disposable environment, before the formatting and table fixtures:
