@@ -269,12 +269,14 @@ This intentionally corrects values previously shown in Changes and replaces sign
 
 `tests/browser/table-layout.spec.js` adds 20 scenarios using the guarded, request-local `tests/browser-layout.php` fixture. It covers shortcode and native-widget renderers, LTR/RTL, 320/900 px, compact/full widths, caption placement and source-popup interaction, first-line flag alignment, unchanged flag sizes, secondary region typography, readable wrapping, table-only horizontal scrolling, amount recalculation and complete base-row backgrounds. The grid matrix checks 256 combinations of direction, renderer, history availability, Code/Previous Close/Changes columns, title mode and header visibility; every colspan must be positive and match the visible grid.
 
+`tests/browser/table-columns.spec.js` adds 16 scenarios for full-width tables at 320/480/900 px. It measures actual glyph bounds and column widths: only Currency receives spare width, Code and Price stay content-sized, and the Code header shares the values' leading edge. It covers both renderers, LTR/RTL, hidden Code/headers/history, unchanged displayed values across resizing, large amounts and numeric containment.
+
 Run on a separate synthetic environment with the test Compose override:
 
 ```sh
-WP_TEST_URL=http://127.0.0.1:19260 npm test --prefix tests/browser -- table-layout.spec.js rtl-labels.spec.js trend-arrows.spec.js
+WP_TEST_URL=http://127.0.0.1:19260 npm test --prefix tests/browser -- table-columns.spec.js table-layout.spec.js rtl-labels.spec.js trend-arrows.spec.js
 ```
 
 The fixture filters options for one HTTP request only. It does not save settings, widgets, rates or pages. The full browser suite still needs its normal seeded table/admin fixtures. Tests intentionally fail on unmodified 1.3.2 and the preceding 1.4.0 snapshot; keep the immutable baseline unchanged.
 
-Compact table captions now follow the logical start edge; full-width tables, converters and badges retain their caption behavior. New table label classes provide a 12ch minimum, normal wrapping and non-shrinking flags; region text is smaller and regular weight. Base-row filler cells use the count of visible history columns, independently of title mode or whether headers are displayed. No public attributes, option keys, data migrations, calculations, JavaScript, translations or version metadata change. See the [acceptance report](releases/1.4.0-table-layout.md) for compatibility evidence, intentional visual differences and rollback.
+Compact table captions now follow the logical start edge; full-width tables, converters and badges retain their caption behavior. Full-width tables give spare width to Currency and keep other columns content-sized; the Code header follows the same logical edge as its values. New table label classes provide a 12ch minimum, normal wrapping and non-shrinking flags; region text is smaller and regular weight. Base-row filler cells use the count of visible history columns, independently of title mode or whether headers are displayed. No public attributes, option keys, data migrations, calculations, JavaScript, translations or version metadata change. See the [acceptance report](releases/1.4.0-table-layout.md) for compatibility evidence, intentional visual differences and rollback.

@@ -213,6 +213,14 @@
 	width: 100%;
 }
 
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-full th:first-child {
+	width: 100%;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-full thead th {
+	text-align: start;
+}
+
 .cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-label > img {
 	flex-shrink: 0;
 }
