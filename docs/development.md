@@ -12,7 +12,7 @@ On a dedicated, seeded test environment, run:
 WP_TEST_URL=http://127.0.0.1:19249 npm --prefix tests/browser test -- css-parity.spec.js
 ```
 
-The suite covers tables, native widgets, converters, badges, flags/regions, trend arrows, expanded source information, input edits, hover/focus, currency swaps, LTR/RTL, 320/1064 px, and custom theme rules/properties. Every comparison requires identical computed styles, values and geometry for all plugin elements. Expected screenshots are generated from the pinned reference CSS in the same DOM/state, stored under ignored `test-results/`, and compared with Playwright's image comparator (`threshold: 0.05`, `maxDiffPixels: 0`). The small color/antialiasing allowance addresses observed Chromium SVG-edge rasterization differences on identical CSS; computed-style and geometry comparisons have no tolerance. A deliberate height mutation verifies that the comparison detects a visible regression.
+The suite covers tables, native widgets, converters, badges, flags/regions, trend arrows, expanded source information, input edits, hover/focus, currency swaps, LTR/RTL, 320/1064 px, and custom theme rules/properties. Before comparison, the test removes only the new table-layout marker classes (`exchange-rates-table-label`, `exchange-rates-table-region`, `exchange-rates-table-full`, `exchange-rates-caption-start`) to represent cached legacy markup. Every comparison then requires identical computed styles, values and geometry for all plugin elements. This protects legacy HTML, converters and badges; it does not assert pixel equality for the intentionally revised table layout, which has its own tests below. Expected screenshots are generated from the pinned reference CSS in the same DOM/state, stored under ignored `test-results/`, and compared with Playwright's image comparator (`threshold: 0.05`, `maxDiffPixels: 0`). The small color/antialiasing allowance addresses observed Chromium SVG-edge rasterization differences on identical CSS; computed-style and geometry comparisons have no tolerance. A deliberate height mutation verifies that the comparison detects a visible regression.
 
 `CSS_REFERENCE=legacy` selects immutable 1.3.2 CSS and LTR scenarios. Run this mode only with the actual 1.3.2 plugin installed in the disposable environment: its PNG markup must remain the baseline. To check cleaned 1.4.0 CSS against legacy markup in RTL as well, run the default `release` reference mode on that same 1.3.2 installation. Direct equality to old RTL CSS is intentionally not asserted because the approved 1.4.0 bidi fixes change its rendering.
 
@@ -203,7 +203,7 @@ Rates and settings remain two separate option writes, not an atomic transaction.
 
 `rtl-labels.spec.js` adds 40 cases using the guarded, read-only RTL fixture. The matrix covers LTR and RTL at 1064px and 320px, shortcode and native tables, full and compact widths, all five flag modes, 16px/64px flags, codes/names, regions on/off, the base row, Arabic/Hebrew text and long labels. Emoji images are supplied locally by the test runner; this does not test the availability of WordPress.org's emoji CDN.
 
-The tests measure the rendered text with DOM `Range` rectangles, not just the full-width label container. They require a small non-overlapping flag/text gap, aligned region labels, unchanged Latin code order, retained ellipsis/overflow behavior and no document-level horizontal overflow. Run them in the disposable environment after seeding the table fixture:
+The tests measure the rendered text with DOM `Range` rectangles, not just the full-width label container. They require a small non-overlapping flag/text gap, aligned region labels, unchanged Latin code order, readable wrapping with no ellipsis and no document-level horizontal overflow. The layout refinement described below deliberately replaces the old truncation assertions; flag adjacency, size, direction and region alignment remain checked. Run them in the disposable environment after seeding the table fixture:
 
 ```sh
 WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-labels.spec.js
@@ -213,7 +213,7 @@ The production fix overrides the first table header cell's alignment only under 
 
 In Chromium, before the fix, both published 1.3.2 and the preceding 1.4.0 candidate fail the 20 RTL cases and pass the 20 LTR cases. For compatibility verification, seed on the immutable 1.3.2 baseline, switch only plugin files, run browser regressions and compare stored options, both widget types, pages and registrations without reseeding. Rollback should preserve that state too. These checks do not certify every third-party theme, physical device or nested mixed-direction container.
 
-Firefox has a separately reproduced, pre-existing full-width region-layout defect: region text can be positioned outside the visible table in both LTR and RTL. The same LTR failures occur on published 1.3.2. This patch does not change that layout algorithm. The region assertions intentionally remain active and report the failures; they are soft assertions so all flag/name groups are still checked. Chromium CI passing must not be described as full Firefox visual acceptance.
+The earlier alignment-only patch left a separately reproduced Firefox full-width region-layout defect: region text could be positioned outside the visible table in both directions, also on published 1.3.2. The subsequent table-layout refinement replaces the nested fixed table layout for new labels; the unchanged region-alignment assertions now pass in Firefox as well. Region checks remain soft assertions so other flag/name checks still run on failure. Cross-browser results and their limits are recorded in the [layout acceptance report](releases/1.4.0-table-layout.md).
 
 ## Trend arrow regressions
 
@@ -263,3 +263,18 @@ Percentage magnitude is `abs((current - previous) / previous * 100)` for the dis
 The renderer compares the two formatted prices, not the rounded absolute difference. Equal displayed prices suppress both percentage and arrow, with an accessible below-precision explanation; crossing a rounding boundary still shows the direction. Only the edited table is updated. The percentage and source direction are independent of amount, so PHP supplies escaped metadata and translated labels for JavaScript to show/hide. Old cached markup without this metadata retains the previous input behavior and requires normal cache invalidation to receive the fix.
 
 This intentionally corrects values previously shown in Changes and replaces signed percentages with magnitude plus direction. It preserves rate/amount formatting, saved options/rates/widgets/pages, shortcode attributes, public method signatures and the existing 14px SVG assets. There is no migration. Revert the fix to roll back; the incorrect percentage formula and rounded-direction bug then return. The version remains unreleased 1.4.0; an older release ZIP does not contain this fix and must not be mistaken for the new candidate after merge.
+
+
+## Readable table layout regressions
+
+`tests/browser/table-layout.spec.js` adds 20 scenarios using the guarded, request-local `tests/browser-layout.php` fixture. It covers shortcode and native-widget renderers, LTR/RTL, 320/900 px, compact/full widths, caption placement and source-popup interaction, first-line flag alignment, unchanged flag sizes, secondary region typography, readable wrapping, table-only horizontal scrolling, amount recalculation and complete base-row backgrounds. The grid matrix checks 256 combinations of direction, renderer, history availability, Code/Previous Close/Changes columns, title mode and header visibility; every colspan must be positive and match the visible grid.
+
+Run on a separate synthetic environment with the test Compose override:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:19260 npm test --prefix tests/browser -- table-layout.spec.js rtl-labels.spec.js trend-arrows.spec.js
+```
+
+The fixture filters options for one HTTP request only. It does not save settings, widgets, rates or pages. The full browser suite still needs its normal seeded table/admin fixtures. Tests intentionally fail on unmodified 1.3.2 and the preceding 1.4.0 snapshot; keep the immutable baseline unchanged.
+
+Compact table captions now follow the logical start edge; full-width tables, converters and badges retain their caption behavior. New table label classes provide a 12ch minimum, normal wrapping and non-shrinking flags; region text is smaller and regular weight. Base-row filler cells use the count of visible history columns, independently of title mode or whether headers are displayed. No public attributes, option keys, data migrations, calculations, JavaScript, translations or version metadata change. See the [acceptance report](releases/1.4.0-table-layout.md) for compatibility evidence, intentional visual differences and rollback.

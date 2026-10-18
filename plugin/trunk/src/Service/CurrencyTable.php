@@ -80,7 +80,7 @@ class CurrencyTable
         $img_template = '<img loading="lazy" style="width:%1$spx!important;height:%2$spx!important" src="%3$s" alt="%4$s">&nbsp;<div class="d-flex-wrap"><div class="'.$w100.'"><div class="text-truncate">%4$s</div></div>';
         $region_template = '<div class="break"></div><div class="'.$w100.'"><div class="text-truncate small">%1$s</div></div>';
         $template = '%1$s&nbsp;<div class="d-flex-wrap"><div class="'.$w100.'"><div class="text-truncate">%2$s</div></div>';
-        $start_template = '<div class="d-flex">';
+        $start_template = '<div class="d-flex exchange-rates-table-label'.($this->parameters['region'] ? ' exchange-rates-table-region' : '').'">';
         $end_template = '</div></div>';
         $img_src_template = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.rawurlencode($this->parameters['flag_type']).'/%1$s.svg';
 
@@ -263,12 +263,12 @@ class CurrencyTable
                 'class' => 'text-right active',
             ];
 
-            $t = count($output_data);
-
-            if ($t > 2) {
+            // Complete only the visible history columns; the label mode does not change the grid.
+            $history_columns = (int) $show_previous_close + (int) $show_changes;
+            if ($history_columns > 0) {
                 $output_data[3] = [
                     'data' => '',
-                    'colspan' => $t - (($this->parameters['code']) ? 3 : 2),
+                    'colspan' => $history_columns,
                     'class' => 'active',
                 ];
             }
@@ -280,7 +280,8 @@ class CurrencyTable
 
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
-        $class = ($this->parameters['border'] ? ' table-border' : '');
+        $class = $this->parameters['full_width'] ? 'exchange-rates-table-full' : '';
+        $class .= ($this->parameters['border'] ? ' table-border' : '');
         $class .= ($this->parameters['border_hori'] ? ' table-border-hori' : '');
         $class .= ($this->parameters['border_vert'] ? ' table-border-vert' : '');
 
