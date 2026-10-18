@@ -2079,3 +2079,11 @@ msgstr ""
 #: src/Widgets/Table.php:249
 msgid "Show table header"
 msgstr ""
+
+#: src/Models/DataSources.php
+msgid "Invalid source directory response."
+msgstr ""
+
+#: src/Admin/Settings/General/Sections/SourceTable.php
+msgid "Showing the last valid source directory."
+msgstr ""

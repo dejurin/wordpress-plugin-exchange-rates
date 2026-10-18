@@ -99,7 +99,7 @@ try {
 	er_directory_check( $good === $r, 'Reject poisoned 1.3.2 cache and recover with valid HTTP data' );
 	er_directory_check( $reference === er_directory_render( 'Recovery' ), 'Valid source table HTML is unchanged after recovery' );
 	foreach ( array( 1, '1767355200', '01767355200' ) as $stamp ) {
-		$rows = er_directory_valid(); $rows[0]['lastupdate'] = $stamp;
+		$rows = er_directory_valid(); $rows[0]['lastupdate'] = $stamp; $rows[0]['country'] = 'currencyrate';
 		$rows[] = array( 'source' => 'future-provider', 'country' => 'us', 'base' => 'LD', 'lastupdate' => 1767355200 );
 		delete_transient( $key ); $http_response = er_directory_response( $rows );
 		$r = DataSources::getInstance()->get_sources_data();
