@@ -132,6 +132,10 @@ The actual execution time depends on your site's WP-Cron configuration and traff
 
 The converter recalculates amounts immediately using the rates loaded with the page. It does not request a new market quote for every conversion.
 
+Pages show saved rates immediately while WordPress Cron refreshes expired data in the background. If a refresh fails, the last saved rates and their original date remain visible, and another background attempt is scheduled after five minutes. Reload the page to see newly saved rates; open pages do not update automatically. When no rates have been loaded, the plugin displays an unavailable-data message.
+
+For updates without site visits, configure your hosting scheduler to run WordPress Cron. Full-page or CDN caches may continue showing older page content until they expire or are cleared.
+
 = How do I choose a data source? =
 
 Open Settings → Exchange Rates, select a source, and save your settings.
@@ -549,6 +553,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.0 =
+* Render cached rates immediately and refresh expired or missing data through WordPress Cron without frontend AJAX; retain hourly updates and retry failed background requests after five minutes.
 * Calculate percentage changes relative to previous close; show unsigned percentages with trend colors and keep existing arrows consistent with displayed precision when amounts change.
 * Preserve trailing integer zeros when formatting amounts with zero decimal places.
 * Keep amount changes and number formatting local to the edited exchange-rate table.

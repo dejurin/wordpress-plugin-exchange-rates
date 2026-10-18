@@ -24,6 +24,6 @@ class Unistall
         delete_transient(Models\DataSources::$transient_option_name);
 
         // Delete Schedul
-        wp_clear_scheduled_hook(Cron\UpdateRates::$action_name);
+        Cron\UpdateRates::clear_tasks();
     }
 }
