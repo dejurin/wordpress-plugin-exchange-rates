@@ -1,9 +1,19 @@
 const { test, expect } = require('@playwright/test');
 
+async function renderedText(page) {
+  return page.locator('section').evaluateAll(sections => sections.map(section => {
+    const clone = section.cloneNode(true);
+    // WordPress may replace decorative emoji text with images after page load.
+    for (const image of clone.querySelectorAll('img.emoji')) image.replaceWith(image.alt);
+    return clone.textContent;
+  }));
+}
+
 for (const direction of ['ltr', 'rtl']) {
   for (const width of [320, 1064]) {
     for (const source of ['currencyrate', 'eu-ecb']) {
-      test(`${direction} ${width}px ${source}: retained source after failed selection`, async ({ page }) => {
+      for (const mismatch of [false, true]) {
+      test(`${direction} ${width}px ${source}: ${mismatch ? 'retained source after failed selection' : 'legacy matching-source contract'}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 900 });
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
@@ -11,9 +21,11 @@ for (const direction of ['ltr', 'rtl']) {
         const rate = source === 'currencyrate' ? 1.25 : 2;
         const caption = source === 'currencyrate' ? 'CurrencyRate' : 'ECB';
         await page.goto(url);
-        const before = await page.locator('section').allTextContents();
-        await page.goto(`${url}&mismatch=1`);
-        expect(await page.locator('section').allTextContents()).toEqual(before);
+        const before = await renderedText(page);
+        if (mismatch) {
+          await page.goto(`${url}&mismatch=1`);
+          expect(await renderedText(page)).toEqual(before);
+        }
         for (const id of ['table-normal', 'table-widget']) {
           const table = page.locator(`#${id} table`);
           await expect(table.locator('td[data-rate]').first()).toHaveAttribute('data-rate', String(rate));
@@ -36,6 +48,7 @@ for (const direction of ['ltr', 'rtl']) {
         }
         expect(errors).toEqual([]);
       });
+      }
     }
   }
 }

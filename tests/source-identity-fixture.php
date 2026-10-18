@@ -24,7 +24,7 @@ function er_source_render() {
 		$widget = new $class();
 		$widget->number = 22;
 		ob_start();
-		$widget->widget( array( 'before_widget' => '', 'after_widget' => '' ), array( 'amount' => 1, 'base_currency' => 'USD', 'currency_list' => array( 'EUR', 'GBP' ), 'from' => 'USD', 'to' => 'EUR', 'flag_type' => 'none', 'code' => true, 'amount_active' => true ) );
+		$widget->widget( array( 'before_widget' => '', 'after_widget' => '' ), array( 'amount' => 1, 'base_currency' => 'USD', 'currency_list' => array( 'EUR', 'GBP' ), 'from' => 'USD', 'to' => 'EUR', 'flag_type' => 'none', 'code' => true, 'amount_active' => true, 'symbol' => false ) );
 		$result[ $name ] = ob_get_clean();
 	}
 	return $result;
