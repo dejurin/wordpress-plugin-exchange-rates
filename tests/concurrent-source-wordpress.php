@@ -116,6 +116,7 @@ function er_race_seed( $source ) {
 	er_race_state();
 	$settings = er_source_settings( $source );
 	$settings['update_timestamp'] = time() - 7200;
+	$settings['legacy_special_value'] = "100% %s %d _ ' \" \\";
 	update_option( 'exchange-rates', $settings );
 	update_option( 'exchange-rates_rates', er_source_payload( $source ) );
 	delete_option( 'exchange-rates_refresh_lock' );
