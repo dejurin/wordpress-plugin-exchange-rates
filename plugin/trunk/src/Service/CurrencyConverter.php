@@ -39,7 +39,7 @@ class CurrencyConverter
         $currency_list = RatesData::get_rate_codes($rates);
 
         if (empty($currency_list)) {
-            return '<b>'.Plugin::NAME.'</b> '.esc_html__('Error: exchange-rate data is not available yet.', 'exchange-rates');
+            return Dev::rates_unavailable();
         }
 
         $first_element = end($currency_list);
@@ -82,7 +82,7 @@ class CurrencyConverter
         }
 
         if (empty($arr)) {
-            return '<b>'.Plugin::NAME.'</b> '.esc_html__('Error: exchange-rate data is not available yet.', 'exchange-rates');
+            return Dev::rates_unavailable();
         }
 
         $this->parameters['base_currency'] = $this->parameters['from'];

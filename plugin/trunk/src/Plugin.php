@@ -35,25 +35,11 @@ class Plugin
         $admin_notice = Notices::get_instance();
         $admin_notice->info('Rate', 'rate');
 
-        /*
-         * Update rates action.
-         */
-        add_action(Cron\UpdateRates::$action_name, ['\Dejurin\ExchangeRates\Service\UpdateDataSources', 'update']);
-
-        /*
-         * CODE START
-         * Each HOUR_IN_SECONDS launches update data. In case the WP Cron doesn't work.
-         * If WP Cron work fine, you need to commented or delete this one code below.
-         */
-        $settings = get_option(Models\Settings::$option_name, []);
-        if ( ! empty( $settings ) && isset( $settings['update_timestamp'] )
-            && intval( $settings['update_timestamp'] ) > 0
-            && intval( $settings['update_timestamp'] ) + HOUR_IN_SECONDS < time() ) {
-            Service\UpdateDataSources::update();
-        }
-        /*
-         * CODE END
-        */
+        // Keep recurring updates and recover expired/missing data in WP-Cron only.
+        add_action( Cron\UpdateRates::$action_name, array( '\\Dejurin\\ExchangeRates\\Cron\\UpdateRates', 'run_hourly' ) );
+        add_action( Cron\UpdateRates::$retry_action_name, array( '\\Dejurin\\ExchangeRates\\Cron\\UpdateRates', 'run_retry' ) );
+        Cron\UpdateRates::register_task();
+        Cron\UpdateRates::queue_if_due();
 
         /*
          * Add Badge shortcode.
