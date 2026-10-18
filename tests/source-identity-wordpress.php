@@ -81,8 +81,15 @@ try {
 		er_identity_check( $reference['html'] === $legacy['html'], $old . ': missing legacy source keeps existing selected-source fallback' );
 	}
 } finally {
-	update_option( 'exchange-rates', $original['settings'] );
-	update_option( 'exchange-rates_rates', $original['rates'] );
+	// Child requests changed the database behind this process's option cache.
+	foreach ( array( 'settings' => 'exchange-rates', 'rates' => 'exchange-rates_rates' ) as $key => $option ) {
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_cache_delete( $option, 'options' );
+		update_option( $option, $original[ $key ] );
+	}
+	wp_cache_delete( 'alloptions', 'options' );
+	wp_cache_delete( 'exchange-rates', 'options' );
+	wp_cache_delete( 'exchange-rates_rates', 'options' );
 }
 er_identity_check( $original === er_identity_state(), 'Original settings/rates/widgets/sidebar state restored' );
 WP_CLI::log( sprintf( 'Source identity: %d/%d passed, %d failed.', $checks - $failures, $checks, $failures ) );
