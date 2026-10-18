@@ -121,7 +121,7 @@ for (const direction of ['ltr', 'rtl']) {
         await table.locator('input').fill('100');
         const cells = await table.locator('td[data-change-trend]').allTextContents();
         expect(cells.map(text => text.replace(/[^\d.]/g, ''))).toEqual(['125', '90', '1', '100']);
-        expect(await table.locator('td[data-change]').allTextContents()).toEqual(['4.17%', '10%', '11.1%', '–']);
+        expect(await table.locator('td[data-change]').allTextContents()).toEqual(['4,17%', '10%', '11,1%', '–']);
         const after = await grid(table);
         expect(after.spans).toEqual(before.spans);
       }
