@@ -354,6 +354,12 @@
 }
 
 .cr-exchange-rates .widget-exchange-rates-currency-converter input,
+.cr-exchange-rates .widget-exchange-rates-currency-converter select,
+.cr-exchange-rates .widget-exchange-rates-currency-converter button.swap {
+	box-sizing: border-box;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-converter input,
 .cr-exchange-rates .widget-exchange-rates-currency-converter select {
 	width: 100%;
 	height: 40px;
