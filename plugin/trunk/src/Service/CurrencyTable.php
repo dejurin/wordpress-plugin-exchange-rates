@@ -31,6 +31,8 @@ class CurrencyTable
         $has_previous_rates = RatesData::has_previous_rates($rates);
         $show_previous_close = !empty($this->parameters['table_headers_previous_close_show']) && $has_previous_rates;
         $show_changes = !empty($this->parameters['table_headers_changes_show']) && $has_previous_rates;
+        // Retained rates keep their own source, even after a failed selection change.
+        $source_id = RatesData::get_source($rates, $this->settings['source_id']);
         $last_currency = null;
 
         $flag_types = ['none', 'rectangular', 'square', 'circular', 'emoji'];
@@ -94,7 +96,7 @@ class CurrencyTable
                 continue;
             }
 
-            $this->parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
+            $this->parameters['reverse'] = 'currencyrate' === $source_id;
             $currency = new Currency($this->parameters, $currency_code);
             if ($currency->is_available()) {
                 $err = false;
@@ -305,7 +307,7 @@ class CurrencyTable
             $last_currency->get_date(),
             $widget_number,
             self::WIDGET_SLUG,
-            $this->settings['source_id'],
+            $source_id,
             0
         );
 
