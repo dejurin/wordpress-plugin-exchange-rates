@@ -106,6 +106,13 @@ for (const direction of directions) {
             await document.fonts.ready;
             await Promise.all(Array.from(document.images, image => image.decode().catch(() => {})));
           });
+          // Preserve exact CSS parity for cached legacy markup. Current table
+          // layout intentionally changes and has dedicated table-layout tests.
+          await page.evaluate(() => {
+            for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start']) {
+              document.querySelectorAll('.' + name).forEach(node => node.classList.remove(name));
+            }
+          });
           if (theme !== 'default') {
             await page.addStyleTag({ content: ':root{--bs-light:rgba(30,70,110,.2);--bs-light-hover:rgba(30,70,110,.4);--radius:12px;--bs-table-striped-bg:rgba(30,70,110,.1)} .cr-exchange-rates input,.cr-exchange-rates select{background-color:#eee;padding:9px} .cr-exchange-rates .border{border-color:#607d8b!important}' });
           }
