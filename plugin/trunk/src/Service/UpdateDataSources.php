@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use Dejurin\ExchangeRates\Models\DataSources;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Models\Sources;
 use Dejurin\ExchangeRates\Plugin;
@@ -26,9 +25,6 @@ class UpdateDataSources
         $settings = null === $settings_snapshot ? array() : maybe_unserialize( $settings_snapshot );
         $settings = wp_parse_args($settings, Settings::get_defaults());
 
-        // Update sources
-        $get_data_sources = DataSources::getInstance();
-        // $sources = $get_data_sources->get_sources_data();
         $source_id = $settings['source_id'];
 
         if (!is_null($force_source_id)) {

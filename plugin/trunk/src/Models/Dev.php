@@ -63,9 +63,6 @@ class Dev
         }
         else if (2 === $dev) {
             $_add = \Dejurin\ExchangeRates\Models\Sources::$_new2;
-            if (0 === $dev) {
-                $_add = \Dejurin\ExchangeRates\Models\Sources::$_new0;
-            }
             $template = '%3$s&nbsp;&middot;&nbsp;%1$s&nbsp;&middot;&nbsp;<a href="'
                     .'https://'.esc_attr($_add).'/'.esc_attr($_base_currency).'"'
                     .' target="_blank" rel="noreferrer noopener">'

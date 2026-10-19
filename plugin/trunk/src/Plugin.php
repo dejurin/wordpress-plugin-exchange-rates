@@ -54,15 +54,6 @@ class Plugin
         }
     }
 
-    /*
-    public function hide_example_widget($widget_types)
-    {
-        $widget_types[] = Plugin::PLUGIN_SLUG;
-
-        return $widget_types;
-    }
-    */
-
     public static function register_public_script_style()
     {
         wp_register_style(

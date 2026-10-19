@@ -222,7 +222,7 @@ The source-information panel also includes a link to the source website, check a
 
 Exchange-rate data and source information are retrieved through [api-bank.fex.to](https://api-bank.fex.to/), the API interface for CurrencyRate.today.
 
-Requests are made from your WordPress server. Rate requests can occur on activation, scheduled updates, source changes, manual refreshes, or a page load when the last successful update is more than an hour old. The settings page also requests source information when its cached copy needs refreshing.
+Requests are made from your WordPress server. Rate requests can occur on activation, scheduled background updates, source changes, and manual refreshes. Frontend rendering reads saved rates without waiting for the API. A page visit can queue a background refresh when data is missing or more than an hour old; WordPress Cron performs the request separately. The settings page also requests source information when its cached copy needs refreshing.
 
 A rate request identifies the selected source. By default, the WordPress HTTP API sends the site's URL and WordPress version in the User-Agent header. The API server also receives the requesting server's IP address.
 
@@ -553,6 +553,10 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.0 =
+* Preserve number and currency-symbol order in RTL layouts and keep flags next to their currency labels.
+* Replace legacy trend arrows with 14 px SVG icons while preserving rise, fall, and hidden states.
+* Improve compact table captions, flag and region alignment, readable currency labels, compact Code/Price columns, and the full-width base-currency row.
+* Normalize box sizing within converters so amount inputs, selectors, and swap buttons use consistent sizing in themes without a global reset.
 * Validate source-directory fields and timestamps before display; retain the last valid directory with an error notice when refreshing fails.
 * Discard an outdated update result when settings change during its request, preserving the newly selected source, saved rates, and preferences.
 * Reject invalid API rates, mismatched sources, and missing or invalid rate dates without replacing the last saved rates; sources without previous-close data remain supported.
