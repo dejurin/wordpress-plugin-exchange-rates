@@ -43,6 +43,7 @@ jobs:
       - run: php -l tests/browser-admin.php
       - run: php -l tests/manual-update-wordpress.php && php -l tests/manual-update-clock.php
       - run: php -l tests/update-state-wordpress.php
+      - run: php -l tests/refresh-interval-wordpress.php
       - run: php -l tests/background-refresh-wordpress.php && php -l tests/background-clock.php
       - run: php -l tests/concurrent-source-wordpress.php
       - run: php -l tests/browser-update.php
@@ -66,7 +67,7 @@ jobs:
   wordpress:
     name: WordPress 7.1.3 / PHP 8.3 smoke and browser regressions
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       COMPOSE_PROJECT_NAME: exchange-rates-ci-${{ github.run_id }}-${{ github.run_attempt }}
       COMPOSE_FILE: wordpress/compose.yaml:wordpress/compose.test.yaml
@@ -102,6 +103,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-identity-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/refresh-interval-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/background-refresh-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed

@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 use Dejurin\ExchangeRates\Admin\Notices;
@@ -15,7 +15,7 @@ use Dejurin\ExchangeRates\Admin\Notices;
 
 class Plugin
 {
-    const VERSION = '1.4.0';
+    const VERSION = '1.4.1';
     const NAME = 'Exchange Rates';
     const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
@@ -34,6 +34,8 @@ class Plugin
 
         $admin_notice = Notices::get_instance();
         $admin_notice->info('Rate', 'rate');
+
+        add_filter( 'cron_schedules', array( '\\Dejurin\\ExchangeRates\\Cron\\UpdateRates', 'register_schedule' ) );
 
         // Keep recurring updates and recover expired/missing data in WP-Cron only.
         add_action( Cron\UpdateRates::$action_name, array( '\\Dejurin\\ExchangeRates\\Cron\\UpdateRates', 'run_hourly' ) );

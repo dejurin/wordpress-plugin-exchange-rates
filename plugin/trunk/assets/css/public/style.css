@@ -258,6 +258,29 @@
 	margin-top: 2px;
 }
 
+/* Hybrid rules apply only to new labels, preserving cached legacy markup. */
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-hybrid {
+	align-items: center !important;
+	column-gap: 0.25em;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-hybrid > img {
+	margin-top: 0;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-stacked {
+	display: grid !important;
+	grid-template-columns: auto minmax(12ch, 1fr);
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-stacked > .d-flex-wrap {
+	display: contents !important;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table .exchange-rates-table-stacked .exchange-rates-region-text {
+	grid-column: 1 / -1;
+}
+
 /* Widget Currency Table - Style end */
 
 /* Caption - Style start */

@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,9 +126,9 @@ Your WordPress server needs an internet connection to retrieve new data.
 
 = How often are exchange rates updated? =
 
-The plugin schedules an update once per hour through WordPress Cron.
+The plugin schedules an update every 30 minutes through WordPress Cron.
 
-The actual execution time depends on your site's WP-Cron configuration and traffic. Each data source also has its own publication schedule, so an hourly request does not necessarily mean that new rates are available.
+The actual execution time depends on your site's WP-Cron configuration and traffic. Each data source also has its own publication schedule, so a scheduled request does not necessarily mean that new rates are available.
 
 The converter recalculates amounts immediately using the rates loaded with the page. It does not request a new market quote for every conversion.
 
@@ -198,7 +198,7 @@ Changing the amount in one table recalculates that table only.
 
 Enter positive numbers without thousands separators or currency symbols. Use a period for decimals, for example 1000 or 1000.50.
 
-In version 1.4.0, table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
+Table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
 
 = Does this change my store's checkout currency or product prices? =
 
@@ -232,7 +232,7 @@ The source-information panel also includes a link to the source website, check a
 
 Exchange-rate data and source information are retrieved through [api-bank.fex.to](https://api-bank.fex.to/), the API interface for CurrencyRate.today.
 
-Requests are made from your WordPress server. Rate requests can occur on activation, scheduled background updates, source changes, and manual refreshes. Frontend rendering reads saved rates without waiting for the API. A page visit can queue a background refresh when data is missing or more than an hour old; WordPress Cron performs the request separately. The settings page also requests source information when its cached copy needs refreshing.
+Requests are made from your WordPress server. Rate requests can occur on activation, scheduled background updates, source changes, and manual refreshes. Frontend rendering reads saved rates without waiting for the API. A page visit can queue a background refresh when data is missing or at least 30 minutes old; WordPress Cron performs the request separately. The settings page also requests source information when its cached copy needs refreshing.
 
 A rate request identifies the selected source. By default, the WordPress HTTP API sends the site's URL and WordPress version in the User-Agent header. The API server also receives the requesting server's IP address.
 
@@ -562,6 +562,12 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 
 == Changelog ==
 
+= 1.4.1 =
+* Avoid a PHP warning when recreating a missing cron schedule on WordPress 5.6.
+* Center small flags on the currency name, with the country below the group; flags of 40 px or more sit beside the combined name and country. Preserve single-row labels when the country is hidden.
+* Check for updated rates every 30 minutes and migrate existing hourly schedules automatically without reactivation.
+* Recover missing or expired cached data in the background using the same 30-minute interval; preserve the five-minute error retry and one-minute manual-update cooldown.
+
 = 1.4.0 =
 * Preserve number and currency-symbol order in RTL layouts and keep flags next to their currency labels.
 * Replace legacy trend arrows with 14 px SVG icons while preserving rise, fall, and hidden states.
@@ -673,6 +679,9 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Currency labels now adapt to flag size, with a 40 px threshold. Automatic rate checks now run every 30 minutes, subject to WordPress Cron execution. Existing hourly events migrate automatically; settings, saved rates and widgets are retained.
 
 = 1.4.0 =
 Maintenance release for number formatting, independent tables, settings accessibility and reliable manual-update state. Existing settings, shortcodes and widgets are retained; no data migration is required.

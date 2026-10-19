@@ -56,7 +56,7 @@ add_action( 'template_redirect', function () {
 		return;
 	}
 	$flag = isset( $_GET['flag'] ) && in_array( $_GET['flag'], array( 'rectangular', 'square', 'circular', 'emoji', 'none' ), true ) ? $_GET['flag'] : 'rectangular';
-	$size = isset( $_GET['size'] ) && '64' === $_GET['size'] ? 64 : 16;
+	$size = isset( $_GET['size'] ) ? max( 16, min( 64, (int) $_GET['size'] ) ) : 16;
 	$code = ! isset( $_GET['names'] );
 	$region = ! isset( $_GET['no-region'] );
 	$language = isset( $_GET['language'] ) ? $_GET['language'] : 'en';

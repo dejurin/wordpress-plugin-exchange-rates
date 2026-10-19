@@ -22,6 +22,37 @@ class CurrencyTable
     public $table;
     const WIDGET_SLUG = 'widget-'.Plugin::PLUGIN_SLUG.'-currency-table';
 
+	/** Render regular and base-currency labels with the same size-dependent layout. */
+	private function render_label( $title, $region, $flag ) {
+		$type = $this->parameters['flag_type'];
+		$width = max( 16, min( 64, (int) $this->parameters['flag_size'] ) );
+		$height = 'rectangular' === $type ? $width * 0.75 : $width;
+		$show_region = ! empty( $this->parameters['region'] );
+		$classes = 'd-flex exchange-rates-table-label exchange-rates-table-hybrid';
+		if ( $show_region ) {
+			$classes .= ' exchange-rates-table-region';
+			if ( 'none' !== $type && $width < 40 ) {
+				$classes .= ' exchange-rates-table-stacked';
+			}
+		}
+		$html = '<div class="' . esc_attr( $classes ) . '">';
+		if ( 'none' !== $type ) {
+			if ( 'emoji' === $type ) {
+				$emoji = Emoji::get_list();
+				$src = 'https://s.w.org/images/core/emoji/14.0.0/svg/' . strtolower( $emoji[ $flag ] ) . '.svg';
+			} else {
+				$src = plugin_dir_url( $GLOBALS['dejurin_exchange_rates']->plugin_path ) . 'assets/flags/' . rawurlencode( $type ) . '/' . rawurlencode( strtolower( $flag ) ) . '.svg';
+			}
+			$html .= '<img loading="lazy" style="width:' . esc_attr( $width ) . 'px!important;height:' . esc_attr( $height ) . 'px!important" src="' . esc_url( $src ) . '" alt="' . esc_attr( $title ) . '">';
+		}
+		$text_class = $this->parameters['full_width'] ? 'text-element w-100' : 'text-element';
+		$html .= '<div class="d-flex-wrap"><div class="' . esc_attr( $text_class ) . '"><div class="text-truncate">' . esc_html( $title ) . '</div></div>';
+		if ( $show_region ) {
+			$html .= '<div class="' . esc_attr( $text_class ) . ' exchange-rates-region-text"><div class="text-truncate small">' . esc_html( $region ) . '</div></div>';
+		}
+		return $html . '</div></div>';
+	}
+
     public function get_html_widget($widget_number)
     {
         $err = true;
@@ -72,23 +103,6 @@ class CurrencyTable
 
         $get_currencies = Currencies::get_list();
 
-        $w = $this->parameters['flag_size'];
-        $h = $this->parameters['flag_size'];
-
-        if ('rectangular' === $this->parameters['flag_type']) {
-            $ratio = $this->parameters['flag_size'] / 4;
-            $h = $ratio * 3;
-        }
-
-        $w100 = $this->parameters['full_width'] ? 'text-element w-100' : 'text-element';
-
-        $img_template = '<img loading="lazy" style="width:%1$spx!important;height:%2$spx!important" src="%3$s" alt="%4$s">&nbsp;<div class="d-flex-wrap"><div class="'.$w100.'"><div class="text-truncate">%4$s</div></div>';
-        $region_template = '<div class="break"></div><div class="'.$w100.'"><div class="text-truncate small">%1$s</div></div>';
-        $template = '%1$s&nbsp;<div class="d-flex-wrap"><div class="'.$w100.'"><div class="text-truncate">%2$s</div></div>';
-        $start_template = '<div class="d-flex exchange-rates-table-label'.($this->parameters['region'] ? ' exchange-rates-table-region' : '').'">';
-        $end_template = '</div></div>';
-        $img_src_template = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/'.rawurlencode($this->parameters['flag_type']).'/%1$s.svg';
-
         if (!is_array($this->parameters['currency_list'])) {
             $this->parameters['currency_list'] = array_filter(explode(',', $this->parameters['currency_list']), 'strlen');
         }
@@ -125,34 +139,7 @@ class CurrencyTable
                 $class_trend = $change_visible ? ((1 === $trend) ? ' table-success' : ' table-danger') : '';
                 $svg_trend = $change_visible ? '<img class="exchange-rates-trend" width="14" height="14" alt="'.$trend_name.'" src="'.esc_url($trend_src).'" />' : '';
 
-                $output_data[0]['data'] = $start_template;
-
-                if ('emoji' === $this->parameters['flag_type']) {
-                    $emoji = Emoji::get_list();
-                    $output_data[0]['data'] .= sprintf(
-                        $img_template,
-                        $w,
-                        $h,
-                        sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$get_currencies[$currency_code]['flag']])),
-                        $currency_title
-                    );
-                } elseif ('none' !== $this->parameters['flag_type']) {
-                    $output_data[0]['data'] .= sprintf(
-                        $img_template,
-                        $w,
-                        $h,
-                        sprintf($img_src_template, strtolower($get_currencies[$currency_code]['flag'])),
-                        $currency_title
-                    );
-                } else {
-                    $output_data[0]['data'] .= sprintf($template, '', $currency_title);
-                }
-
-                if ($this->parameters['region']) {
-                    $output_data[0]['data'] .= sprintf($region_template, $currency_region);
-                }
-
-                $output_data[0]['data'] .= $end_template;
+                $output_data[0]['data'] = $this->render_label($currency_title, $currency_region, $get_currencies[$currency_code]['flag']);
                 $output_data[0]['td'] = 'th';
                 $output_data[0]['scope'] = 'row';
 
@@ -222,34 +209,7 @@ class CurrencyTable
             $base_currency_name = $get_currencies[$base_currency_code]['name'];
             $base_currency_title = $this->parameters['code'] ? $base_currency_code : $base_currency_name;
 
-            $output_data[0]['data'] = $start_template;
-
-            if ('emoji' === $this->parameters['flag_type']) {
-                $emoji = Emoji::get_list();
-                $output_data[0]['data'] .= sprintf(
-                    $img_template,
-                    $w,
-                    $h,
-                    sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$get_currencies[$base_currency_code]['flag']])),
-                    $base_currency_title
-                );
-            } elseif ('none' !== $this->parameters['flag_type']) {
-                $output_data[0]['data'] .= sprintf(
-                    $img_template,
-                    $w,
-                    $h,
-                    sprintf($img_src_template, strtolower($get_currencies[$base_currency_code]['flag'])),
-                    $base_currency_title
-                );
-            } else {
-                $output_data[0]['data'] .= sprintf($template, '', $base_currency_title);
-            }
-
-            if ($this->parameters['region']) {
-                $output_data[0]['data'] .= sprintf($region_template, $get_currencies[$base_currency_code]['region']);
-            }
-
-            $output_data[0]['data'] .= $end_template;
+            $output_data[0]['data'] = $this->render_label($base_currency_title, $get_currencies[$base_currency_code]['region'], $get_currencies[$base_currency_code]['flag']);
             $output_data[0]['td'] = 'th';
             $output_data[0]['scope'] = 'row';
             $output_data[0]['class'] = 'active';
