@@ -101,6 +101,18 @@ try {
 	}
 	$schedules = wp_get_schedules();
 	interval_check( isset( $schedules['exchange-rates_30_minutes'] ) && 1800 === $schedules['exchange-rates_30_minutes']['interval'], 'Plugin registers its own 1800-second schedule' );
+
+	// WordPress before 6.1 returns false when the cron option is absent.
+	$cron_before = get_option( 'cron' );
+	try {
+		delete_option( 'cron' );
+		interval_check( false === get_option( 'cron' ), 'Missing cron option fixture is active' );
+		interval_check( UpdateRates::register_task() && interval_valid(), 'Missing cron option is recreated without PHP warnings' );
+		$events = interval_events();
+		interval_check( UpdateRates::register_task() && $events === interval_events(), 'Repeated registration after missing cron recovery does not duplicate work' );
+	} finally {
+		update_option( 'cron', $cron_before );
+	}
 	foreach ( array( -60, 120, 3600 ) as $offset ) {
 		interval_seed();
 		wp_schedule_event( time() + $offset, 'hourly', 'exchange-rates_data_update' );
