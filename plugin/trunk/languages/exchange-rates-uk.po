@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exchange Rates 1.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/exchange-rates\n"
-"POT-Creation-Date: 2026-10-19T08:33:50+00:00\n"
+"POT-Creation-Date: 2026-10-19T09:00:35+00:00\n"
 "PO-Revision-Date: 2026-10-19 10:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -88,7 +88,7 @@ msgstr "Це займе лише кілька хвилин"
 msgid "Rate it now"
 msgstr "Оцініть зараз"
 
-#: src/Admin/Notices.php:86 src/Admin/Settings/General/Page.php:274
+#: src/Admin/Notices.php:86 src/Admin/Settings/General/Page.php:272
 msgid "Rating"
 msgstr "Рейтинг"
 
@@ -97,6 +97,7 @@ msgid "Settings"
 msgstr "Налаштування"
 
 #: src/Admin/Settings/General/Page.php:38
+#: src/Admin/Settings/General/Page.php:89
 msgid "No data received"
 msgstr "Немає даних"
 
@@ -138,10 +139,6 @@ msgstr "Попереднє закриття (вчора)"
 msgid "Previous close no data."
 msgstr "Попереднє закриття немає даних."
 
-#: src/Admin/Settings/General/Page.php:89
-msgid "No data received. Press the \"Save\" button to force an update of the data."
-msgstr "Немає даних. Натисніть кнопку «Зберегти», щоб примусово оновити дані."
-
 #: src/Admin/Settings/General/Page.php:90
 #: src/Admin/Settings/General/Sections/SourceTable.php:40
 msgid "ERROR"
@@ -151,152 +148,148 @@ msgstr "ПОМИЛКА"
 msgid "Exchange-rate data is not available yet."
 msgstr "Дані валютних курсів ще недоступні."
 
-#: src/Admin/Settings/General/Page.php:94
-msgid "If you want to force an update, click on the button \"Save\"."
-msgstr "Якщо ви хочете примусово оновити, натисніть кнопку «Зберегти»."
-
-#: src/Admin/Settings/General/Page.php:96
+#: src/Admin/Settings/General/Page.php:95
 msgid "Force Data Update"
 msgstr "Примусове оновлення даних"
 
-#: src/Admin/Settings/General/Page.php:106
+#: src/Admin/Settings/General/Page.php:104
 msgid "Source table"
 msgstr "Таблиця джерел"
 
-#: src/Admin/Settings/General/Page.php:107
+#: src/Admin/Settings/General/Page.php:105
 msgid "List of sources that you can select as a source of exchange rate data."
 msgstr "Список джерел, які можна вибрати як джерело даних для курсів валют."
 
-#: src/Admin/Settings/General/Page.php:111
+#: src/Admin/Settings/General/Page.php:109
 msgid "Currency Table"
 msgstr "Таблиця курсів валют"
 
-#: src/Admin/Settings/General/Page.php:112
+#: src/Admin/Settings/General/Page.php:110
 msgid "List of currencies that are supported by the current exchange rate data source."
 msgstr "Список валют, які підтримуються поточним джерелом даних обмінного курсу."
 
-#: src/Admin/Settings/General/Page.php:121
+#: src/Admin/Settings/General/Page.php:119
 msgid "Badge shortcode generator "
 msgstr "Генератор коротких кодів для баджів "
 
-#: src/Admin/Settings/General/Page.php:128
+#: src/Admin/Settings/General/Page.php:126
 msgid "Color badge"
 msgstr "Колір для баджа"
 
-#: src/Admin/Settings/General/Page.php:136
+#: src/Admin/Settings/General/Page.php:134
 msgid "Amount"
 msgstr "Кількість"
 
-#: src/Admin/Settings/General/Page.php:144
+#: src/Admin/Settings/General/Page.php:142
 msgid "Base Currency"
 msgstr "Базова валюта"
 
-#: src/Admin/Settings/General/Page.php:165
+#: src/Admin/Settings/General/Page.php:163
 msgid "Currency list"
 msgstr "Список валют"
 
-#: src/Admin/Settings/General/Page.php:186
+#: src/Admin/Settings/General/Page.php:184
 msgid "Flag type"
 msgstr "Тип прапора"
 
-#: src/Admin/Settings/General/Page.php:201
+#: src/Admin/Settings/General/Page.php:199
 #: src/Admin/Settings/General/Sections/Fields/Decimals.php:18
 msgid "Decimals"
 msgstr "Десяткові"
 
-#: src/Admin/Settings/General/Page.php:210 src/Widgets/Converter.php:169
+#: src/Admin/Settings/General/Page.php:208 src/Widgets/Converter.php:169
 #: src/Widgets/Table.php:228
 msgid "Options"
 msgstr "Опції"
 
-#: src/Admin/Settings/General/Page.php:228 src/Widgets/Converter.php:187
+#: src/Admin/Settings/General/Page.php:226 src/Widgets/Converter.php:187
 #: src/Widgets/Table.php:284
 msgid "Generate"
 msgstr "Генерувати"
 
-#: src/Admin/Settings/General/Page.php:233
+#: src/Admin/Settings/General/Page.php:231
 msgid "Help"
 msgstr "Допомога"
 
-#: src/Admin/Settings/General/Page.php:234
+#: src/Admin/Settings/General/Page.php:232
 msgid "This Plugin includes two widgets and one shortcode."
 msgstr "Цей плагін містить два віджети та один шорткод."
 
-#: src/Admin/Settings/General/Page.php:235
+#: src/Admin/Settings/General/Page.php:233
 msgid "Widgets"
 msgstr "Віджети"
 
-#: src/Admin/Settings/General/Page.php:237
+#: src/Admin/Settings/General/Page.php:235
 msgid "Currency Converter is easy to use, simple real-time converter;"
 msgstr "Конвертер валют простий у використанні, конвертер у реальному часі;"
 
-#: src/Admin/Settings/General/Page.php:238
+#: src/Admin/Settings/General/Page.php:236
 msgid "Universal widget, it can be used on travel and property website/blog, as well as online stores."
 msgstr "Універсальний віджет, його можна використовувати на веб-сайті/блозі про подорожі та нерухомість, а також в онлайн-магазинах."
 
-#: src/Admin/Settings/General/Page.php:241
+#: src/Admin/Settings/General/Page.php:239
 msgid "Currency Table is a table with exchange rates and another features."
 msgstr "Таблиця курсів валют - це таблиця з курсами валют та іншими функціями."
 
-#: src/Admin/Settings/General/Page.php:242
+#: src/Admin/Settings/General/Page.php:240
 msgid "The currency rates table is mainly used by news websites, portals and financial forums."
 msgstr "Таблиця курсів валют в основному використовується новинними веб-сайтами, порталами та фінансовими форумами."
 
-#: src/Admin/Settings/General/Page.php:244 src/Widgets/Converter.php:182
+#: src/Admin/Settings/General/Page.php:242 src/Widgets/Converter.php:182
 #: src/Widgets/Table.php:279
 msgid "Shortcode"
 msgstr "Шорткод"
 
-#: src/Admin/Settings/General/Page.php:247
+#: src/Admin/Settings/General/Page.php:245
 msgid "Badge is a simple exchange rates list."
 msgstr "Бадж - це простий список курсів валют."
 
-#: src/Admin/Settings/General/Page.php:249
+#: src/Admin/Settings/General/Page.php:247
 msgid "An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page."
 msgstr "Чудовий шорткод, який можна використовувати в міжнародних інтернет-магазинах. Ви можете легко додати список цін у різних валютах на сторінку продукту."
 
-#: src/Admin/Settings/General/Page.php:252
+#: src/Admin/Settings/General/Page.php:250
 msgid "How to install widget?"
 msgstr "Як встановити віджет?"
 
-#: src/Admin/Settings/General/Page.php:254
+#: src/Admin/Settings/General/Page.php:252
 msgid "Go to Appearance &rarr; Widgets;"
 msgstr "Перейдіть до Вигляд &rarr; Віджети;"
 
-#: src/Admin/Settings/General/Page.php:255
+#: src/Admin/Settings/General/Page.php:253
 msgid "Legacy Widget &rarr; Choose Widget;"
 msgstr "Застарілий віджет &rarr; Вибрати віджет;"
 
-#: src/Admin/Settings/General/Page.php:256
-#: src/Admin/Settings/General/Page.php:262
+#: src/Admin/Settings/General/Page.php:254
+#: src/Admin/Settings/General/Page.php:260
 msgid "Enjoy!"
 msgstr "Насолоджуйтесь!"
 
-#: src/Admin/Settings/General/Page.php:258
+#: src/Admin/Settings/General/Page.php:256
 msgid "How to install shortcode?"
 msgstr "Як встановити шорткод?"
 
-#: src/Admin/Settings/General/Page.php:260
+#: src/Admin/Settings/General/Page.php:258
 msgid "Generate shortcode from this page;"
 msgstr "Згенеруйте шорткод із цієї сторінки;"
 
-#: src/Admin/Settings/General/Page.php:261
+#: src/Admin/Settings/General/Page.php:259
 msgid "Copy and Paste shortcode anywhere you like;"
 msgstr "Скопіюйте та вставте шорткод у будь-якому місці;"
 
-#: src/Admin/Settings/General/Page.php:268
+#: src/Admin/Settings/General/Page.php:266
 msgid "Supported by:"
 msgstr "За підтримки:"
 
-#: src/Admin/Settings/General/Page.php:269
+#: src/Admin/Settings/General/Page.php:267
 msgid "Questions"
 msgstr "Запитання"
 
-#: src/Admin/Settings/General/Page.php:269
+#: src/Admin/Settings/General/Page.php:267
 msgid "Support"
 msgstr "Підтримка"
 
-#: src/Admin/Settings/General/Page.php:271
+#: src/Admin/Settings/General/Page.php:269
 msgid "Please rate plugin"
 msgstr "Будь ласка, оцініть плагін"
 
