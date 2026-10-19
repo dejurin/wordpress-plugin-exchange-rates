@@ -34,8 +34,12 @@ class UpdateRates {
 	/** Read only this plugin's default events; explicit source arguments are external work. */
 	private static function recurring_events() {
 		$events = array();
+		$cron = _get_cron_array();
+		if ( false === $cron ) {
+			return $events;
+		}
 		// Core has no public API for listing every occurrence of a hook.
-		foreach ( _get_cron_array() as $timestamp => $hooks ) {
+		foreach ( $cron as $timestamp => $hooks ) {
 			if ( isset( $hooks[ self::$action_name ] ) ) {
 				foreach ( $hooks[ self::$action_name ] as $event ) {
 					if ( array() === $event['args'] ) {

@@ -563,6 +563,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.1 =
+* Avoid a PHP warning when recreating a missing cron schedule on WordPress 5.6.
 * Center small flags on the currency name, with the country below the group; flags of 40 px or more sit beside the combined name and country. Preserve single-row labels when the country is hidden.
 * Check for updated rates every 30 minutes and migrate existing hourly schedules automatically without reactivation.
 * Recover missing or expired cached data in the background using the same 30-minute interval; preserve the five-minute error retry and one-minute manual-update cooldown.
