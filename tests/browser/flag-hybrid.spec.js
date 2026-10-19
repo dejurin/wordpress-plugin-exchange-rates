@@ -66,7 +66,9 @@ for (const direction of ['ltr', 'rtl']) {
               await checkRows(page, { size, flag, region, direction });
             }
             if (direction === 'rtl' && flag === 'rectangular' && [16, 39, 40, 64].includes(size)) {
-              await testInfo.attach(`hybrid-${width}-${size}-region-${region}`, { body: await page.locator('#widget-full').screenshot(), contentType: 'image/png' });
+              const screenshot = testInfo.outputPath(`hybrid-${width}-${size}-region-${region}.png`);
+              await page.locator('#widget-full').screenshot({ path: screenshot });
+              await testInfo.attach('hybrid layout', { path: screenshot, contentType: 'image/png' });
             }
           }
           expect(errors).toEqual([]);

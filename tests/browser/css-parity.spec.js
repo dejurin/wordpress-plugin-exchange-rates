@@ -116,6 +116,18 @@ for (const direction of directions) {
           // Preserve exact CSS parity for cached legacy markup. Current table
           // layout intentionally changes and has dedicated table-layout tests.
           await page.evaluate(() => {
+            document.querySelectorAll('.exchange-rates-table-hybrid').forEach(node => {
+              const text = node.querySelector('.d-flex-wrap');
+              const region = node.querySelector('.exchange-rates-region-text');
+              if (region) {
+                const lineBreak = document.createElement('div');
+                lineBreak.className = 'break';
+                region.before(lineBreak);
+                region.classList.remove('exchange-rates-region-text');
+              }
+              text.before(document.createTextNode('\u00a0'));
+              node.classList.remove('exchange-rates-table-hybrid', 'exchange-rates-table-stacked');
+            });
             for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start']) {
               document.querySelectorAll('.' + name).forEach(node => node.classList.remove(name));
             }

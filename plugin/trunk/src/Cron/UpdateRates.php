@@ -19,13 +19,14 @@ class UpdateRates {
 	const RETRY_DELAY = 300;
 	const LOCK_LIFETIME = 300;
 
-	const REFRESH_INTERVAL = 900;
-	const SCHEDULE = 'exchange-rates_15_minutes';
+	const REFRESH_INTERVAL = 1800;
+	const SCHEDULE = 'exchange-rates_30_minutes';
 
 	public static function register_schedule( $schedules ) {
 		$schedules[ self::SCHEDULE ] = array(
 			'interval' => self::REFRESH_INTERVAL,
-			'display' => __( 'Every 15 minutes', 'exchange-rates' ),
+			// Bootstrap may read metadata before WordPress allows plugin translations.
+			'display' => did_action( 'init' ) ? __( 'Every 30 minutes', 'exchange-rates' ) : 'Every 30 minutes',
 		);
 		return $schedules;
 	}
