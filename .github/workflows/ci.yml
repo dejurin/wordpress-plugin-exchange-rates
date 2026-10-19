@@ -35,6 +35,7 @@ jobs:
       - run: php -l tests/deactivation-inflight-wordpress.php
       - run: php tests/formatting.php
       - run: php tests/change-percentage.php
+      - run: php -l tests/localization.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
       - run: php -l tests/source-identity-wordpress.php && php -l tests/source-identity-fixture.php
@@ -84,6 +85,12 @@ jobs:
       - run: docker compose --env-file wordpress/.env up -d --wait --wait-timeout 180
       - run: docker compose --env-file wordpress/.env run --rm --entrypoint sh cli /opt/dev/init.sh
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
+      - name: Check current translation catalogs and WordPress loading
+        run: |
+          docker compose --env-file wordpress/.env run --rm --entrypoint sh cli -c '
+            wp i18n make-pot /var/www/html/wp-content/plugins/exchange-rates /tmp/exchange-rates-current.pot --slug=exchange-rates --domain=exchange-rates &&
+            wp eval-file /opt/tests/localization.php /tmp/exchange-rates-current.pot
+          '
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/payload-validation-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-directory-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-identity-wordpress.php

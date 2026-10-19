@@ -2,16 +2,16 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Exchange Rates 1.3.2\n"
+"Project-Id-Version: Exchange Rates 1.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/exchange-rates\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-20T08:05:15+00:00\n"
+"POT-Creation-Date: 2026-10-19T08:33:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: exchange-rates\n"
 
 #. Plugin Name of the plugin
@@ -26,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: Install.php
-msgid "❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 86 world banks (sources)."
+msgid "❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 80+ world banks (sources)."
 msgstr ""
 
 #. Author of the plugin
@@ -41,12 +41,11 @@ msgstr ""
 
 #. translators: %s: Number of seconds to wait
 #: src/Admin/Admin.php:49
-#, php-format
 msgid "Please wait before updating again. Timeout: %s second(s)."
 msgstr ""
 
 #: src/Admin/Admin.php:59
-#: src/Admin/Admin.php:67
+#: src/Admin/Admin.php:66
 msgid "Unable to update exchange-rate data. Please try again later."
 msgstr ""
 
@@ -138,6 +137,7 @@ msgid "No data received. Press the \"Save\" button to force an update of the dat
 msgstr ""
 
 #: src/Admin/Settings/General/Page.php:90
+#: src/Admin/Settings/General/Sections/SourceTable.php:40
 msgid "ERROR"
 msgstr ""
 
@@ -322,7 +322,7 @@ msgid "Region"
 msgstr ""
 
 #: src/Admin/Settings/General/Sections/CurrencyTable.php:55
-#: src/Admin/Settings/General/Sections/SourceTable.php:49
+#: src/Admin/Settings/General/Sections/SourceTable.php:60
 msgid "Show More/Less"
 msgstr ""
 
@@ -352,6 +352,10 @@ msgstr ""
 
 #: src/Admin/Settings/General/Sections/SourceTable.php:32
 msgid "Last Update"
+msgstr ""
+
+#: src/Admin/Settings/General/Sections/SourceTable.php:42
+msgid "Showing the last valid source directory."
 msgstr ""
 
 #: src/Models/Checkbox.php:16
@@ -1877,27 +1881,35 @@ msgstr ""
 msgid "Zimbabwean ZiG"
 msgstr ""
 
-#: src/Models/Dev.php:93
+#: src/Models/DataSources.php:66
+msgid "Invalid source directory response."
+msgstr ""
+
+#: src/Models/Dev.php:16
+msgid "Error: exchange-rate data is not available yet."
+msgstr ""
+
+#: src/Models/Dev.php:100
 msgid "Info"
 msgstr ""
 
-#: src/Models/Dev.php:103
+#: src/Models/Dev.php:110
 msgid "Check:"
 msgstr ""
 
-#: src/Models/Dev.php:104
+#: src/Models/Dev.php:111
 msgid "Latest change:"
 msgstr ""
 
-#: src/Models/Dev.php:107
+#: src/Models/Dev.php:114
 msgid "Disclaimers."
 msgstr ""
 
-#: src/Models/Dev.php:107
+#: src/Models/Dev.php:114
 msgid "This plugin or website cannot guarantee the accuracy of the exchange rates displayed. You should confirm current rates before making any transactions that could be affected by changes in the exchange rates."
 msgstr ""
 
-#: src/Models/Dev.php:108
+#: src/Models/Dev.php:115
 msgid "You can install this WP plugin on your website from the WordPress official website:"
 msgstr ""
 
@@ -1941,17 +1953,34 @@ msgstr ""
 msgid "Changes col:"
 msgstr ""
 
-#: src/Service/CurrencyConverter.php:41
-#: src/Service/CurrencyConverter.php:84
-msgid "Error: exchange-rate data is not available yet."
-msgstr ""
-
-#: src/Service/CurrencyConverter.php:91
+#: src/Service/CurrencyConverter.php:92
 msgid "Loading..."
 msgstr ""
 
-#: src/Service/CurrencyTable.php:202
-#: src/Shortcodes/Badge.php:296
+#: src/Service/CurrencyTable.php:116
+msgid "No change."
+msgstr ""
+
+#: src/Service/CurrencyTable.php:116
+msgid "Previous rate unavailable."
+msgstr ""
+
+#. translators: %s: Unsigned, localized percentage.
+#: src/Service/CurrencyTable.php:119
+msgid "Increase: %s"
+msgstr ""
+
+#. translators: %s: Unsigned, localized percentage.
+#: src/Service/CurrencyTable.php:119
+msgid "Decrease: %s"
+msgstr ""
+
+#: src/Service/CurrencyTable.php:121
+msgid "Change is below display precision."
+msgstr ""
+
+#: src/Service/CurrencyTable.php:213
+#: src/Shortcodes/Badge.php:300
 msgid "Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before."
 msgstr ""
 
@@ -2078,12 +2107,4 @@ msgstr ""
 
 #: src/Widgets/Table.php:249
 msgid "Show table header"
-msgstr ""
-
-#: src/Models/DataSources.php
-msgid "Invalid source directory response."
-msgstr ""
-
-#: src/Admin/Settings/General/Sections/SourceTable.php
-msgid "Showing the last valid source directory."
 msgstr ""
