@@ -56,7 +56,7 @@ for (const direction of ['ltr', 'rtl']) {
       }
     });
 
-    test(`${direction} ${width}px: flags align with the first line and regions are secondary`, async ({ page }) => {
+    test(`${direction} ${width}px: flags center on the currency name and regions are secondary`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await open(page, direction);
       for (const kind of ['shortcode', 'widget']) {
@@ -65,12 +65,11 @@ for (const direction of ['ltr', 'rtl']) {
             const flag = cell.querySelector('img'), title = cell.querySelector('.text-truncate'), region = cell.querySelector('.small');
             const r = flag.getBoundingClientRect(), t = title.getBoundingClientRect();
             const a = getComputedStyle(title), b = getComputedStyle(region);
-            return { dy: r.top - t.top, flag: r.width, titleSize: parseFloat(a.fontSize), regionSize: parseFloat(b.fontSize), weight: b.fontWeight };
+            return { dy: r.top + r.height / 2 - t.top - t.height / 2, flag: r.width, titleSize: parseFloat(a.fontSize), regionSize: parseFloat(b.fontSize), weight: b.fontWeight };
           }));
           for (const row of rows) {
             expect(row.flag).toBe(mode === 'full' ? 32 : 16);
-            expect(row.dy).toBeGreaterThanOrEqual(-1);
-            expect(row.dy).toBeLessThanOrEqual(5);
+            expect(Math.abs(row.dy)).toBeLessThanOrEqual(1);
             expect(row.regionSize / row.titleSize).toBeLessThanOrEqual(0.82);
             expect(row.weight).toBe('400');
           }

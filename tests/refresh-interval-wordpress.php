@@ -1,5 +1,5 @@
 <?php
-/** Fifteen-minute schedule regressions. Disposable synthetic WordPress only. */
+/** Thirty-minute schedule regressions. Disposable synthetic WordPress only. */
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI || '1' !== getenv( 'EXCHANGE_RATES_TEST_MODE' ) || 'local' !== wp_get_environment_type() ) {
 	throw new RuntimeException( 'Interval tests require the isolated local environment.' );
 }
@@ -64,7 +64,7 @@ function interval_seed( $age = 10 ) {
 function interval_valid() {
 	$events = interval_events();
 	$event = reset( $events );
-	return 1 === count( $events ) && 'exchange-rates_15_minutes' === $event['schedule'] && 900 === $event['interval'];
+	return 1 === count( $events ) && 'exchange-rates_30_minutes' === $event['schedule'] && 1800 === $event['interval'];
 }
 $reject_schedule = function ( $pre, $event ) {
 	return 'exchange-rates_data_update' === $event->hook ? false : $pre;
@@ -74,18 +74,30 @@ $reject_delete = function ( $pre, $timestamp, $hook ) {
 };
 try {
 	$schedules = wp_get_schedules();
-	interval_check( isset( $schedules['exchange-rates_15_minutes'] ) && 900 === $schedules['exchange-rates_15_minutes']['interval'], 'Plugin registers its own 900-second schedule' );
+	interval_check( isset( $schedules['exchange-rates_30_minutes'] ) && 1800 === $schedules['exchange-rates_30_minutes']['interval'], 'Plugin registers its own 1800-second schedule' );
 	foreach ( array( -60, 120, 3600 ) as $offset ) {
 		interval_seed();
 		wp_schedule_event( time() + $offset, 'hourly', 'exchange-rates_data_update' );
 		$before = get_option( 'exchange-rates' );
 		interval_check( UpdateRates::register_task() && interval_valid(), 'Existing hourly event migrates without reactivation: ' . $offset );
 		$events = interval_events();
-		interval_check( key( $events ) <= max( time(), min( time() + $offset, $GLOBALS['exchange_rates_test_now'] + 890 ) ), 'Migration does not postpone the next due refresh' );
+		interval_check( key( $events ) <= max( time(), min( time() + $offset, $GLOBALS['exchange_rates_test_now'] + 1790 ) ), 'Migration does not postpone the next due refresh' );
 		interval_check( $before === get_option( 'exchange-rates' ), 'Migration preserves saved settings' );
 		UpdateRates::register_task();
 		interval_check( $events === interval_events(), 'Repeated registration preserves timestamp and event count' );
 	}
+	$old_schedule = function ( $schedules ) {
+		$schedules['exchange-rates_15_minutes'] = array( 'interval' => 900, 'display' => 'Old candidate interval' );
+		return $schedules;
+	};
+	add_filter( 'cron_schedules', $old_schedule );
+	interval_seed();
+	wp_schedule_event( time() + 600, 'exchange-rates_15_minutes', 'exchange-rates_data_update' );
+	remove_filter( 'cron_schedules', $old_schedule );
+	interval_check( UpdateRates::register_task() && interval_valid(), 'Earlier fifteen-minute candidate migrates to thirty minutes' );
+	interval_check( key( interval_events() ) <= time() + 600, 'Candidate migration preserves the earlier pending event' );
+	interval_check( ! isset( wp_get_schedules()['exchange-rates_15_minutes'] ), 'Obsolete schedule is no longer registered' );
+
 	interval_seed();
 	wp_schedule_event( time() + 3600, 'hourly', 'exchange-rates_data_update' );
 	wp_schedule_event( time() + 7200, 'hourly', 'exchange-rates_data_update' );
@@ -96,12 +108,12 @@ try {
 	interval_check( $explicit == wp_get_scheduled_event( 'exchange-rates_data_update', array( 'currencyrate' ) ), 'Explicit source events are preserved' );
 	wp_clear_scheduled_hook( 'exchange-rates_data_update', array( 'currencyrate' ) );
 
-	foreach ( array( 899, 900, 901 ) as $age ) {
+	foreach ( array( 899, 900, 901, 1799, 1800, 1801 ) as $age ) {
 		interval_seed( $age );
 		// Keep the recurring event in the future to exercise only the stale-cache boundary.
 		wp_schedule_event( time() + 600, 'hourly', 'exchange-rates_data_update' );
 		UpdateRates::queue_if_due();
-		interval_check( ( $age >= 900 ) === (bool) wp_next_scheduled( 'exchange-rates_data_retry' ), 'Stale boundary at age ' . $age );
+		interval_check( ( $age >= 1800 ) === (bool) wp_next_scheduled( 'exchange-rates_data_retry' ), 'Stale boundary at age ' . $age );
 	}
 	interval_seed();
 	interval_check( UpdateRates::register_task() && interval_valid(), 'Missing recurring event is restored' );
@@ -152,7 +164,7 @@ try {
 	_set_cron_array( $cron );
 	interval_check( UpdateRates::register_task() && interval_valid(), 'A matching schedule name with an obsolete stored interval is repaired' );
 
-	interval_seed( 901 );
+	interval_seed( 1801 );
 	wp_schedule_event( time() + 3600, 'hourly', 'exchange-rates_data_update' );
 	wp_schedule_single_event( time() + 300, 'exchange-rates_data_retry' );
 	set_transient( 'exchange-rates_refresh_after', time() + 300, 300 );
@@ -187,7 +199,7 @@ try {
 	}
 	wp_cache_delete( 'alloptions', 'options' );
 	wp_cache_delete( 'cron', 'options' );
-	interval_check( interval_valid(), 'Concurrent page bootstraps leave exactly one 900-second event' );
+	interval_check( interval_valid(), 'Concurrent page bootstraps leave exactly one 1800-second event' );
 	interval_check( 0 === $requests, 'Scheduling and stale checks never fetch rates synchronously' );
 	$settings = get_option( 'exchange-rates' );
 	$rates = get_option( 'exchange-rates_rates' );

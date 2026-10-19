@@ -76,11 +76,11 @@ if ( isset( $args[0] ) && 'request' === $args[0] ) {
 		update_option( 'exchange-rates_rates', ! empty( $case['empty'] ) ? array() : background_payload( 1.25 ) );
 		if ( empty( $case['no_hourly'] ) ) {
 			$fixture_schedule = function ( $schedules ) {
-				$schedules['exchange-rates_15_minutes'] = array( 'interval' => 900, 'display' => 'Test interval' );
+				$schedules['exchange-rates_30_minutes'] = array( 'interval' => 1800, 'display' => 'Test interval' );
 				return $schedules;
 			};
 			add_filter( 'cron_schedules', $fixture_schedule );
-			wp_schedule_event( $case['now'] + 600, 'exchange-rates_15_minutes', 'exchange-rates_data_update' );
+			wp_schedule_event( $case['now'] + 600, 'exchange-rates_30_minutes', 'exchange-rates_data_update' );
 			remove_filter( 'cron_schedules', $fixture_schedule );
 		}
 	}
@@ -239,11 +239,11 @@ try {
 	}
 	$repair = background_request( array( 'seed' => 10, 'no_hourly' => true ) );
 	$repair_again = background_request();
-	background_check( 1 === count( $repair['events'] ) && 'exchange-rates_15_minutes' === $repair['events'][0]['schedule'] && $repair['events'] === $repair_again['events'], 'Missing recurring schedule is restored once without fetching rates' );
+	background_check( 1 === count( $repair['events'] ) && 'exchange-rates_30_minutes' === $repair['events'][0]['schedule'] && $repair['events'] === $repair_again['events'], 'Missing recurring schedule is restored once without fetching rates' );
 	$hourly = background_request( array( 'seed' => 10, 'operation' => 'hourly' ) );
 	background_check( 1 === count( $hourly['requests'] ), 'Existing hourly hook still runs its update independently of page traffic' );
 	$hourly_events = array_values( array_filter( $hourly['events'], function ( $e ) { return 'exchange-rates_data_update' === $e['hook']; } ) );
-	background_check( 1 === count( $hourly_events ) && 'exchange-rates_15_minutes' === $hourly_events[0]['schedule'], 'Public hook is preserved with the fifteen-minute schedule' );
+	background_check( 1 === count( $hourly_events ) && 'exchange-rates_30_minutes' === $hourly_events[0]['schedule'], 'Public hook is preserved with the thirty-minute schedule' );
 	background_request( array( 'seed' => 3700, 'operation' => 'retry', 'provider' => 'malformed' ) );
 	$manual = background_request( array( 'now' => $now + 1, 'operation' => 'manual' ) );
 	background_check( 1 === count( $manual['requests'] ) && true === $manual['after']['settings']['rates_available'], 'Explicit manual refresh is not blocked by background backoff' );

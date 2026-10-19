@@ -85,7 +85,7 @@ for (const direction of ['ltr', 'rtl']) {
             if (row.region) {
               // Allow one pixel of cross-engine glyph rounding. Keep this soft
               // so an unrelated region-layout failure cannot hide label checks.
-              expect.soft(Math.abs(row.region[edge] - row.label[edge]), `${id}: region leading edge`).toBeLessThanOrEqual(1);
+              expect.soft(Math.abs(row.region[edge] - (row.flag && Number(parameters.size || 16) < 40 ? row.flag[edge] : row.label[edge])), `${id}: region leading edge`).toBeLessThanOrEqual(1);
             }
             expect(row.overflow).toBe('visible');
             expect(row.ellipsis).toBe('clip');
