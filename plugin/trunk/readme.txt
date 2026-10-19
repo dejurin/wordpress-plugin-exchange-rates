@@ -583,7 +583,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Preserve the cached source, conversion direction, and attribution when loading a newly selected source fails.
 
 = 1.3.2 =
-* Fixed admin stylesheet and script loading scope: plugin admin assets now load only on the plugin settings page and the widgets screen, so they no longer get injected into the WordPress 7.1 block editor iframe.
+* Restrict the main admin stylesheet and common admin script to the plugin settings and widgets screens, preventing the stylesheet from being injected into the WordPress 7.1 block editor iframe. The separate manual-update script still loads on other admin screens.
 * Verified compatibility with WordPress 7.1.
 
 = 1.3.1 =
