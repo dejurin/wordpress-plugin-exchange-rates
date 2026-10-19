@@ -73,6 +73,32 @@ $reject_delete = function ( $pre, $timestamp, $hook ) {
 	return 'exchange-rates_data_update' === $hook ? false : $pre;
 };
 try {
+	// Schedule metadata is also requested before WordPress permits JIT translations.
+	$init_count = isset( $GLOBALS['wp_actions']['init'] ) ? $GLOBALS['wp_actions']['init'] : null;
+	$translations = 0;
+	$translate = function ( $translated, $text, $domain ) use ( &$translations ) {
+		if ( 'exchange-rates' === $domain && 'Every 30 minutes' === $text ) {
+			++$translations;
+			return 'Translated schedule label';
+		}
+		return $translated;
+	};
+	add_filter( 'gettext', $translate, 10, 3 );
+	try {
+		unset( $GLOBALS['wp_actions']['init'] );
+		$early = UpdateRates::register_schedule( array() );
+		interval_check( 0 === $translations && 'Every 30 minutes' === $early[UpdateRates::SCHEDULE]['display'], 'Early bootstrap does not request plugin translations' );
+		$GLOBALS['wp_actions']['init'] = 1;
+		$late = UpdateRates::register_schedule( array() );
+		interval_check( 'Translated schedule label' === $late[UpdateRates::SCHEDULE]['display'], 'Schedule label is translated after init' );
+	} finally {
+		remove_filter( 'gettext', $translate, 10 );
+		if ( null === $init_count ) {
+			unset( $GLOBALS['wp_actions']['init'] );
+		} else {
+			$GLOBALS['wp_actions']['init'] = $init_count;
+		}
+	}
 	$schedules = wp_get_schedules();
 	interval_check( isset( $schedules['exchange-rates_30_minutes'] ) && 1800 === $schedules['exchange-rates_30_minutes']['interval'], 'Plugin registers its own 1800-second schedule' );
 	foreach ( array( -60, 120, 3600 ) as $offset ) {
