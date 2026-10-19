@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Exchange Rates\n"
+"Project-Id-Version: Exchange Rates 1.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/exchange-rates\n"
-"POT-Creation-Date: 2026-05-20T20:29:32+00:00\n"
-"PO-Revision-Date: 2024-03-17 14:58+0200\n"
+"POT-Creation-Date: 2026-10-19T08:33:50+00:00\n"
+"PO-Revision-Date: 2026-10-19 10:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: bg_BG\n"
@@ -11,13 +11,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: WordPress POMO\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: Install.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Domain: exchange-rates\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
@@ -35,13 +34,8 @@ msgstr "https://wordpress.org/plugins/exchange-rates/"
 
 #. Description of the plugin
 #: Install.php
-msgid ""
-"❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with "
-"beautiful UI. Included rates of 86 world banks (sources)."
-msgstr ""
-"❤️‍ Това е конвертор на валута и валутни курсове Уиджети, лесни за използване, "
-"с красив потребителски интерфейс. Включени са курсовете на 84 световни банки "
-"(източници)."
+msgid "❤️‍ It is a Currency Converter & Exchange Rates Widgets, easy-to-use, with beautiful UI. Included rates of 80+ world banks (sources)."
+msgstr "❤️‍ Лесен за използване валутен конвертор и джаджи за валутни курсове с красив интерфейс. Включва курсове от 80+ банки по света (източници)."
 
 #. Author of the plugin
 #: Install.php
@@ -58,7 +52,7 @@ msgstr "https://currencyrate.today/"
 msgid "Please wait before updating again. Timeout: %s second(s)."
 msgstr "Изчакайте, преди да актуализирате отново. Timeout: %s second(s)."
 
-#: src/Admin/Admin.php:59 src/Admin/Admin.php:67
+#: src/Admin/Admin.php:59 src/Admin/Admin.php:66
 msgid "Unable to update exchange-rate data. Please try again later."
 msgstr "Не може да се обновят данните за обменните курсове. Моля, опитайте отново по-късно."
 
@@ -107,12 +101,8 @@ msgid "No data received"
 msgstr "Не е получена информация"
 
 #: src/Admin/Settings/General/Page.php:48
-msgid ""
-"Advice! If you need mid-exchange rates of all currencies, select the source "
-"CurrencyRate.Today."
-msgstr ""
-"Съвет! Ако имате нужда от средни обменни курсове на всички валути, изберете "
-"източника CurrencyRate.Today."
+msgid "Advice! If you need mid-exchange rates of all currencies, select the source CurrencyRate.Today."
+msgstr "Съвет! Ако имате нужда от средни обменни курсове на всички валути, изберете източника CurrencyRate.Today."
 
 #: src/Admin/Settings/General/Page.php:50
 msgid "Last successful update:"
@@ -149,13 +139,11 @@ msgid "Previous close no data."
 msgstr "Предишно затваряне няма данни."
 
 #: src/Admin/Settings/General/Page.php:89
-msgid ""
-"No data received. Press the \"Save\" button to force an update of the data."
-msgstr ""
-"Не е получена информация. Натиснете бутона \"Запазване\", за да принудите "
-"актуализацията на данните."
+msgid "No data received. Press the \"Save\" button to force an update of the data."
+msgstr "Не е получена информация. Натиснете бутона \"Запазване\", за да принудите актуализацията на данните."
 
 #: src/Admin/Settings/General/Page.php:90
+#: src/Admin/Settings/General/Sections/SourceTable.php:40
 msgid "ERROR"
 msgstr "ГРЕШКА"
 
@@ -165,12 +153,11 @@ msgstr "Данните за обменните курсове все още не
 
 #: src/Admin/Settings/General/Page.php:94
 msgid "If you want to force an update, click on the button \"Save\"."
-msgstr ""
-"Ако искате да принудите актуализация, щракнете върху бутона \"Запазване\"."
+msgstr "Ако искате да принудите актуализация, щракнете върху бутона \"Запазване\"."
 
 #: src/Admin/Settings/General/Page.php:96
 msgid "Force Data Update"
-msgstr "Актуализация на данните за силите"
+msgstr "Принудително обновяване на данните"
 
 #: src/Admin/Settings/General/Page.php:106
 msgid "Source table"
@@ -178,21 +165,15 @@ msgstr "Таблица източник"
 
 #: src/Admin/Settings/General/Page.php:107
 msgid "List of sources that you can select as a source of exchange rate data."
-msgstr ""
-"Списък с източници, които можете да изберете като източник на данни за "
-"валутния курс."
+msgstr "Списък с източници, които можете да изберете като източник на данни за валутния курс."
 
 #: src/Admin/Settings/General/Page.php:111
 msgid "Currency Table"
 msgstr "Валутна таблица"
 
 #: src/Admin/Settings/General/Page.php:112
-msgid ""
-"List of currencies that are supported by the current exchange rate data "
-"source."
-msgstr ""
-"Списък с валути, които се поддържат от текущия източник на данни за обменния "
-"курс."
+msgid "List of currencies that are supported by the current exchange rate data source."
+msgstr "Списък с валути, които се поддържат от текущия източник на данни за обменния курс."
 
 #: src/Admin/Settings/General/Page.php:121
 msgid "Badge shortcode generator "
@@ -247,28 +228,19 @@ msgstr "Джаджи"
 
 #: src/Admin/Settings/General/Page.php:237
 msgid "Currency Converter is easy to use, simple real-time converter;"
-msgstr ""
-"Конвертор на валути е лесен за използване, прост конвертор в реално време;"
+msgstr "Конвертор на валути е лесен за използване, прост конвертор в реално време;"
 
 #: src/Admin/Settings/General/Page.php:238
-msgid ""
-"Universal widget, it can be used on travel and property website/blog, as "
-"well as online stores."
-msgstr ""
-"Универсална джаджа, може да се използва в уебсайт/блог за пътувания и имоти, "
-"както и в онлайн магазини."
+msgid "Universal widget, it can be used on travel and property website/blog, as well as online stores."
+msgstr "Универсална джаджа, може да се използва в уебсайт/блог за пътувания и имоти, както и в онлайн магазини."
 
 #: src/Admin/Settings/General/Page.php:241
 msgid "Currency Table is a table with exchange rates and another features."
 msgstr "Валутната таблица е таблица с обменни курсове и други функции."
 
 #: src/Admin/Settings/General/Page.php:242
-msgid ""
-"The currency rates table is mainly used by news websites, portals and "
-"financial forums."
-msgstr ""
-"Таблицата с валутните курсове се използва главно от новинарски уебсайтове, "
-"портали и финансови форуми."
+msgid "The currency rates table is mainly used by news websites, portals and financial forums."
+msgstr "Таблицата с валутните курсове се използва главно от новинарски уебсайтове, портали и финансови форуми."
 
 #: src/Admin/Settings/General/Page.php:244 src/Widgets/Converter.php:182
 #: src/Widgets/Table.php:279
@@ -280,14 +252,8 @@ msgid "Badge is a simple exchange rates list."
 msgstr "Бадж е прост списък с обменни курсове."
 
 #: src/Admin/Settings/General/Page.php:249
-msgid ""
-"An excellent shortcode that can be used in international online stores. With "
-"ease you can add a list of prices in different currencies to the product "
-"page."
-msgstr ""
-"Отличен кратък код, който може да се използва в международни онлайн "
-"магазини. С лекота можете да добавите списък с цени в различни валути към "
-"продуктовата страница."
+msgid "An excellent shortcode that can be used in international online stores. With ease you can add a list of prices in different currencies to the product page."
+msgstr "Отличен кратък код, който може да се използва в международни онлайн магазини. С лекота можете да добавите списък с цени в различни валути към продуктовата страница."
 
 #: src/Admin/Settings/General/Page.php:252
 msgid "How to install widget?"
@@ -357,7 +323,7 @@ msgid "Region"
 msgstr "Регион"
 
 #: src/Admin/Settings/General/Sections/CurrencyTable.php:55
-#: src/Admin/Settings/General/Sections/SourceTable.php:49
+#: src/Admin/Settings/General/Sections/SourceTable.php:60
 msgid "Show More/Less"
 msgstr "Покажи повече/по-малко"
 
@@ -370,12 +336,8 @@ msgid "Sources"
 msgstr "Източници"
 
 #: src/Admin/Settings/General/Sections/Settings.php:98
-msgid ""
-"Different data providers may provide different sets of currencies and their "
-"prices. We recommend you select local data provider."
-msgstr ""
-"Различните доставчици на данни могат да предоставят различни набори от "
-"валути и техните цени. Препоръчваме ви да изберете местен доставчик на данни."
+msgid "Different data providers may provide different sets of currencies and their prices. We recommend you select local data provider."
+msgstr "Различните доставчици на данни могат да предоставят различни набори от валути и техните цени. Препоръчваме ви да изберете местен доставчик на данни."
 
 #: src/Admin/Settings/General/Sections/SourceTable.php:29
 msgid "Item"
@@ -393,6 +355,10 @@ msgstr "Основен"
 msgid "Last Update"
 msgstr "Последна актуализация"
 
+#: src/Admin/Settings/General/Sections/SourceTable.php:42
+msgid "Showing the last valid source directory."
+msgstr "Показва се последният валиден списък с източници."
+
 #: src/Models/Checkbox.php:16
 msgid "Full-width table"
 msgstr "Маса с пълна ширина"
@@ -406,10 +372,8 @@ msgid "Show base currency"
 msgstr "Показване на основна валута"
 
 #: src/Models/Checkbox.php:21
-msgid ""
-"Inverse (currencies will be calc based on the amount of the base currency)"
-msgstr ""
-"Обратно (валутите ще се изчисляват въз основа на сумата на основната валута)"
+msgid "Inverse (currencies will be calc based on the amount of the base currency)"
+msgstr "Обратно (валутите ще се изчисляват въз основа на сумата на основната валута)"
 
 #: src/Models/Checkbox.php:22
 msgid "Show currency code only"
@@ -1895,39 +1859,37 @@ msgstr "Кюрасао и Синт Мартен"
 msgid "Zimbabwean ZiG"
 msgstr "Зимбабвийски ZiG"
 
-#: src/Models/Dev.php:93
+#: src/Models/DataSources.php:66
+msgid "Invalid source directory response."
+msgstr "Невалиден отговор със списъка с източници."
+
+#: src/Models/Dev.php:16
+msgid "Error: exchange-rate data is not available yet."
+msgstr "Грешка: данните за обменните курсове все още не са налични."
+
+#: src/Models/Dev.php:100
 msgid "Info"
 msgstr "Информация"
 
-#: src/Models/Dev.php:103
+#: src/Models/Dev.php:110
 msgid "Check:"
 msgstr "Проверка:"
 
-#: src/Models/Dev.php:104
+#: src/Models/Dev.php:111
 msgid "Latest change:"
 msgstr "Последна промяна:"
 
-#: src/Models/Dev.php:107
+#: src/Models/Dev.php:114
 msgid "Disclaimers."
 msgstr "Отказ от отговорност."
 
-#: src/Models/Dev.php:107
-msgid ""
-"This plugin or website cannot guarantee the accuracy of the exchange rates "
-"displayed. You should confirm current rates before making any transactions "
-"that could be affected by changes in the exchange rates."
-msgstr ""
-"Този плъгин или уебсайт не може да гарантира точността на показаните обменни "
-"курсове. Трябва да потвърдите текущите курсове, преди да извършвате "
-"транзакции, които могат да бъдат засегнати от промени в обменните курсове."
+#: src/Models/Dev.php:114
+msgid "This plugin or website cannot guarantee the accuracy of the exchange rates displayed. You should confirm current rates before making any transactions that could be affected by changes in the exchange rates."
+msgstr "Този плъгин или уебсайт не може да гарантира точността на показаните обменни курсове. Трябва да потвърдите текущите курсове, преди да извършвате транзакции, които могат да бъдат засегнати от промени в обменните курсове."
 
-#: src/Models/Dev.php:108
-msgid ""
-"You can install this WP plugin on your website from the WordPress official "
-"website:"
-msgstr ""
-"Можете да инсталирате този WP плъгин на вашия уебсайт от официалния сайт на "
-"WordPress:"
+#: src/Models/Dev.php:115
+msgid "You can install this WP plugin on your website from the WordPress official website:"
+msgstr "Можете да инсталирате този WP плъгин на вашия уебсайт от официалния сайт на WordPress:"
 
 #: src/Models/Flags.php:27
 msgid "None"
@@ -1969,23 +1931,35 @@ msgstr "Предишен затвори кол:"
 msgid "Changes col:"
 msgstr "Промени в кол:"
 
-#: src/Service/CurrencyConverter.php:41 src/Service/CurrencyConverter.php:84
-msgid "Error: exchange-rate data is not available yet."
-msgstr "Грешка: данните за обменните курсове все още не са налични."
-
-#: src/Service/CurrencyConverter.php:91
+#: src/Service/CurrencyConverter.php:92
 msgid "Loading..."
 msgstr "Зареждане..."
 
-#: src/Service/CurrencyTable.php:202 src/Shortcodes/Badge.php:296
-msgid ""
-"Error: Check parameters of widget or shortcode. Probably you changed the "
-"source of currency rates, where there was not the desired currency that you "
-"selected before."
-msgstr ""
-"Грешка: Проверете параметрите на джаджа или кратък код. Вероятно сте "
-"променили източника на валутните курсове, където не е имало желаната валута, "
-"която сте избрали преди."
+#: src/Service/CurrencyTable.php:116
+msgid "No change."
+msgstr "Без промяна."
+
+#: src/Service/CurrencyTable.php:116
+msgid "Previous rate unavailable."
+msgstr "Предишният курс не е наличен."
+
+#. translators: %s: Unsigned, localized percentage.
+#: src/Service/CurrencyTable.php:119
+msgid "Increase: %s"
+msgstr "Повишение: %s"
+
+#. translators: %s: Unsigned, localized percentage.
+#: src/Service/CurrencyTable.php:119
+msgid "Decrease: %s"
+msgstr "Понижение: %s"
+
+#: src/Service/CurrencyTable.php:121
+msgid "Change is below display precision."
+msgstr "Промяната е твърде малка за избраната точност на показване."
+
+#: src/Service/CurrencyTable.php:213 src/Shortcodes/Badge.php:300
+msgid "Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before."
+msgstr "Грешка: Проверете параметрите на джаджа или кратък код. Вероятно сте променили източника на валутните курсове, където не е имало желаната валута, която сте избрали преди."
 
 #: src/Shortcodes/CurrencyTable.php:49 src/Widgets/Table.php:312
 msgid "Code"
@@ -2008,12 +1982,8 @@ msgid "Currency Converter Widget"
 msgstr "Конвертор на валута джаджа"
 
 #: src/Widgets/Converter.php:82 src/Widgets/Table.php:132
-msgid ""
-"Exchange-rate data is not available yet. Save plugin settings or force a "
-"data update first."
-msgstr ""
-"Данните за обменните курсове все още не са налични. Първо запазете "
-"настройките на плъгина или принудително обновете данните."
+msgid "Exchange-rate data is not available yet. Save plugin settings or force a data update first."
+msgstr "Данните за обменните курсове все още не са налични. Първо запазете настройките на плъгина или принудително обновете данните."
 
 #: src/Widgets/Converter.php:93
 msgid "Exchange rate source:"
@@ -2061,12 +2031,8 @@ msgid "If you only need a widget, ignore this shortcode."
 msgstr "Ако имате нужда само от джаджа, игнорирайте този кратък код."
 
 #: src/Widgets/Converter.php:184 src/Widgets/Table.php:281
-msgid ""
-"If you want to put the widget anywhere on your website/blog, use the "
-"shortcode."
-msgstr ""
-"Ако искате да поставите джаджата навсякъде във вашия уебсайт/блог, "
-"използвайте краткия код."
+msgid "If you want to put the widget anywhere on your website/blog, use the shortcode."
+msgstr "Ако искате да поставите джаджата навсякъде във вашия уебсайт/блог, използвайте краткия код."
 
 #: src/Widgets/Converter.php:195
 msgid "Currency Converter"
