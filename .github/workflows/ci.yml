@@ -36,6 +36,7 @@ jobs:
       - run: php tests/formatting.php
       - run: php tests/change-percentage.php
       - run: php -l tests/localization.php
+      - run: php -l tests/browser-empty-update.php && php -l tests/http-fixture.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
       - run: php -l tests/source-identity-wordpress.php && php -l tests/source-identity-fixture.php
@@ -126,6 +127,7 @@ jobs:
             !tests/browser/test-results/settings-labels-*/**
             !tests/browser/test-results/admin-globals-*/**
             !tests/browser/test-results/manual-update-state-*/**
+            !tests/browser/test-results/first-load-update-*/**
           if-no-files-found: ignore
           retention-days: 7
       - name: Remove this disposable CI environment
