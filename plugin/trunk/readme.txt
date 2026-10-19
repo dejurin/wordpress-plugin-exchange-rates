@@ -148,13 +148,23 @@ The selected source is shared by the plugin's converters, tables, and badges. Yo
 
 After saving, confirm that the update succeeded in Settings → Exchange Rates. Review the source name, rate dates, and available currencies before using the displayed conversions.
 
-If the selected source cannot be loaded, previously stored rates retain their original source, conversion direction, and rate dates. The selection remains saved for the next update; it does not relabel or reinterpret the stored rates. Retry with Force Data Update when available and confirm that the selected source updates successfully.
+If the selected source cannot be loaded, previously stored rates retain their original source, conversion direction, and rate dates. The selection remains saved for the next update; it does not relabel or reinterpret the stored rates. Retry with Force Data Update and confirm that the selected source updates successfully.
 
 = Can I refresh the data manually? =
 
-Yes. Open Settings → Exchange Rates and use Force Data Update when the button is available.
+Yes. Open Settings → Exchange Rates and use Force Data Update. The button is also available when the first attempt to load rates has failed.
+
+If the request fails, check the API connection or source availability and try again. Existing saved rates are retained. After a successful request, the settings page reloads and shows the last successful update time.
 
 Manual requests are subject to a one-minute interval after a successful update.
+
+= What happens when I deactivate or delete the plugin? =
+
+Deactivating Exchange Rates preserves its settings, widget configurations, and saved exchange rates.
+
+Deleting the plugin through the WordPress Plugins screen removes its settings, widget configurations, saved rates, and cached source directory. Posts, pages, and embedded shortcodes are not modified; the plugin must be active for its shortcodes and widgets to work.
+
+To update, reinstall, or roll back while preserving your configuration, replace the plugin files without deleting the plugin through WordPress first. Back up your database before uninstalling.
 
 = Can I use shortcodes in posts and pages? =
 
@@ -566,6 +576,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Keep amount changes and number formatting local to the edited exchange-rate table.
 * Associate settings labels with their existing controls while preserving the Sources link.
 * Keep administrative JavaScript loop variables local to avoid overwriting other scripts' globals.
+* Keep Force Data Update available after an initial API failure and clarify the difference between deactivation and deletion.
 * Compare manual-update timestamps in UTC so the one-minute interval is independent of the site timezone.
 * Persist successful update metadata through settings sanitization, verify stored data before reporting success, and retain the last successful timestamp after provider failures.
 * Refresh a newly selected source after saving the selection, and display unknown update time without inventing a successful-update date.

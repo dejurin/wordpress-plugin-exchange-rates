@@ -14,7 +14,9 @@ if ( is_file( dirname( $pomo ) . '/compat.php' ) ) {
 require_once $pomo . '/po.php';
 require_once $pomo . '/mo.php';
 
-$root = dirname( __DIR__ ) . '/plugin/trunk';
+// WP-CLI evaluates this file in method scope and mounts tests separately from the plugin.
+$root = $running_wordpress ? WP_PLUGIN_DIR . '/exchange-rates' : dirname( __DIR__ ) . '/plugin/trunk';
+global $checks, $failures;
 $checks = 0;
 $failures = 0;
 function er_catalog_check( $pass, $label ) {

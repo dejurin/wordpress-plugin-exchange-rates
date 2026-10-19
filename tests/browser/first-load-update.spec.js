@@ -39,6 +39,10 @@ for (const direction of ['ltr', 'rtl']) {
       });
       await page.goto(`${settingsPath}&er-test-direction=${direction}`);
       expect(await page.locator('html').evaluate(element => getComputedStyle(element).direction)).toBe(direction);
+      // The fixture must load matching core CSS, not merely flip the HTML direction.
+      for (const href of await page.locator('link[href*="load-styles.php"]').evaluateAll(links => links.map(link => link.href))) {
+        expect(new URL(href).searchParams.get('dir')).toBe(direction);
+      }
       const button = page.locator('#exchange-rates-force-data-update-button');
       const message = page.locator('#exchange-rates-force-data-update-message');
       await expect(button).toBeVisible();

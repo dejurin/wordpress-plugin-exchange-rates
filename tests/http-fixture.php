@@ -116,5 +116,6 @@ add_shortcode( 'exchange_rates_table_test', function ( $attributes ) {
 add_action('init', function () {
     if (get_option('exchange_rates_empty_update_provider') && isset($_GET['er-test-direction']) && 'rtl' === $_GET['er-test-direction']) {
         $GLOBALS['wp_locale']->text_direction = 'rtl';
+        wp_styles()->text_direction = 'rtl';
     }
 });
