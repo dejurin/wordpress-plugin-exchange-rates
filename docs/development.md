@@ -350,3 +350,11 @@ CI uses deterministic bare, Astra-reset and site-minimum CSS patterns. To test c
 For the functional 1.3.2 baseline, install its immutable plugin export on a separate disposable site, then run with `CONVERTER_REFERENCE=legacy` and `--grep 'legacy contract'`. The sizing regression is intentionally expected to fail on unmodified 1.3.2 and the preceding 1.4.0 candidate. CSS parity normalizes only this known reference defect; all remaining computed styles and geometry are compared exactly, with the existing screenshot antialiasing tolerance.
 
 The production change only adds `box-sizing: border-box` to converter inputs, selects and swap buttons. No font, padding, height, SVG, PHP, JavaScript, saved data or public interface changes. Removing the rule restores the old box model without a migration. See [the acceptance report](releases/1.4.0-converter-box-sizing.md) for tested versions and limitations.
+
+## Source-directory validation
+
+Run `tests/source-directory-wordpress.php` with `wp eval-file` only in the isolated test environment. It covers invalid/missing timestamps, malformed rows and responses, HTTP failures, poisoned legacy caches, recovery, unchanged valid HTML, and retention across PHP requests. Rate payloads and user settings must remain byte-for-byte unchanged.
+
+`exchange-rates_sources` keeps the existing response envelope and one-hour success TTL. A valid legacy cache is copied unchanged into the non-autoloaded `exchange-rates_sources_last_good` option before expiry. Failed refreshes retain that directory, report an explicit error, and cache the failure for five minutes. There are no additional frontend requests or cron events. A fresh install with no valid directory displays the error without inventing rows or dates. Data already evicted before this version first reads it cannot be recovered.
+
+The backup is retained on deactivation and deleted on uninstall. Reverting the code requires no settings/widget migration; 1.3.2 ignores the additional backup option. The hourly rate updater, shortcode attributes, widget IDs, rate cache, and source selection are unchanged. Fault-injection tests use synthetic responses and do not prove provider availability.

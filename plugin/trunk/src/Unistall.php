@@ -22,6 +22,7 @@ class Unistall
 
         // Delete Transient
         delete_transient(Models\DataSources::$transient_option_name);
+        delete_option(Models\DataSources::$last_good_option_name);
 
         // Delete Schedul
         Cron\UpdateRates::clear_tasks();

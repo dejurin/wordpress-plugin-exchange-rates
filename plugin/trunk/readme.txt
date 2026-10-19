@@ -553,6 +553,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.0 =
+* Validate source-directory fields and timestamps before display; retain the last valid directory with an error notice when refreshing fails.
 * Discard an outdated update result when settings change during its request, preserving the newly selected source, saved rates, and preferences.
 * Reject invalid API rates, mismatched sources, and missing or invalid rate dates without replacing the last saved rates; sources without previous-close data remain supported.
 * Render cached rates immediately and refresh expired or missing data through WordPress Cron without frontend AJAX; retain hourly updates and retry failed background requests after five minutes.
