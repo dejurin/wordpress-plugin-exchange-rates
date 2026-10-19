@@ -3,9 +3,12 @@
  * Catalog coverage, MO loading and placeholder regressions.
  * Run with a WordPress POMO directory, or through wp eval-file.
  */
-$pomo = defined( 'ABSPATH' ) ? ABSPATH . 'wp-includes/pomo' : ( isset( $argv[1] ) ? $argv[1] : '' );
+$running_wordpress = defined( 'ABSPATH' );
+$pomo = $running_wordpress ? ABSPATH . 'wp-includes/pomo' : ( isset( $argv[1] ) ? $argv[1] : '' );
 // Standalone POMO loading also needs the core PHP compatibility functions.
 if ( is_file( dirname( $pomo ) . '/compat.php' ) ) {
+	if ( ! defined( 'ABSPATH' ) ) { define( 'ABSPATH', dirname( dirname( $pomo ) ) . '/' ); }
+	if ( ! defined( 'WPINC' ) ) { define( 'WPINC', 'wp-includes' ); }
 	require_once dirname( $pomo ) . '/compat.php';
 }
 require_once $pomo . '/po.php';
@@ -38,7 +41,7 @@ preg_match( '/^Version:\s*(.+)$/m', file_get_contents( $root . '/Install.php' ),
 preg_match( '/^Description:\s*(.+)$/m', file_get_contents( $root . '/Install.php' ), $description );
 er_catalog_check( 'Exchange Rates ' . trim( $version[1] ) === $pot->get_header( 'Project-Id-Version' ), 'POT version matches plugin' );
 er_catalog_check( isset( $pot->entries[ trim( $description[1] ) ] ), 'Current plugin description is extracted' );
-$fresh_path = defined( 'ABSPATH' ) ? ( isset( $args[0] ) ? $args[0] : '' ) : ( isset( $argv[2] ) ? $argv[2] : '' );
+$fresh_path = $running_wordpress ? ( isset( $args[0] ) ? $args[0] : '' ) : ( isset( $argv[2] ) ? $argv[2] : '' );
 $fresh = new PO();
 er_catalog_check( '' !== $fresh_path && $fresh->import_from_file( $fresh_path ), 'Fresh WP-CLI extraction loads' );
 er_catalog_check( er_catalog_keys( $fresh ) === er_catalog_keys( $pot ), 'POT keys match current source extraction' );
