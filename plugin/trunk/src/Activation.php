@@ -11,7 +11,7 @@ class Activation
     public static function run()
     {
         /*
-         * Cron task for update currency rates each hour.
+         * Cron task for update currency rates every 15 minutes.
          */
         Cron\UpdateRates::register_task();
 

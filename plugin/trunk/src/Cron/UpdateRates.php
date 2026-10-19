@@ -19,8 +19,41 @@ class UpdateRates {
 	const RETRY_DELAY = 300;
 	const LOCK_LIFETIME = 300;
 
+	const REFRESH_INTERVAL = 900;
+	const SCHEDULE = 'exchange-rates_15_minutes';
+
+	public static function register_schedule( $schedules ) {
+		$schedules[ self::SCHEDULE ] = array(
+			'interval' => self::REFRESH_INTERVAL,
+			'display' => __( 'Every 15 minutes', 'exchange-rates' ),
+		);
+		return $schedules;
+	}
+
+	/** Read only this plugin's default events; explicit source arguments are external work. */
+	private static function recurring_events() {
+		$events = array();
+		// Core has no public API for listing every occurrence of a hook.
+		foreach ( _get_cron_array() as $timestamp => $hooks ) {
+			if ( isset( $hooks[ self::$action_name ] ) ) {
+				foreach ( $hooks[ self::$action_name ] as $event ) {
+					if ( array() === $event['args'] ) {
+						$events[ $timestamp ] = $event;
+					}
+				}
+			}
+		}
+		return $events;
+	}
+
+	private static function schedule_is_current( $events ) {
+		$event = reset( $events );
+		return 1 === count( $events ) && self::SCHEDULE === $event['schedule']
+			&& isset( $event['interval'] ) && self::REFRESH_INTERVAL === (int) $event['interval'];
+	}
+
 	public static function register_task() {
-		if ( wp_next_scheduled( self::$action_name ) ) {
+		if ( self::schedule_is_current( self::recurring_events() ) ) {
 			return true;
 		}
 		$token = self::acquire_lock();
@@ -28,7 +61,31 @@ class UpdateRates {
 			return false;
 		}
 		try {
-			return wp_next_scheduled( self::$action_name ) ? true : wp_schedule_event( time(), 'hourly', self::$action_name );
+			// Another request may have migrated since our initial read.
+			wp_cache_delete( 'alloptions', 'options' );
+			wp_cache_delete( 'cron', 'options' );
+			$events = self::recurring_events();
+			if ( self::schedule_is_current( $events ) ) {
+				return true;
+			}
+			$next = time();
+			if ( $events ) {
+				$settings = get_option( Settings::$option_name, array() );
+				$updated = isset( $settings['update_timestamp'] ) ? (int) $settings['update_timestamp'] : 0;
+				$next = max( time(), min( (int) key( $events ), time() + self::REFRESH_INTERVAL, $updated + self::REFRESH_INTERVAL ) );
+			}
+			// Write first: a rejected schedule must not erase working legacy events.
+			$already_scheduled = isset( $events[ $next ] ) && self::schedule_is_current( array( $events[ $next ] ) );
+			if ( ! $already_scheduled && ! wp_schedule_event( $next, self::SCHEDULE, self::$action_name ) ) {
+				return false;
+			}
+			foreach ( $events as $timestamp => $event ) {
+				if ( $timestamp !== $next && ! wp_unschedule_event( $timestamp, self::$action_name ) ) {
+					// Leave recoverable work; the next bootstrap retries incomplete cleanup.
+					return false;
+				}
+			}
+			return self::schedule_is_current( self::recurring_events() );
 		} finally {
 			self::release_lock( $token );
 		}
@@ -42,8 +99,8 @@ class UpdateRates {
 		if ( wp_next_scheduled( self::$retry_action_name ) ) {
 			return true;
 		}
-		$hourly = wp_next_scheduled( self::$action_name );
-		if ( $hourly && $hourly <= time() ) {
+		$recurring = wp_next_scheduled( self::$action_name );
+		if ( $recurring && $recurring <= time() ) {
 			return true;
 		}
 		$token = self::acquire_lock();
@@ -60,7 +117,7 @@ class UpdateRates {
 	private static function is_due() {
 		$settings = get_option( Settings::$option_name, array() );
 		$updated = isset( $settings['update_timestamp'] ) ? (int) $settings['update_timestamp'] : 0;
-		return $updated <= 0 || $updated + HOUR_IN_SECONDS < time() || ! RatesData::has_current_rates();
+		return $updated <= 0 || $updated + self::REFRESH_INTERVAL <= time() || ! RatesData::has_current_rates();
 	}
 
 	private static function schedule_retry( $timestamp ) {
@@ -68,7 +125,7 @@ class UpdateRates {
 		return wp_next_scheduled( self::$retry_action_name ) ? true : wp_schedule_single_event( $timestamp, self::$retry_action_name );
 	}
 
-	/** Preserve the existing hourly hook, including an explicit source argument. */
+	/** Preserve the public hook and legacy callback, including an explicit source argument. */
 	public static function run_hourly( $force_source_id = null ) {
 		return self::refresh( $force_source_id );
 	}

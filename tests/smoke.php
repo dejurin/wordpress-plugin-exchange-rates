@@ -24,7 +24,7 @@ require_once ABSPATH.'wp-admin/includes/plugin.php';
 $metadata = get_plugin_data(WP_PLUGIN_DIR.'/exchange-rates/Install.php', false, false);
 exchange_rates_check(is_plugin_active('exchange-rates/Install.php'), 'Plugin activated with the correct filename case');
 exchange_rates_check($metadata['Version'] === \Dejurin\ExchangeRates\Plugin::VERSION, 'Autoloader and version agree');
-exchange_rates_check(false !== wp_next_scheduled('exchange-rates_data_update'), 'Hourly update hook is registered');
+exchange_rates_check(false !== wp_next_scheduled('exchange-rates_data_update'), 'Recurring update hook is registered');
 exchange_rates_check(\Dejurin\ExchangeRates\Service\UpdateDataSources::update(), 'Synthetic HTTP response persisted through the normal update path');
 exchange_rates_check(\Dejurin\ExchangeRates\Service\RatesData::has_previous_rates(), 'Current and previous data are available');
 $sources = \Dejurin\ExchangeRates\Models\DataSources::getInstance()->get_sources_data();

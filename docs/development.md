@@ -46,7 +46,7 @@ Network failures or missing data are not masked by substituting test rates.
 
 Edits to `plugin/trunk/` on the host are immediately visible to containers; file updates and modifications through the administration UI are disabled.
 Automatic WordPress updates and automatic WP-Cron are disabled for reproducibility.
-Page rendering uses saved rates without contacting the rate provider. Expired or missing data queues a WP-Cron refresh; the existing hourly event remains scheduled. Because automatic WP-Cron is disabled in this local setup, run its cron event manually:
+Page rendering uses saved rates without contacting the rate provider. Expired or missing data queues a WP-Cron refresh; a recurring 15-minute event remains scheduled. Because automatic WP-Cron is disabled in this local setup, run its cron event manually:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli cron event run exchange-rates_data_update
@@ -181,9 +181,9 @@ The production change replaces `current_time('timestamp')` with `time()` when co
 
 ## Concurrent source selection
 
-Run `docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php` only on the disposable synthetic site. Separate PHP processes overlap an old hourly/direct request with a real settings save, in both source directions and with successful or failed responses. The suite also switches sources immediately before option filters and SQL writes, covers an absent rate cache, an obsolete alloptions cache and unrelated preference changes, then verifies recovery and restoration from fresh requests.
+Run `docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php` only on the disposable synthetic site. Separate PHP processes overlap an old recurring/direct request with a real settings save, in both source directions and with successful or failed responses. The suite also switches sources immediately before option filters and SQL writes, covers an absent rate cache, an obsolete alloptions cache and unrelated preference changes, then verifies recovery and restoration from fresh requests.
 
-The updater conditionally saves rates and service metadata against the serialized settings captured before HTTP. A changed snapshot rejects the obsolete write instead of reverting user fields. Each SQL write checks its predicate atomically; clearing an option cache alone is not a concurrency guard. The request source and write values come from that database snapshot, not a potentially stale option cache. Existing hourly scheduling, five-minute retry, manual refresh authorization, option keys, sanitizer/veto hooks, successful-write notifications and widget/shortcode contracts remain. See [the scoped acceptance report](releases/1.4.0-concurrent-source.md).
+The updater conditionally saves rates and service metadata against the serialized settings captured before HTTP. A changed snapshot rejects the obsolete write instead of reverting user fields. Each SQL write checks its predicate atomically; clearing an option cache alone is not a concurrency guard. The request source and write values come from that database snapshot, not a potentially stale option cache. Existing recurring scheduling, five-minute retry, manual refresh authorization, option keys, sanitizer/veto hooks, successful-write notifications and widget/shortcode contracts remain. See [the scoped acceptance report](releases/1.4.0-concurrent-source.md).
 
 ## API payload validation regressions
 
@@ -318,7 +318,7 @@ Compact table captions now follow the logical start edge; full-width tables, con
 
 Rendering a page never calls the rate provider. Existing cached rates, source information and their original date remain visible when a refresh fails. With no current rates, all three shortcodes and both native widgets show the existing translated unavailable-data message. No frontend AJAX or polling is added, and an already open page does not replace its rates after a background update. Reload to read the newly saved data.
 
-The existing `exchange-rates_data_update` hourly event is retained and repaired if absent. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless an hourly event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
+The existing `exchange-rates_data_update` hook runs every 15 minutes and is repaired if absent; legacy hourly events migrate on bootstrap. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless a recurring event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
 
 Background scheduling and workers share a per-site, five-minute lease in the non-autoloaded `exchange-rates_refresh_lock` option. A unique database insert and compare-and-swap on expiry avoid relying on persistent object-cache behavior or the `add_option()` upsert. Release checks token ownership. A killed worker therefore cannot block refresh permanently. The transient `exchange-rates_refresh_after` records retry timing separately from success metadata. Deactivation removes both cron hooks and these internal scheduling values while preserving user settings and rates. No tables or data migrations are introduced.
 
@@ -330,7 +330,7 @@ Run on the disposable environment before seeding browser fixtures:
 docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/background-refresh-wordpress.php
 ```
 
-The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, hourly scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
+The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, 15-minute scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
 
 For rollback to 1.3.2, deactivate the candidate, replace only the plugin files and reactivate 1.3.2. Deactivation clears the new internal scheduling state but keeps rates, widgets, settings and posts. The old synchronous loading behavior returns with the old code. See the [background-refresh acceptance report](releases/1.4.0-background-refresh.md) for the exact versions and results tested.
 
@@ -357,4 +357,34 @@ Run `tests/source-directory-wordpress.php` with `wp eval-file` only in the isola
 
 `exchange-rates_sources` keeps the existing response envelope and one-hour success TTL. A valid legacy cache is copied unchanged into the non-autoloaded `exchange-rates_sources_last_good` option before expiry. Failed refreshes retain that directory, report an explicit error, and cache the failure for five minutes. There are no additional frontend requests or cron events. A fresh install with no valid directory displays the error without inventing rows or dates. Data already evicted before this version first reads it cannot be recovered.
 
-The backup is retained on deactivation and deleted on uninstall. Reverting the code requires no settings/widget migration; 1.3.2 ignores the additional backup option. The hourly rate updater, shortcode attributes, widget IDs, rate cache, and source selection are unchanged. Fault-injection tests use synthetic responses and do not prove provider availability.
+The backup is retained on deactivation and deleted on uninstall. Reverting the code requires no settings/widget migration; 1.3.2 ignores the additional backup option. The rate updater, shortcode attributes, widget IDs, rate cache, and source selection are unchanged. Fault-injection tests use synthetic responses and do not prove provider availability.
+
+## Fifteen-minute refresh (1.4.1)
+
+`Cron\UpdateRates::REFRESH_INTERVAL` defines both the 900-second recurrence and
+cache expiry (`age >= 900`). The public `exchange-rates_data_update` hook and
+`run_hourly()` callback remain compatible, including explicit source arguments.
+The source-directory cache remains hourly; it is not the rate-refresh interval.
+
+On ordinary plugin bootstrap, the registered `exchange-rates_15_minutes` schedule
+replaces legacy default events under the existing per-site lease. The migration
+writes the replacement before removing obsolete occurrences, preserves events
+with explicit arguments and never postpones an earlier due time. It does not
+align sites to quarter-hour wall-clock boundaries. A rejected schedule preserves
+legacy work; a rejected removal returns failure and a later bootstrap retries.
+Cron storage is not transactional across other plugins/core workers: partial
+cleanup may temporarily leave more than one event until a successful retry.
+
+Run only in the disposable synthetic environment:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/refresh-interval-wordpress.php
+```
+
+The suite covers expiry at 899/900/901 seconds, upgrade without reactivation,
+legacy duplicates, idempotence, explicit-source events, schedule/removal failures,
+pending retries, busy/expired leases, concurrent bootstraps and deactivation.
+Existing background, manual-update, payload and source-race suites remain required.
+WP-Cron timing depends on site visits or an external cron runner. Page HTML may
+also remain cached after a successful rate refresh; this change does not purge
+third-party page caches or update already-open browser pages.

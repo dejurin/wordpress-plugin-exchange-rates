@@ -2,16 +2,16 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Exchange Rates 1.4.0\n"
+"Project-Id-Version: Exchange Rates 1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/exchange-rates\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-19T09:00:35+00:00\n"
+"POT-Creation-Date: 2026-10-19T16:26:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: exchange-rates\n"
 
 #. Plugin Name of the plugin
@@ -41,6 +41,7 @@ msgstr ""
 
 #. translators: %s: Number of seconds to wait
 #: src/Admin/Admin.php:49
+#, php-format
 msgid "Please wait before updating again. Timeout: %s second(s)."
 msgstr ""
 
@@ -349,6 +350,10 @@ msgstr ""
 
 #: src/Admin/Settings/General/Sections/SourceTable.php:42
 msgid "Showing the last valid source directory."
+msgstr ""
+
+#: src/Cron/UpdateRates.php:28
+msgid "Every 15 minutes"
 msgstr ""
 
 #: src/Models/Checkbox.php:16
@@ -1960,11 +1965,13 @@ msgstr ""
 
 #. translators: %s: Unsigned, localized percentage.
 #: src/Service/CurrencyTable.php:119
+#, php-format
 msgid "Increase: %s"
 msgstr ""
 
 #. translators: %s: Unsigned, localized percentage.
 #: src/Service/CurrencyTable.php:119
+#, php-format
 msgid "Decrease: %s"
 msgstr ""
 

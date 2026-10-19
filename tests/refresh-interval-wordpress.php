@@ -127,6 +127,31 @@ try {
 	remove_filter( 'pre_unschedule_event', $reject_delete, 10 );
 	interval_check( UpdateRates::register_task() && interval_valid(), 'A later request finishes interrupted migration' );
 
+
+	interval_seed();
+	wp_schedule_event( time() + 3600, 'hourly', 'exchange-rates_data_update' );
+	$before = interval_events();
+	$reject_write = function ( $value, $old_value ) { return $old_value; };
+	add_filter( 'pre_update_option_cron', $reject_write, 10, 2 );
+	try {
+		interval_check( false === UpdateRates::register_task() && $before === interval_events(), 'Rejected cron option write preserves the legacy schedule and reports failure' );
+	} finally {
+		remove_filter( 'pre_update_option_cron', $reject_write, 10 );
+	}
+	interval_check( UpdateRates::register_task() && interval_valid(), 'Migration recovers after storage rejection' );
+	$cron = _get_cron_array();
+	foreach ( $cron as &$hooks ) {
+		if ( isset( $hooks['exchange-rates_data_update'] ) ) {
+			foreach ( $hooks['exchange-rates_data_update'] as &$event ) {
+				$event['interval'] = 3600;
+			}
+			unset( $event );
+		}
+	}
+	unset( $hooks );
+	_set_cron_array( $cron );
+	interval_check( UpdateRates::register_task() && interval_valid(), 'A matching schedule name with an obsolete stored interval is repaired' );
+
 	interval_seed( 901 );
 	wp_schedule_event( time() + 3600, 'hourly', 'exchange-rates_data_update' );
 	wp_schedule_single_event( time() + 300, 'exchange-rates_data_retry' );
