@@ -13,6 +13,8 @@ set_error_handler( function ( $level, $message, $file, $line ) {
 }, E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE );
 $GLOBALS['exchange_rates_test_now'] = time();
 require __DIR__ . '/background-clock.php';
+// With --skip-plugins=exchange-rates, load after the clock to avoid PHP 5.6 function caching.
+require_once WP_PLUGIN_DIR . '/exchange-rates/Install.php';
 
 function interval_events() {
 	$events = array();

@@ -135,11 +135,11 @@ class UpdateRates {
 		return self::refresh( $force_source_id );
 	}
 
+	/** Core owns retry removal; queued callbacks skip already-fresh data. */
 	public static function run_retry() {
 		// An explicit/manual update may already have refreshed this cache.
 		if ( ! self::is_due() ) {
 			delete_transient( self::$retry_transient );
-			wp_clear_scheduled_hook( self::$retry_action_name );
 			return true;
 		}
 		return self::refresh();
@@ -158,7 +158,6 @@ class UpdateRates {
 			}
 			if ( UpdateDataSources::update( $force_source_id ) ) {
 				delete_transient( self::$retry_transient );
-				wp_clear_scheduled_hook( self::$retry_action_name );
 				return true;
 			}
 			// Attempt time is separate from the last successful update metadata.
