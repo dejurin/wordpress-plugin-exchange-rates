@@ -75,6 +75,8 @@ This command changes URLs in the **local database of the selected Compose projec
 
 ## Isolated smoke with synthetic rates
 
+For a pinned prerelease core in its own project, use the [WordPress 7.2 Beta 1 lab](compatibility/wordpress-7.2-beta1.md).
+
 Use a separate project name; tests create a page and write synthetic rates to its database.
 If the normal environment is already running, stop it or select an available QA port.
 These commands use separate volumes and port 18973:
@@ -318,7 +320,7 @@ Compact table captions now follow the logical start edge; full-width tables, con
 
 Rendering a page never calls the rate provider. Existing cached rates, source information and their original date remain visible when a refresh fails. With no current rates, all three shortcodes and both native widgets show the existing translated unavailable-data message. No frontend AJAX or polling is added, and an already open page does not replace its rates after a background update. Reload to read the newly saved data.
 
-The existing `exchange-rates_data_update` hook runs every 30 minutes and is repaired if absent; legacy hourly events migrate on bootstrap. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless a recurring event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
+The existing `exchange-rates_data_update` hook runs every 30 minutes and is repaired if absent; legacy hourly events migrate on bootstrap. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless a recurring event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. WordPress removes each due retry before invoking its callback; a queued retry then checks freshness and exits without another provider request. Refresh callbacks must not clear other retry events, because the native cron runner may already hold them in its ready-event snapshot. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
 
 Background scheduling and workers share a per-site, five-minute lease in the non-autoloaded `exchange-rates_refresh_lock` option. A unique database insert and compare-and-swap on expiry avoid relying on persistent object-cache behavior or the `add_option()` upsert. Release checks token ownership. A killed worker therefore cannot block refresh permanently. The transient `exchange-rates_refresh_after` records retry timing separately from success metadata. Deactivation removes both cron hooks and these internal scheduling values while preserving user settings and rates. No tables or data migrations are introduced.
 
@@ -331,6 +333,10 @@ docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/backg
 ```
 
 The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, 30-minute scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
+
+`tests/native-cron-retry-wordpress.php` runs the real `wp-cron.php` in child CLI processes, checking both orders of overlapping recurring/retry events, multiple overdue retries with fresh data, a future retry, and a failed provider. Its 38 assertions cover core diagnostics, event ownership, request counts, persistence, backoff and lease release. It snapshots and restores the disposable database options. Run it with the same `wp eval-file` command as the background suite.
+
+On PHP 5.6, run the interval suite with `wp --skip-plugins=exchange-rates eval-file /opt/tests/refresh-interval-wordpress.php`. The suite loads the plugin after its frozen clock; loading the plugin earlier can cache the native `time()` function on that PHP version and make the 1799-second assertion depend on elapsed test time.
 
 For rollback to 1.3.2, deactivate the candidate, replace only the plugin files and reactivate 1.3.2. Deactivation clears the new internal scheduling state but keeps rates, widgets, settings and posts. The old synchronous loading behavior returns with the old code. See the [background-refresh acceptance report](releases/1.4.0-background-refresh.md) for the exact versions and results tested.
 
