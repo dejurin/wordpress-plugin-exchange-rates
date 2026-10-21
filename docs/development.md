@@ -75,6 +75,8 @@ This command changes URLs in the **local database of the selected Compose projec
 
 ## Isolated smoke with synthetic rates
 
+For a pinned prerelease core in its own project, use the [WordPress 7.2 Beta 1 lab](compatibility/wordpress-7.2-beta1.md).
+
 Use a separate project name; tests create a page and write synthetic rates to its database.
 If the normal environment is already running, stop it or select an available QA port.
 These commands use separate volumes and port 18973:
