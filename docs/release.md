@@ -82,3 +82,5 @@ the existing worker/deactivation race can recreate a single retry after cleanup.
 Verify both hooks after the operation. This release does not fix that lifecycle
 race or authorize publication. Test upgrade and rollback on a disposable fixture
 before using this procedure on any real site.
+
+For the frozen 1.4.1 ZIP, WordPress 7.2 Beta/minimum-runtime evidence and native upgrade/rollback matrix, see the [1.4.1 release acceptance](releases/1.4.1.md).
