@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   lint:
-    name: PHP ${{ matrix.php }} syntax and formatting
+    name: PHP ${{ matrix.php }} syntax and unit regressions
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
@@ -30,6 +30,8 @@ jobs:
           coverage: none
       - run: python3 scripts/plugin.py lint
       - run: php tests/formatting.php
+      - run: php tests/percentage.php
+      - run: php -l tests/percentage-wordpress.php
       - run: php -l tests/formatting-wordpress.php
       - run: php -l tests/http-fixture.php && php -l tests/table-isolation-wordpress.php
       - run: php -l tests/browser-admin.php
@@ -71,6 +73,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env up -d --wait --wait-timeout 180
       - run: docker compose --env-file wordpress/.env run --rm --entrypoint sh cli /opt/dev/init.sh
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/percentage-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/manual-update-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed

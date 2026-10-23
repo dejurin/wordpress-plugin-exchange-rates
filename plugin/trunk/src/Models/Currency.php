@@ -182,7 +182,7 @@ class Currency
             0 !== $rate_0 && 0 !== $rate_1) {
             $pre = '';
             $decimal = 0;
-            $value = (100 - ((100 * $rate_1) / $rate_0));
+            $value = ( ( $rate_0 - $rate_1 ) / $rate_1 ) * 100;
 
             $value_abs = abs($value);
 

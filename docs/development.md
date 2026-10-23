@@ -109,6 +109,26 @@ Open the printed fixture URL to check browser parity: the saved table amount/cur
 
 The fix changes only zero-precision formatting: integer zeros are retained and zero is returned as `"0"`. Existing callers can therefore apply their normal dash/null zero placeholders instead of receiving an empty string. Fractional trimming, format IDs, separators, rounding, option keys and stored values are preserved. There is no data migration. Reverting the fix restores the old formatter and its bug without a database rollback. The development ZIP still carries the current version metadata; it is not a new published release.
 
+## Percentage-change regressions
+
+Run the dependency-free suite with PHP 5.6 or newer:
+
+```sh
+php tests/percentage.php
+```
+
+The 144 assertions use literal expected percentages for increases, decreases, unchanged and invalid rates, numeric strings, amounts, localized separators and existing rounding thresholds. They also cover both rate orientations and cross-currency conversion with both legs changing, and verify that current/previous rates and arrow directions remain unchanged. Options exist only in memory; no WordPress bootstrap, database or network is used.
+
+For rendered output, run in the separate synthetic environment described above:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/percentage-wordpress.php
+```
+
+Its 21 assertions check the actual shortcode's Changes column, percentage tooltips, current/previous values and mixed arrow directions. Temporary option filters supply synthetic data without writing settings or rates; both stored options are checked after rendering. Both suites are included in CI.
+
+Percentage change is `(current - previous) / previous * 100`, calculated after conversion to the displayed currency pair. Previously the denominator was the current value: a move from 100 to 110 displayed about +9.1% instead of +10%, while 100 to 90 displayed about -11.1% instead of -10%. The correction preserves amount handling, formatting, precision thresholds, rates, arrows, public attributes and saved data. No migration or version change is introduced. Reverting the formula restores the previous calculation without a database rollback; no publication is performed by these checks.
+
 ## Table amount isolation regressions
 
 The browser suite uses the real WordPress-rendered shortcodes and saved widget with the plugin's public JavaScript and WordPress jQuery. It requires Node.js 20 or newer, npm and Chromium; CI uses Node.js 24. Dependencies are pinned under `tests/browser/` and are excluded from the plugin ZIP.
@@ -187,8 +207,8 @@ Rates and settings remain two separate option writes, not an atomic transaction.
 
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter and percentage regression tests and syntax checks for the WordPress test helpers.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, rendered percentages, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
