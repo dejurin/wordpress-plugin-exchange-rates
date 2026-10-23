@@ -249,8 +249,8 @@ try {
 	// Do not let plugin bootstrap refresh an expired fixture before the child installs its clock.
 	$before['settings']['update_timestamp'] = $now - HOUR_IN_SECONDS - 1;
 	$result = update_state_request( array( 'operation' => 'bootstrap', 'admin' => false, 'seed' => $before['settings'] ) );
-	update_state_check( 1 === count( $result['requests'] ), 'Existing expired positive timestamp still triggers the hourly fallback' );
-	update_state_success( $result, $now, 'USD', 'currencyrate', 'hourly fallback' );
+	update_state_check( ! $result['requests'], 'Expired bootstrap queues background work without provider HTTP' );
+	update_state_check( $before === $result['state'], 'Expired bootstrap preserves saved data while the background job is pending' );
 	update_state_seed( null );
 	$form = update_state_request( array( 'operation' => 'form', 'input' => array( 'source_id' => 'currencyrate', 'currency_format' => 3, 'decimals' => 2 ) ) );
 	update_state_check( empty( $form['state']['settings']['update_timestamp'] ), 'Saving the form does not fabricate a successful update time' );

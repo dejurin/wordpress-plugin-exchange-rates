@@ -61,9 +61,9 @@ $xpath = new DOMXPath( $document );
 $rows  = $xpath->query( '//tbody/tr' );
 check_rendered_percentage( 3, $rows->length, 'All mixed-direction rows render' );
 $expected = array(
-	array( '110', '+10%', 'up' ),
-	array( '90', '-10%', 'down' ),
-	array( '100', html_entity_decode( '&ndash;', ENT_QUOTES, 'UTF-8' ), null ),
+	array( '110', '10%', 'up', 'Increase: 10%' ),
+	array( '90', '10%', 'down', 'Decrease: 10%' ),
+	array( '100', html_entity_decode( '&ndash;', ENT_QUOTES, 'UTF-8' ), null, 'No change.' ),
 );
 foreach ( $rows as $index => $row ) {
 	$cells = $xpath->query( './td', $row );
@@ -74,7 +74,11 @@ foreach ( $rows as $index => $row ) {
 	check_rendered_percentage( $expected[ $index ][0], trim( $cells->item( 0 )->textContent ), 'Current value, row ' . $index );
 	check_rendered_percentage( '100', trim( $cells->item( 1 )->textContent ), 'Previous value, row ' . $index );
 	check_rendered_percentage( $expected[ $index ][1], trim( $cells->item( 2 )->textContent ), 'Changes column, row ' . $index );
-	check_rendered_percentage( null === $expected[ $index ][2] ? '' : $expected[ $index ][1], $cells->item( 0 )->getAttribute( 'title' ), 'Percentage tooltip, row ' . $index );
+	check_rendered_percentage( $expected[ $index ][3], $cells->item( 0 )->getAttribute( 'title' ), 'Percentage tooltip, row ' . $index );
+	check_rendered_percentage( $expected[ $index ][3], $cells->item( 2 )->getAttribute( 'aria-label' ), 'Accessible change label, row ' . $index );
+	check_rendered_percentage( $expected[ $index ][1], $cells->item( 0 )->getAttribute( 'data-change-percent' ), 'Client percentage metadata, row ' . $index );
+	$trend = 'up' === $expected[ $index ][2] ? '1' : ( 'down' === $expected[ $index ][2] ? '-1' : '0' );
+	check_rendered_percentage( $trend, $cells->item( 0 )->getAttribute( 'data-change-trend' ), 'Client direction metadata, row ' . $index );
 	$images = $xpath->query( './/img', $cells->item( 0 ) );
 	check_rendered_percentage( $expected[ $index ][2], $images->length ? $images->item( 0 )->getAttribute( 'alt' ) : null, 'Existing arrow, row ' . $index );
 }

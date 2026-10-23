@@ -86,17 +86,15 @@ class Page
 						</div>
 					</div>
 					<?php if (!$has_current_rates) { ?>
-						<h2><?php esc_html_e('No data received. Press the "Save" button to force an update of the data.', 'exchange-rates'); ?></h2>
+						<h2><?php esc_html_e('No data received', 'exchange-rates'); ?></h2>
 						<p class="m-0"><b><?php esc_html_e('ERROR', 'exchange-rates'); ?>:</b>
 							<?php echo esc_html(isset($get_sources_data['error']) ? $get_sources_data['error'] : __('Exchange-rate data is not available yet.', 'exchange-rates')); ?>
 						</p>
-					<?php } else { ?>
-					<p class="m-0"><b><?php esc_html_e('If you want to force an update, click on the button "Save".', 'exchange-rates'); ?></b></p>
+					<?php } ?>
 					<p>
-						<button id="exchange-rates-force-data-update-button" class="button button-primary"><?php esc_html_e('Force Data Update', 'exchange-rates'); ?></button>
+						<button type="button" id="exchange-rates-force-data-update-button" class="button button-primary"><?php esc_html_e('Force Data Update', 'exchange-rates'); ?></button>
 					</p>
 					<div id="exchange-rates-force-data-update-message"></div>
-					<?php } ?>
 				</div>
 			</div>
 			<?php if ($has_current_rates) { ?>

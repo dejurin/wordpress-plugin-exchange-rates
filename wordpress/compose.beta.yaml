@@ -1,0 +1,19 @@
+# Append after compose.yaml and compose.test.yaml; select a separate project/port.
+services:
+  wordpress:
+    image: exchange-rates-wordpress:7.2-beta1-php8.3
+    build:
+      context: .
+      dockerfile: Dockerfile.beta
+    volumes:
+      - ${WP_BETA_PLUGIN_PATH:-../plugin/trunk}:/var/www/html/wp-content/plugins/exchange-rates:ro
+  cli:
+    volumes:
+      - ${WP_BETA_PLUGIN_PATH:-../plugin/trunk}:/var/www/html/wp-content/plugins/exchange-rates:ro
+
+# An explicit unused subnet avoids exhausting Docker Desktop's automatic pools.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${WP_BETA_SUBNET:?Choose an unused subnet for the isolated Beta project}

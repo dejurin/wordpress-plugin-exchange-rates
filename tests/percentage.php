@@ -1,6 +1,6 @@
 <?php
 /**
- * Dependency-free percentage regressions. Run with PHP 5.6 or newer.
+ * Public-constructor percentage regressions. Run with PHP 5.6 or newer.
  *
  * WordPress options are simulated in memory; no database or network is used.
  */
@@ -52,24 +52,11 @@ function percentage_currency( $previous, $current, $amount = 1, $format = 3 ) {
 	return new Currency( array( 'base_currency' => 'USD', 'inverse' => false, 'reverse' => true, 'amount' => $amount ), 'EUR' );
 }
 
-// Literal expectations use the previous value as the reference point.
+// Numeric strings pass through the constructor and the actual RatesData reader.
 $cases = array(
-	array( 100, 110, '+10&#x25;', 1 ),
-	array( 100, 90, '-10&#x25;', -1 ),
-	array( 80, 90, '+12.5&#x25;', 1 ),
-	array( 100, 200, '+100&#x25;', 1 ),
-	array( 200, 100, '-50&#x25;', -1 ),
-	array( 100, 1, '-99&#x25;', -1 ),
-	array( 100, 1300, '+1,200&#x25;', 1 ),
-	array( 100, 100, '&ndash;', false ),
-	array( 100, 101.25, '+1.25&#x25;', 1 ),
-	array( 100, 98.75, '-1.25&#x25;', -1 ),
-	array( 100, 109.16, '+9.2&#x25;', 1 ),
-	array( 100, 90.84, '-9.2&#x25;', -1 ),
-	array( 100, 199.6, '+100&#x25;', 1 ),
-	array( 1, 1.0001, '+0.01&#x25;', 1 ),
-	array( 1, 0.9999, '-0.01&#x25;', -1 ),
-	array( '100', '110', '+10&#x25;', 1 ),
+	array( '100', '110', '10&#x25;', 1 ),
+	array( '100', '90', '10&#x25;', -1 ),
+	array( '100', '100', '&ndash;', false ),
 );
 foreach ( $cases as $case ) {
 	foreach ( array( 1, 100 ) as $amount ) {
@@ -82,19 +69,26 @@ foreach ( $cases as $case ) {
 	}
 }
 
-// Keep localized separators and the existing sub-precision placeholder.
-assert_percentage_same( '+12,5&#x25;', percentage_currency( 80, 90, 1, 0 )->get_change_percentage(), 'Decimal comma' );
-assert_percentage_same( '+1.200&#x25;', percentage_currency( 100, 1300, 1, 0 )->get_change_percentage(), 'Localized thousands separator' );
-assert_percentage_same( '&ndash;', percentage_currency( 100, 100.000001 )->get_change_percentage(), 'Percentage below display precision' );
+// Magnitude is unsigned; direction survives a rounded absolute difference.
+assert_percentage_same( '12,5&#x25;', percentage_currency( 80, 90, 1, 0 )->get_change_percentage(), 'Decimal comma' );
+assert_percentage_same( '1.200&#x25;', percentage_currency( 100, 1300, 1, 0 )->get_change_percentage(), 'Localized thousands separator' );
+$currency = percentage_currency( 100, 100.000001 );
+assert_percentage_same( '&lt;0.01&#x25;', $currency->get_change_percentage(), 'Percentage below display precision' );
+assert_percentage_same( 1, $currency->get_trend(), 'Unrounded direction below absolute-change precision' );
 
 // Both legs change: 6 / 0.75 = 8 becomes 6.6 / 0.66 = 10.
 foreach ( array( true, false ) as $inverse ) {
-	$GLOBALS['percentage_options'] = percentage_options( 0.75, 0.66 );
-	$GLOBALS['percentage_options']['exchange-rates_rates']['data'][0]['rates']['LYD'] = 6.6;
-	$GLOBALS['percentage_options']['exchange-rates_rates']['data'][1]['rates']['LYD'] = 6;
-	$currency = new Currency( array( 'base_currency' => 'LYD', 'inverse' => $inverse, 'reverse' => true, 'amount' => 1 ), 'EUR' );
-	assert_percentage_same( $inverse ? '+25&#x25;' : '-20&#x25;', $currency->get_change_percentage(), 'Converted pair, inverse ' . (int) $inverse );
-	assert_percentage_same( $inverse ? 1 : -1, $currency->get_trend(), 'Converted pair direction, inverse ' . (int) $inverse );
+	foreach ( array( 1, 100 ) as $amount ) {
+		$GLOBALS['percentage_options'] = percentage_options( 0.75, 0.66 );
+		$GLOBALS['percentage_options']['exchange-rates_rates']['data'][0]['rates']['LYD'] = 6.6;
+		$GLOBALS['percentage_options']['exchange-rates_rates']['data'][1]['rates']['LYD'] = 6;
+		$currency = new Currency( array( 'base_currency' => 'LYD', 'inverse' => $inverse, 'reverse' => true, 'amount' => $amount ), 'EUR' );
+		$label = 'Converted pair, inverse ' . (int) $inverse . ', amount ' . $amount;
+		assert_percentage_same( $inverse ? '25&#x25;' : '20&#x25;', $currency->get_change_percentage(), $label . ' magnitude' );
+		assert_percentage_same( $inverse ? 1 : -1, $currency->get_trend(), $label . ' direction' );
+		assert_percentage_same( true, abs( $currency->get_rate() - ( $inverse ? 10 : 0.1 ) ) < 1e-9, $label . ' current rate' );
+		assert_percentage_same( true, abs( $currency->get_rate( 1 ) - ( $inverse ? 8 : 0.125 ) ) < 1e-9, $label . ' previous rate' );
+	}
 }
 
 // Bank sources use the other rate orientation; 40 becomes 44 local units per USD.
@@ -107,16 +101,32 @@ $GLOBALS['percentage_options']['exchange-rates_rates'] = array(
 		array( 'rates' => array( 'UAH' => 1, 'USD' => 40 ) ),
 	),
 );
-$currency = new Currency( array( 'base_currency' => 'UAH', 'inverse' => true, 'reverse' => false, 'amount' => 1 ), 'USD' );
-assert_percentage_same( '+10&#x25;', $currency->get_change_percentage(), 'Bank source orientation' );
+foreach ( array( true, false ) as $inverse ) {
+	$currency = new Currency( array( 'base_currency' => 'UAH', 'inverse' => $inverse, 'reverse' => false, 'amount' => 1 ), 'USD' );
+	$label = 'Bank source, inverse ' . (int) $inverse;
+	assert_percentage_same( $inverse ? '10&#x25;' : '9.1&#x25;', $currency->get_change_percentage(), $label . ' magnitude' );
+	assert_percentage_same( $inverse ? 1 : -1, $currency->get_trend(), $label . ' direction' );
+	assert_percentage_same( true, abs( $currency->get_rate() - ( $inverse ? 44 : 1 / 44 ) ) < 1e-9, $label . ' current rate' );
+	assert_percentage_same( true, abs( $currency->get_rate( 1 ) - ( $inverse ? 40 : 1 / 40 ) ) < 1e-9, $label . ' previous rate' );
+}
 
-foreach ( array( array( null, 110 ), array( 0, 110 ), array( -1, 110 ), array( 'invalid', 110 ), array( 100, null ), array( 100, 0 ), array( 100, -1 ) ) as $case ) {
-	$currency = percentage_currency( $case[0], $case[1] );
-	assert_percentage_same( '&ndash;', $currency->get_change_percentage(), 'Missing or invalid rate: ' . json_encode( $case ) );
+// Reject either leg of either snapshot without inventing a percentage or direction.
+foreach ( array( null, 0, -1, 'invalid', INF, NAN, array() ) as $invalid_index => $invalid ) {
+	foreach ( array( 0, 1 ) as $index ) {
+		foreach ( array( 'USD', 'EUR' ) as $code ) {
+			$GLOBALS['percentage_options'] = percentage_options( 100, 110 );
+			$GLOBALS['percentage_options']['exchange-rates_rates']['data'][ $index ]['rates'][ $code ] = $invalid;
+			$currency = new Currency( array( 'base_currency' => 'USD', 'inverse' => false, 'reverse' => true, 'amount' => 1 ), 'EUR' );
+			$label = 'Invalid value ' . $invalid_index . ', snapshot ' . $index . ', leg ' . $code;
+			assert_percentage_same( '&ndash;', $currency->get_change_percentage(), $label . ' percentage' );
+			assert_percentage_same( false, $currency->get_trend(), $label . ' direction' );
+		}
+	}
 }
 $currency = percentage_currency( 100, 110 );
 $currency->set_currencies( 'USD', 'USD' );
 assert_percentage_same( '&ndash;', $currency->get_change_percentage(), 'Base currency has no percentage change' );
+assert_percentage_same( false, $currency->get_trend(), 'Base currency has no direction' );
 
 printf( "%s: %d percentage assertions, %d failures, PHP %s\n", $failures ? 'FAIL' : 'PASS', $checks, $failures, PHP_VERSION );
 exit( $failures ? 1 : 0 );

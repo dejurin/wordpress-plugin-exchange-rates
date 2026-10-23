@@ -11,6 +11,11 @@ use Dejurin\ExchangeRates\Plugin;
 
 class Dev
 {
+	/** Render the existing unavailable message when no current cache exists. */
+	public static function rates_unavailable() {
+		return '<b>' . Plugin::NAME . '</b> ' . esc_html__( 'Error: exchange-rate data is not available yet.', 'exchange-rates' );
+	}
+
     public static function caption($parameters, $time, $widget_nubmer, $widget_slug, $source_id, $dev = 1)
     {
         // $get_currencies = Currencies::get_currencies();
@@ -43,7 +48,12 @@ class Dev
         $_base_currency = 'USD' === $base_currency && is_null($quote_currency) ? 'usd' : strtolower($base_currency);
         $_quote_currency = !is_null($quote_currency) && $base_currency !== $quote_currency ? strtolower($quote_currency) : '';
 
-        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div class="d-flex exchange-rates exchange-rates-caption">';
+        // Keep compact table captions at the table's leading edge without changing other widgets.
+        $caption_class = '';
+        if ( 'widget-' . Plugin::PLUGIN_SLUG . '-currency-table' === $widget_slug && isset( $parameters['full_width'] ) && ! $parameters['full_width'] ) {
+            $caption_class = ' exchange-rates-caption-start';
+        }
+        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div class="d-flex exchange-rates exchange-rates-caption'.$caption_class.'">';
 
         if (1 === $dev) {
             $template = '%3$s&nbsp;&middot;&nbsp;<a href="'
@@ -53,9 +63,6 @@ class Dev
         }
         else if (2 === $dev) {
             $_add = \Dejurin\ExchangeRates\Models\Sources::$_new2;
-            if (0 === $dev) {
-                $_add = \Dejurin\ExchangeRates\Models\Sources::$_new0;
-            }
             $template = '%3$s&nbsp;&middot;&nbsp;%1$s&nbsp;&middot;&nbsp;<a href="'
                     .'https://'.esc_attr($_add).'/'.esc_attr($_base_currency).'"'
                     .' target="_blank" rel="noreferrer noopener">'

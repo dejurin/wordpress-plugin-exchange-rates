@@ -47,7 +47,7 @@ Do not copy SVN `tags/` directories into Git; Git retains the history.
 **The current workflow does not publish anything to WordPress.org.** SVN is used only for read-only inspection and comparison.
 Publishing the next version is a separate, explicitly authorized operation after ZIP verification. This repository has no automatic SVN deployment or corresponding secrets.
 
-For the frozen 1.4.0 scope, exact package identity, compatibility evidence and known issues, see the [1.4.0 acceptance report](releases/1.4.0.md).
+For the initial 1.4.0 candidate and known issues, see the [historical acceptance report](releases/1.4.0.md). Later release work is documented in the [CSS cleanup acceptance](releases/1.4.0-css-audit.md), including the merged RTL/SVG reference and its separate candidate identity. Match the evidence to the exact payload being reviewed.
 
 ### Updating a site with caches
 
@@ -70,3 +70,17 @@ Revert repository changes with `git revert` of the selected commit through a PR,
 When restoring a site backup, verify file ownership and permissions for the destination web server as well as database contents and file hashes. Archive user-name mapping can differ between container images even when the restored bytes match.
 
 For the update-state fix, rollback changes plugin files only: option names and shapes, widget data and page content remain compatible, with no migration. Reverting restores the old state-persistence defect. Before release, verify a saved 1.3.2 fixture through upgrade and rollback as described in [persisted update-state regressions](development.md#persisted-update-state-regressions). This check is separate from live-provider acceptance and publication authorization.
+
+### Rolling back 1.4.1 to 1.4.0
+
+Deactivate 1.4.1 before replacing its files with the verified 1.4.0 ZIP, then
+reactivate 1.4.0 and verify one default hourly `exchange-rates_data_update` event.
+Keep user settings, saved rates, widgets and posts. File replacement alone is not
+a guaranteed schedule rollback: 1.4.0 accepts an existing event without checking
+its recurrence. Let in-flight background requests finish before deactivation;
+the existing worker/deactivation race can recreate a single retry after cleanup.
+Verify both hooks after the operation. This release does not fix that lifecycle
+race or authorize publication. Test upgrade and rollback on a disposable fixture
+before using this procedure on any real site.
+
+For the frozen 1.4.1 ZIP, WordPress 7.2 Beta/minimum-runtime evidence and native upgrade/rollback matrix, see the [1.4.1 release acceptance](releases/1.4.1.md).

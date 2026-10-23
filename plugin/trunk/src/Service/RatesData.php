@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 use Dejurin\ExchangeRates\Plugin;
+use Dejurin\ExchangeRates\Models\Sources;
 
 class RatesData
 {
@@ -75,7 +76,7 @@ class RatesData
         $currency = strtoupper((string) $currency);
         $data = self::get_rates($rates, $index);
 
-        if (!isset($data[$currency]) || !is_numeric($data[$currency]) || (float) $data[$currency] <= 0) {
+        if (!isset($data[$currency]) || !self::is_valid_rate($data[$currency])) {
             return null;
         }
 
@@ -98,32 +99,91 @@ class RatesData
         ];
     }
 
-    public static function validate_payload($payload)
-    {
-        if (!is_array($payload)) {
-            return 'Rates response is not a JSON object.';
-        }
+	/** Accept only positive finite values whose reciprocal remains usable. */
+	private static function is_valid_rate( $value ) {
+		if ( ! is_numeric( $value ) ) {
+			return false;
+		}
+		$rate = (float) $value;
+		return is_finite( $rate ) && $rate > 0 && is_finite( 1 / $rate );
+	}
 
-        if (!isset($payload['source']) || !is_string($payload['source']) || '' === $payload['source']) {
-            return 'Rates response is missing source.';
-        }
+	/** Require an absolute calendar date, without relative or normalized-invalid dates. */
+	private static function is_valid_date( $value ) {
+		if ( ! is_string( $value ) || '' === trim( $value ) || false !== strpos( $value, "\0" ) ) {
+			return false;
+		}
+		$date = date_parse( $value );
+		if ( $date['error_count'] || $date['warning_count'] || false === $date['year'] || false === $date['month'] || false === $date['day']
+			|| ! checkdate( $date['month'], $date['day'], $date['year'] ) ) {
+			return false;
+		}
+		// PHP 5.6 reports numeric zone offsets in minutes; PHP 7.2+ uses seconds.
+		if ( isset( $date['zone'] ) && abs( $date['zone'] ) >= ( PHP_VERSION_ID < 70200 ? 1440 : 86400 ) ) {
+			return false;
+		}
+		if ( isset( $date['relative'] ) ) {
+			// PHP also marks RFC weekdays as relative. Accept only a complete RFC date.
+			$rfc = \DateTime::createFromFormat( DATE_RFC2822, $value, new \DateTimeZone( 'UTC' ) );
+			$calendar = $date['year'] . '-' . $date['month'] . '-' . $date['day'];
+			if ( ! $rfc || $calendar !== $rfc->format( 'Y-n-j' ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-        $base = isset($payload['base']) ? strtoupper((string) $payload['base']) : '';
-        if (!preg_match('/^[A-Z]{2,6}$/', $base)) {
-            return 'Rates response is missing base currency.';
-        }
-
-        $current_rates = self::get_current_rates($payload);
-        if (empty($current_rates)) {
-            return 'Rates response is missing current rates.';
-        }
-
-        foreach ($current_rates as $rate) {
-            if (is_numeric($rate) && (float) $rate > 0) {
-                return '';
-            }
-        }
-
-        return 'Rates response does not contain usable numeric rates.';
-    }
+	/**
+	 * Validate a new response before persistence; do not migrate existing saved payloads.
+	 *
+	 * @param mixed       $payload         Decoded API response.
+	 * @param string|null $expected_source Requested source, when known by the caller.
+	 * @return string Empty on success, otherwise an internal diagnostic.
+	 */
+	public static function validate_payload( $payload, $expected_source = null ) {
+		if ( ! is_array( $payload ) ) {
+			return 'Rates response is not a JSON object.';
+		}
+		if ( ! isset( $payload['source'] ) || ! is_string( $payload['source'] ) || ! isset( Sources::get_list()[ $payload['source'] ] ) ) {
+			return 'Rates response has an unknown source.';
+		}
+		if ( null !== $expected_source && $expected_source !== $payload['source'] ) {
+			return 'Rates response does not match the requested source.';
+		}
+		$base = isset( $payload['base'] ) && is_string( $payload['base'] ) ? strtoupper( $payload['base'] ) : '';
+		if ( ! preg_match( '/^[A-Z]{2,6}$/', $base ) ) {
+			return 'Rates response is missing base currency.';
+		}
+		if ( ! isset( $payload['data'] ) || ! is_array( $payload['data'] ) || ! isset( $payload['data'][0] ) ) {
+			return 'Rates response is missing current rates.';
+		}
+		foreach ( array( 0, 1 ) as $index ) {
+			// A previous close is optional; current-only providers remain supported.
+			if ( 1 === $index && ( ! isset( $payload['data'][1] ) || array() === $payload['data'][1] ) ) {
+				continue;
+			}
+			$record = $payload['data'][ $index ];
+			if ( ! is_array( $record ) || ! isset( $record['rates'] ) || ! is_array( $record['rates'] ) || ! isset( $record['rates'][ $base ] ) ) {
+				return 'Rates response is missing rates or its base rate.';
+			}
+			foreach ( array( 'local_time', 'put_time' ) as $key ) {
+				if ( ! isset( $record[ $key ] ) || ! self::is_valid_date( $record[ $key ] ) ) {
+					return 'Rates response has a missing or invalid date.';
+				}
+			}
+			$minimum = INF;
+			$maximum = 0;
+			foreach ( $record['rates'] as $rate ) {
+				if ( ! self::is_valid_rate( $rate ) ) {
+					return 'Rates response contains an invalid numeric rate.';
+				}
+				$minimum = min( $minimum, (float) $rate );
+				$maximum = max( $maximum, (float) $rate );
+			}
+			if ( ! is_finite( $maximum / $minimum ) ) {
+				return 'Rates response exceeds the supported conversion range.';
+			}
+		}
+		return '';
+	}
 }

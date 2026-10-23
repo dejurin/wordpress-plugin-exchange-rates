@@ -36,6 +36,17 @@ class SourceTable
         $data_sources = DataSources::getInstance();
         $sources = $data_sources->get_sources_data();
 
+		if ( ! $sources['status'] ) {
+			echo '<p class="notice notice-warning"><strong>' . esc_html__( 'ERROR', 'exchange-rates' ) . ':</strong> ' . esc_html( $sources['error'] );
+			if ( ! empty( $sources['data'] ) ) {
+				echo ' ' . esc_html__( 'Showing the last valid source directory.', 'exchange-rates' );
+			}
+			echo '</p>';
+		}
+		if ( empty( $sources['data'] ) ) {
+			return;
+		}
+
         foreach ($sources['data'] as $key => $value) {
             $table->add_row([
                 '<img width="16" height="16" alt="'.esc_attr($value['source']).'" src="'.plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/circular/'.esc_attr($value['country']).'.svg" />',

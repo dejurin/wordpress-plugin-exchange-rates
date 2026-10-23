@@ -17,6 +17,16 @@ add_filter('pre_http_request', function ($preempt, $args, $url) {
         return new WP_Error('test_network_disabled', 'Outbound WordPress HTTP requests are disabled in this test environment.');
     }
 
+    // Active only while the guarded first-load browser fixture owns a snapshot.
+    $manual = get_option('exchange_rates_empty_update_provider');
+    if (is_array($manual) && 'https://api-bank.fex.to/rates/currencyrate.json' === $url) {
+        $manual['calls']++;
+        update_option('exchange_rates_empty_update_provider', $manual);
+        if ('failure' === $manual['mode']) {
+            return new WP_Error('test_provider_down', 'Synthetic provider unavailable.');
+        }
+    }
+
     $payload = array(
         'source' => 'currencyrate',
         'base' => 'USD',
@@ -101,3 +111,11 @@ add_shortcode( 'exchange_rates_table_test', function ( $attributes ) {
 		. do_shortcode( '[exchange-rates_badge currency_list="EUR" flag_type="none"] [exchange-rates_currency-converter from="USD" to="EUR"]' )
 		. '</section>';
 } );
+
+// Exercise real WordPress RTL admin assets without installing a language pack.
+add_action('init', function () {
+    if (get_option('exchange_rates_empty_update_provider') && isset($_GET['er-test-direction']) && 'rtl' === $_GET['er-test-direction']) {
+        $GLOBALS['wp_locale']->text_direction = 'rtl';
+        wp_styles()->text_direction = 'rtl';
+    }
+});

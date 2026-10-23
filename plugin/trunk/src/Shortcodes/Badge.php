@@ -15,6 +15,7 @@ use Dejurin\ExchangeRates\Models\Flags;
 use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\Color;
+use Dejurin\ExchangeRates\Service\RatesData;
 use Dejurin\ExchangeRates\Service\Tools;
 
 class Badge
@@ -198,6 +199,9 @@ class Badge
 
     public function shortcode($attr)
     {
+        if ( ! \Dejurin\ExchangeRates\Service\RatesData::has_current_rates() ) {
+            return Dev::rates_unavailable();
+        }
         $caption = null;
         $currency = null;
         $caption_currency = null;
@@ -230,7 +234,7 @@ class Badge
 
             if (is_array($currency_list) && !empty($currency_list)) {
                 $parameters = Tools::filter_keys_allowed_list($attr, ['source_id', 'base_currency', 'amount', 'base_show', 'code', 'currency_format', 'inverse', 'decimals', 'symbol', 'after', 'color', 'flag_type']);
-                $parameters['reverse'] = 'currencyrate' === $this->settings['source_id'];
+                $parameters['reverse'] = 'currencyrate' === RatesData::get_source(null, $this->settings['source_id']);
 
                 foreach ($currency_list as $code) {
                     if (!isset($get_currencies[$code])) {

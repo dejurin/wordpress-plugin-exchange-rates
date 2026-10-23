@@ -5,17 +5,17 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Help visitors convert currencies and compare prices. Converters, tables, and badges, with 86 data sources to choose from. No API key required.
+Help visitors convert currencies and compare prices. Converters, tables, and badges, with 80+ data sources to choose from. No API key required.
 
 == Description ==
 
 Exchange Rates adds **currency converters**, **exchange-rate tables**, and **compact price badges** to WordPress. Help visitors understand prices and calculate amounts without leaving your website.
 
-Choose from a catalog of **86 exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates retrieve rates through CurrencyRate.today using the source you select.
+Choose from a catalog of **80+ exchange-rate sources**, including central banks, commercial banks, currency exchange services, and alternative market sources. Scheduled updates retrieve rates through CurrencyRate.today using the source you select.
 
 **No API key or account is required.**
 
@@ -126,11 +126,15 @@ Your WordPress server needs an internet connection to retrieve new data.
 
 = How often are exchange rates updated? =
 
-The plugin schedules an update once per hour through WordPress Cron.
+The plugin schedules an update every 30 minutes through WordPress Cron.
 
-The actual execution time depends on your site's WP-Cron configuration and traffic. Each data source also has its own publication schedule, so an hourly request does not necessarily mean that new rates are available.
+The actual execution time depends on your site's WP-Cron configuration and traffic. Each data source also has its own publication schedule, so a scheduled request does not necessarily mean that new rates are available.
 
 The converter recalculates amounts immediately using the rates loaded with the page. It does not request a new market quote for every conversion.
+
+Pages show saved rates immediately while WordPress Cron refreshes expired data in the background. If a refresh fails, the last saved rates and their original date remain visible, and another background attempt is scheduled after five minutes. Reload the page to see newly saved rates; open pages do not update automatically. When no rates have been loaded, the plugin displays an unavailable-data message.
+
+For updates without site visits, configure your hosting scheduler to run WordPress Cron. Full-page or CDN caches may continue showing older page content until they expire or are cleared.
 
 = How do I choose a data source? =
 
@@ -144,13 +148,23 @@ The selected source is shared by the plugin's converters, tables, and badges. Yo
 
 After saving, confirm that the update succeeded in Settings → Exchange Rates. Review the source name, rate dates, and available currencies before using the displayed conversions.
 
-In version 1.4.0, a failed source change can leave previously stored rates displayed with incorrect source attribution or conversion. Do not rely on those conversions until the selected source updates successfully. Retry with Force Data Update when available, or reselect the previous source and confirm that its update succeeds.
+If the selected source cannot be loaded, previously stored rates retain their original source, conversion direction, and rate dates. The selection remains saved for the next update; it does not relabel or reinterpret the stored rates. Retry with Force Data Update and confirm that the selected source updates successfully.
 
 = Can I refresh the data manually? =
 
-Yes. Open Settings → Exchange Rates and use Force Data Update when the button is available.
+Yes. Open Settings → Exchange Rates and use Force Data Update. The button is also available when the first attempt to load rates has failed.
+
+If the request fails, check the API connection or source availability and try again. Existing saved rates are retained. After a successful request, the settings page reloads and shows the last successful update time.
 
 Manual requests are subject to a one-minute interval after a successful update.
+
+= What happens when I deactivate or delete the plugin? =
+
+Deactivating Exchange Rates preserves its settings, widget configurations, and saved exchange rates.
+
+Deleting the plugin through the WordPress Plugins screen removes its settings, widget configurations, saved rates, and cached source directory. Posts, pages, and embedded shortcodes are not modified; the plugin must be active for its shortcodes and widgets to work.
+
+To update, reinstall, or roll back while preserving your configuration, replace the plugin files without deleting the plugin through WordPress first. Back up your database before uninstalling.
 
 = Can I use shortcodes in posts and pages? =
 
@@ -184,7 +198,7 @@ Changing the amount in one table recalculates that table only.
 
 Enter positive numbers without thousands separators or currency symbols. Use a period for decimals, for example 1000 or 1000.50.
 
-In version 1.4.0, table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
+Table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
 
 = Does this change my store's checkout currency or product prices? =
 
@@ -218,7 +232,7 @@ The source-information panel also includes a link to the source website, check a
 
 Exchange-rate data and source information are retrieved through [api-bank.fex.to](https://api-bank.fex.to/), the API interface for CurrencyRate.today.
 
-Requests are made from your WordPress server. Rate requests can occur on activation, scheduled updates, source changes, manual refreshes, or a page load when the last successful update is more than an hour old. The settings page also requests source information when its cached copy needs refreshing.
+Requests are made from your WordPress server. Rate requests can occur on activation, scheduled background updates, source changes, and manual refreshes. Frontend rendering reads saved rates without waiting for the API. A page visit can queue a background refresh when data is missing or at least 30 minutes old; WordPress Cron performs the request separately. The settings page also requests source information when its cached copy needs refreshing.
 
 A rate request identifies the selected source. By default, the WordPress HTTP API sends the site's URL and WordPress version in the User-Agent header. The API server also receives the requesting server's IP address.
 
@@ -230,7 +244,7 @@ For information about the data provider, see [CurrencyRate.Today](https://curren
 
 = Which data sources are included? =
 
-The plugin's source catalog contains the following 86 entries.
+The catalog below lists the sources included in this plugin version. Availability may change over time.
 
 Data is delivered through the CurrencyRate service. Source availability, currency coverage, and publication schedules may vary. This catalog includes central banks, commercial banks, exchange services, alternative market sources, and a virtual currency source.
 
@@ -548,17 +562,35 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 
 == Changelog ==
 
+= 1.4.1 =
+* Prevent a cron save error when a scheduled refresh and retry run together; let WordPress remove due retry events.
+* Avoid a PHP warning when recreating a missing cron schedule on WordPress 5.6.
+* Center small flags on the currency name, with the country below the group; flags of 40 px or more sit beside the combined name and country. Preserve single-row labels when the country is hidden.
+* Check for updated rates every 30 minutes and migrate existing hourly schedules automatically without reactivation.
+* Recover missing or expired cached data in the background using the same 30-minute interval; preserve the five-minute error retry and one-minute manual-update cooldown.
+
 = 1.4.0 =
+* Preserve number and currency-symbol order in RTL layouts and keep flags next to their currency labels.
+* Replace legacy trend arrows with 14 px SVG icons while preserving rise, fall, and hidden states.
+* Improve compact table captions, flag and region alignment, readable currency labels, compact Code/Price columns, and the full-width base-currency row.
+* Normalize box sizing within converters so amount inputs, selectors, and swap buttons use consistent sizing in themes without a global reset.
+* Validate source-directory fields and timestamps before display; retain the last valid directory with an error notice when refreshing fails.
+* Discard an outdated update result when settings change during its request, preserving the newly selected source, saved rates, and preferences.
+* Reject invalid API rates, mismatched sources, and missing or invalid rate dates without replacing the last saved rates; sources without previous-close data remain supported.
+* Render cached rates immediately and refresh expired or missing data through WordPress Cron without frontend AJAX; retain hourly updates and retry failed background requests after five minutes.
+* Calculate percentage changes relative to previous close; show unsigned percentages with trend colors and keep existing arrows consistent with displayed precision when amounts change.
 * Preserve trailing integer zeros when formatting amounts with zero decimal places.
 * Keep amount changes and number formatting local to the edited exchange-rate table.
 * Associate settings labels with their existing controls while preserving the Sources link.
 * Keep administrative JavaScript loop variables local to avoid overwriting other scripts' globals.
+* Keep Force Data Update available after an initial API failure and clarify the difference between deactivation and deletion.
 * Compare manual-update timestamps in UTC so the one-minute interval is independent of the site timezone.
 * Persist successful update metadata through settings sanitization, verify stored data before reporting success, and retain the last successful timestamp after provider failures.
 * Refresh a newly selected source after saving the selection, and display unknown update time without inventing a successful-update date.
+* Preserve the cached source, conversion direction, and attribution when loading a newly selected source fails.
 
 = 1.3.2 =
-* Fixed admin stylesheet and script loading scope: plugin admin assets now load only on the plugin settings page and the widgets screen, so they no longer get injected into the WordPress 7.1 block editor iframe.
+* Restrict the main admin stylesheet and common admin script to the plugin settings and widgets screens, preventing the stylesheet from being injected into the WordPress 7.1 block editor iframe. The separate manual-update script still loads on other admin screens.
 * Verified compatibility with WordPress 7.1.
 
 = 1.3.1 =
@@ -648,6 +680,9 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Currency labels now adapt to flag size, with a 40 px threshold. Automatic rate checks now run every 30 minutes, subject to WordPress Cron execution. Existing hourly events migrate automatically; settings, saved rates and widgets are retained.
 
 = 1.4.0 =
 Maintenance release for number formatting, independent tables, settings accessibility and reliable manual-update state. Existing settings, shortcodes and widgets are retained; no data migration is required.

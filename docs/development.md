@@ -2,6 +2,20 @@
 
 Follow the [development contract](../CONTRIBUTING.md) for language, WordPress conventions, security and compatibility requirements.
 
+## CSS parity checks
+
+`tests/browser/css-parity.spec.js` compares the candidate public stylesheet against immutable Git CSS from `cb097af1d04153dd8132a6a0214642491b5c5557`, the merged 1.4.0 snapshot before CSS cleanup. Keep this reference pinned. The WordPress CI checkout includes history so the reference is available without a second source copy.
+
+On a dedicated, seeded test environment, run:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:19249 npm --prefix tests/browser test -- css-parity.spec.js
+```
+
+The suite covers tables, native widgets, converters, badges, flags/regions, trend arrows, expanded source information, input edits, hover/focus, currency swaps, LTR/RTL, 320/1064 px, and custom theme rules/properties. Before comparison, the test removes only the new table-layout marker classes (`exchange-rates-table-label`, `exchange-rates-table-region`, `exchange-rates-table-full`, `exchange-rates-caption-start`) to represent cached legacy markup. Every comparison then requires identical computed styles, values and geometry for all plugin elements. This protects legacy HTML, converters and badges; it does not assert pixel equality for the intentionally revised table layout, which has its own tests below. Expected screenshots are generated from the pinned reference CSS in the same DOM/state, stored under ignored `test-results/`, and compared with Playwright's image comparator (`threshold: 0.05`, `maxDiffPixels: 0`). The small color/antialiasing allowance addresses observed Chromium SVG-edge rasterization differences on identical CSS; computed-style and geometry comparisons have no tolerance. A deliberate height mutation verifies that the comparison detects a visible regression.
+
+`CSS_REFERENCE=legacy` selects immutable 1.3.2 CSS and LTR scenarios. Run this mode only with the actual 1.3.2 plugin installed in the disposable environment: its PNG markup must remain the baseline. To check cleaned 1.4.0 CSS against legacy markup in RTL as well, run the default `release` reference mode on that same 1.3.2 installation. Direct equality to old RTL CSS is intentionally not asserted because the approved 1.4.0 bidi fixes change its rendering.
+
 ## Purpose and boundaries
 
 `plugin/trunk/` is the single source of plugin code. Installed WordPress files, volume contents, local secrets and build outputs are excluded from Git.
@@ -32,7 +46,7 @@ Network failures or missing data are not masked by substituting test rates.
 
 Edits to `plugin/trunk/` on the host are immediately visible to containers; file updates and modifications through the administration UI are disabled.
 Automatic WordPress updates and automatic WP-Cron are disabled for reproducibility.
-The plugin's hourly HTTP fallback runs only for a known, expired successful-update timestamp. Missing or zero timestamps are recovered by cron or a manual update. To run its cron event manually:
+Page rendering uses saved rates without contacting the rate provider. Expired or missing data queues a WP-Cron refresh; a recurring 30-minute event remains scheduled. Because automatic WP-Cron is disabled in this local setup, run its cron event manually:
 
 ```sh
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli cron event run exchange-rates_data_update
@@ -60,6 +74,8 @@ docker compose --env-file wordpress/.env -f wordpress/compose.yaml run --rm cli 
 This command changes URLs in the **local database of the selected Compose project**. Do not use it for remote sites.
 
 ## Isolated smoke with synthetic rates
+
+For a pinned prerelease core in its own project, use the [WordPress 7.2 Beta 1 lab](compatibility/wordpress-7.2-beta1.md).
 
 Use a separate project name; tests create a page and write synthetic rates to its database.
 If the normal environment is already running, stop it or select an available QA port.
@@ -108,26 +124,6 @@ docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/forma
 Open the printed fixture URL to check browser parity: the saved table amount/current/previous values should be `1,000`, the badge should be `100`, and entering `1000` in the table should keep its values at `1,000`. This covers the repaired integer path; the change does not claim complete PHP/JavaScript rounding parity for all floating-point inputs.
 
 The fix changes only zero-precision formatting: integer zeros are retained and zero is returned as `"0"`. Existing callers can therefore apply their normal dash/null zero placeholders instead of receiving an empty string. Fractional trimming, format IDs, separators, rounding, option keys and stored values are preserved. There is no data migration. Reverting the fix restores the old formatter and its bug without a database rollback. The development ZIP still carries the current version metadata; it is not a new published release.
-
-## Percentage-change regressions
-
-Run the dependency-free suite with PHP 5.6 or newer:
-
-```sh
-php tests/percentage.php
-```
-
-The 144 assertions use literal expected percentages for increases, decreases, unchanged and invalid rates, numeric strings, amounts, localized separators and existing rounding thresholds. They also cover both rate orientations and cross-currency conversion with both legs changing, and verify that current/previous rates and arrow directions remain unchanged. Options exist only in memory; no WordPress bootstrap, database or network is used.
-
-For rendered output, run in the separate synthetic environment described above:
-
-```sh
-docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/percentage-wordpress.php
-```
-
-Its 21 assertions check the actual shortcode's Changes column, percentage tooltips, current/previous values and mixed arrow directions. Temporary option filters supply synthetic data without writing settings or rates; both stored options are checked after rendering. Both suites are included in CI.
-
-Percentage change is `(current - previous) / previous * 100`, calculated after conversion to the displayed currency pair. Previously the denominator was the current value: a move from 100 to 110 displayed about +9.1% instead of +10%, while 100 to 90 displayed about -11.1% instead of -10%. The correction preserves amount handling, formatting, precision thresholds, rates, arrows, public attributes and saved data. No migration or version change is introduced. Reverting the formula restores the previous calculation without a database rollback; no publication is performed by these checks.
 
 ## Table amount isolation regressions
 
@@ -185,6 +181,39 @@ This suite covers handler integration. The browser test described below also exe
 
 The production change replaces `current_time('timestamp')` with `time()` when comparing against the already stored Unix timestamp. The 60-second interval, permissions, nonces, response messages, option keys, saved data and version metadata are preserved. Reverting that line rolls back the change without a database migration.
 
+## Concurrent source selection
+
+Run `docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php` only on the disposable synthetic site. Separate PHP processes overlap an old recurring/direct request with a real settings save, in both source directions and with successful or failed responses. The suite also switches sources immediately before option filters and SQL writes, covers an absent rate cache, an obsolete alloptions cache and unrelated preference changes, then verifies recovery and restoration from fresh requests.
+
+The updater conditionally saves rates and service metadata against the serialized settings captured before HTTP. A changed snapshot rejects the obsolete write instead of reverting user fields. Each SQL write checks its predicate atomically; clearing an option cache alone is not a concurrency guard. The request source and write values come from that database snapshot, not a potentially stale option cache. Existing recurring scheduling, five-minute retry, manual refresh authorization, option keys, sanitizer/veto hooks, successful-write notifications and widget/shortcode contracts remain. See [the scoped acceptance report](releases/1.4.0-concurrent-source.md).
+
+## API payload validation regressions
+
+Run `php tests/payload-validation.php` on PHP 5.6 or newer. On the isolated synthetic WordPress site, also run:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/payload-validation-wordpress.php
+```
+
+The tests reject malformed current/previous rates, non-finite values and overflowing cross-rates, unknown or mismatched sources, invalid base metadata, missing dates, relative dates, calendar normalization and invalid timezone offsets. Valid numeric strings, absolute ISO/SQL/RFC dates, and absent/null/empty previous-close records remain supported. The update service passes its requested source to the existing validator; one-argument validator calls remain supported.
+
+The WordPress suite uses real HTTP interception, option persistence and separate requests. Rejected responses preserve the full last payload, original dates/base/success time, preferences and seven rendering paths. Cron failure schedules a retry and releases its lease. First-load failure retains the existing unavailable message; a later valid response recovers normally. Existing saved payloads are not migrated or revalidated as a whole. Invalid non-finite individual cached rates are no longer usable for arithmetic. See [the validation acceptance report](releases/1.4.0-payload-validation.md) for baseline compatibility and rollback limits.
+
+## Failed source selection and retained-rate identity
+
+`tests/source-identity-wordpress.php` exercises real settings sanitization and the source-change hook across separate WP-CLI processes. It checks both CurrencyRate-to-ECB and ECB-to-CurrencyRate failures, repeated failure, a later successful update, missing legacy source metadata, and restoration of the original fixture state. Seven render paths cover tables, converters, badges, inverse displays, and both native widgets.
+
+Use only the dedicated local test environment with `wordpress/compose.test.yaml` and an explicit disposable Compose project. Then run:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/source-identity-wordpress.php
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- source-identity.spec.js
+```
+
+The browser fixture `?er-source-test=1` supplies deterministic rates without saving options. Its 16 Chromium cases cover LTR/RTL at 320px and 1064px, matching-source legacy behavior, mismatched source/base metadata, table amount entry, converter amount/swap, captions, and dates. `--grep 'legacy matching-source contract'` selects the eight cases expected to pass on published 1.3.2 as well.
+
+The fix reads source identity from the retained payload for calculation and attribution, and the converter also reads its base metadata from that payload. Existing helpers preserve the previous settings fallback when legacy metadata is missing. No settings schema, shortcode attributes, widget identifiers, retrieval scheduling, or frontend assets change. See the [source-identity acceptance report](releases/1.4.0-source-identity.md) for evidence and limitations.
+
 ## Persisted update-state regressions
 
 Run the persistence suite in the same disposable environment, before the formatting and table fixtures:
@@ -193,24 +222,205 @@ Run the persistence suite in the same disposable environment, before the formatt
 docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/update-state-wordpress.php
 ```
 
-The 309 assertions cover sequential requests in separate WordPress processes without reseeding between requests: a successful update at `t`, refusals at `t+1` and `t+59`, another success at `t+60`, and a refusal at `t+61` measured against that new success. The matrix includes four UTC offsets, integer/numeric-string timestamps, missing timestamps and zero. Further cases cover failed/malformed providers, rejected option writes, administrative and CLI service calls, cron, explicit source arguments, a missing settings option, source changes, unknown-time rendering and the hourly fallback. Form input cannot supply service metadata, including after a service update in the same request. Unknown existing settings are preserved. The suite restores its original options and fails on PHP warnings.
+The 306 assertions cover sequential requests in separate WordPress processes without reseeding between requests: a successful update at `t`, refusals at `t+1` and `t+59`, another success at `t+60`, and a refusal at `t+61` measured against that new success. The matrix includes four UTC offsets, integer/numeric-string timestamps, missing timestamps and zero. Further cases cover failed/malformed providers, rejected option writes, administrative and CLI service calls, cron, explicit source arguments, a missing settings option, source changes, unknown-time rendering and the absence of synchronous HTTP during expired-cache page bootstrap. Form input cannot supply service metadata, including after a service update in the same request. Unknown existing settings are preserved. The suite restores its original options and fails on PHP warnings.
 
 The internal writer saves only `rates_available`, `base_currency` and `update_timestamp` through the existing WordPress option API. A temporary sanitizer filter overlays trusted service fields and is removed in `finally`; the form sanitizer remains active. A successful response requires readback of both rates and metadata. The last successful UTC timestamp advances only after a validated, stored rates response. Provider failure retains the cached rates, base and previous successful timestamp while clearing availability. Source-change refreshes run on `updated_option`, after the selected source has been stored, to avoid an outer form write overwriting the new metadata.
 
-Missing or zero time means no known successful update. It allows the first authorized manual attempt, does not display a fabricated date and does not trigger the hourly fallback on every page load. Known expired positive timestamps still trigger that fallback. No migration, new production option or version change is introduced. Nonces, capabilities, response messages and the 60-second interval remain unchanged.
+Missing or zero time means no known successful update. It allows the first authorized manual attempt and does not display a fabricated date. Page rendering queues background recovery for an unknown or expired timestamp; it never fetches rates synchronously. The state writer needs no migration. Nonces, capabilities, response messages and the 60-second interval remain unchanged.
 
 `manual-update-state.spec.js` adds a 25th Chromium test: sign in, click the actual update button, verify persisted metadata after the page reload, click again immediately and verify refusal without changing the successful state. It forwards the real AJAX response unchanged; only provider HTTP is synthetic. Its dedicated fixture restores the original settings and rates. Authenticated traces are disabled and CI excludes its screenshots from uploaded diagnostics.
 
 For an upgrade/rollback check, seed saved options, pages and both widget types on the published 1.3.2 baseline, replace only plugin files, and compare raw saved values and rendered output without reseeding or reactivation. Run the state suites and browser suite, verify restoration, then restore the old files and verify the saved content again. Rollback needs no data migration but reintroduces the old persistence bug.
 
-Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Concurrent requests are not serialized; retry/backoff and cache/source consistency after a failed source change need separate work. Synthetic fixtures do not establish live-provider availability.
+Rates and settings remain two separate option writes, not an atomic transaction. A rejected metadata write is reported as failure, but rates may already have been stored. Background refreshes are serialized and use retry/backoff as described below. Explicit manual/source-change requests retain their existing service path; concurrency with those requests and cache/source consistency after a failed source change remain separate concerns. Synthetic fixtures do not establish live-provider availability.
+
+## RTL flag and label alignment regressions
+
+`rtl-labels.spec.js` adds 40 cases using the guarded, read-only RTL fixture. The matrix covers LTR and RTL at 1064px and 320px, shortcode and native tables, full and compact widths, all five flag modes, 16px/64px flags, codes/names, regions on/off, the base row, Arabic/Hebrew text and long labels. Emoji images are supplied locally by the test runner; this does not test the availability of WordPress.org's emoji CDN.
+
+The tests measure the rendered text with DOM `Range` rectangles, not just the full-width label container. They require a small non-overlapping flag/text gap, aligned region labels, unchanged Latin code order, readable wrapping with no ellipsis and no document-level horizontal overflow. The layout refinement described below deliberately replaces the old truncation assertions; flag adjacency, size, direction and region alignment remain checked. Run them in the disposable environment after seeding the table fixture:
+
+```sh
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-labels.spec.js
+```
+
+The production fix overrides the first table header cell's alignment only under an RTL ancestor. The leading flag remains on the right and the label/region align next to it. LTR rules, PHP, JavaScript, HTML, attributes and stored settings are unchanged. Reverting the four added CSS lines rolls back the display change without a database migration. This fix is part of unreleased 1.4.0; rebuild the final ZIP and invalidate cached/minified CSS after the reviewed changes are merged.
+
+In Chromium, before the fix, both published 1.3.2 and the preceding 1.4.0 candidate fail the 20 RTL cases and pass the 20 LTR cases. For compatibility verification, seed on the immutable 1.3.2 baseline, switch only plugin files, run browser regressions and compare stored options, both widget types, pages and registrations without reseeding. Rollback should preserve that state too. These checks do not certify every third-party theme, physical device or nested mixed-direction container.
+
+The earlier alignment-only patch left a separately reproduced Firefox full-width region-layout defect: region text could be positioned outside the visible table in both directions, also on published 1.3.2. The subsequent table-layout refinement replaces the nested fixed table layout for new labels; the unchanged region-alignment assertions now pass in Firefox as well. Region checks remain soft assertions so other flag/name checks still run on failure. Cross-browser results and their limits are recorded in the [layout acceptance report](releases/1.4.0-table-layout.md).
+
+## Trend arrow regressions
+
+`trend-arrows.spec.js` exercises real shortcode and native Table widget output in full and compact widths. The guarded `browser-trends.php` fixture supplies growth, decline, unchanged and missing previous rates without writing options. Four legacy-contract cases also pass on published 1.3.2: numeric values, trend direction (including inverse quotes), existing `up`/`down` alternative text and absence of an arrow for unchanged/missing data are preserved.
+
+The 24 presentation cases cover LTR/RTL, 1064/320/360 px viewports, normal/inverse quotes and symbols before/after values. They verify loaded same-origin SVG assets, 14 px dimensions, a 4 px gap, vertical alignment, unchanged 16 px flags, row height, contained overflow, repeated amount changes and isolation from other tables. Run them in the disposable environment with `WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- trend-arrows.spec.js`.
+
+The production change replaces only the trend image template and adds scoped CSS plus two local SVG assets and their license. The existing PNG paths remain available. Public JavaScript still clones the same `img` element when recalculating a table; rate calculations, options, shortcodes, widgets and the 1.4.0 version are unchanged. The icons use Lucide paths with customized colours and stroke weight; provenance and license notices are shipped beside the assets in `assets/img/LICENSE-lucide.txt`.
+
+Rollback reverts the trend image template and CSS; no database migration is needed. Purge stale HTML/CSS and regenerate optimizer bundles when installing a rebuilt 1.4.0 candidate. Passing this fixture does not establish compatibility with every theme, physical device or cache configuration.
 
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter and percentage regression tests and syntax checks for the WordPress test helpers.
-- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, rendered percentages, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
+- WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
 CI has only `contents: read`, uses no SVN secrets and publishes no releases. PHPCS/WPCS and comprehensive security checks are not currently automated; see the [validation contract](../CONTRIBUTING.md#validation-and-review).
 CI cleanup with `down --volumes` applies only to the disposable project with a unique name for that specific run.
+
+## RTL numeric direction regressions
+
+`tests/browser/rtl-numbers.spec.js` runs 66 cases against the real plugin renderers in the guarded, read-only `tests/browser-rtl.php` fixture. It covers all eight number formats, RTL/LTR, 320px/1064px widths, both symbol positions, shortcode and native widget tables/converters, badges, previous-close cells, static base amounts, input click/blur, recalculation and negative converter results. Character `Range` coordinates detect visual reordering that correct DOM strings alone cannot detect. Native input values and computed direction are checked separately. No synthetic fixture is shipped in the ZIP.
+
+After seeding rates with the isolated smoke, run:
+
+```sh
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-numbers
+```
+
+The fixture is loaded only by the test Compose override. It filters formatting options for the current request without saving them and retains the page's RTL direction for labels, tables and currency selectors. It does not change the site's language. Existing table-shortcode behavior (no symbol attribute), initial previous-close symbol omission and the converter's empty-group-separator fallback are intentionally preserved.
+
+The fix adds scoped RTL CSS for numeric cells, amount inputs, converter results and badge values. It keeps numeric runs left-to-right and isolated while retaining the previous input/badge alignment. PHP, JavaScript, calculations, format IDs, output strings, data attributes, option keys, shortcode/widget registrations and version 1.4.0 remain unchanged. No migration is required. Reverting this CSS change restores the previous display without changing saved data. Existing mobile table overflow, label alignment and mixed-direction captions are separate issues.
+
+Before publishing the still-unreleased 1.4.0, build a new ZIP from the merged revision and purge cached/minified CSS in the release smoke; older 1.4.0 candidate ZIPs do not contain this fix. This workflow does not publish to WordPress.org.
+
+
+## Percentage and visible-change regressions
+
+Run `php tests/change-percentage.php` with PHP 5.6 or newer. The 1,157 assertions use literal expected results for growth/decline, previous-close denominators, inverse pairs, invalid/missing previous rates, small percentages, all eight format IDs, precisions 0/2/7 and amounts 1/100. It does not bootstrap WordPress or write data.
+
+`php tests/percentage.php` adds 110 assertions through the public `Currency` constructor and the actual `RatesData` reader. These cover numeric strings, localized unsigned percentages, sub-precision direction, both changing legs of a cross-currency pair, both bank-source orientations, amount independence, and invalid current/previous values on either leg (including non-finite values). It uses only in-memory option fixtures and complements the existing reflection-based calculation suite. CI runs both suites on PHP 5.6, 8.3 and 8.4.
+
+Run the rendering companion only in the separate synthetic WordPress environment:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/percentage-wordpress.php
+```
+
+Its 30 assertions verify unsigned Changes values, translated direction tooltips, accessible labels, client percentage/direction metadata, current/previous prices, mixed arrows and unchanged stored settings/rates. Temporary option filters supply the fixture without writing either option. CI runs this alongside the existing smoke and browser regressions. These additional tests, CI steps and documentation introduce no plugin-code, version, public-contract or database changes; reverting them only removes this extra coverage.
+
+`change-percentage.spec.js` adds 14 browser scenarios using the guarded `?er-trend-test=1&changes=1` fixture. They cover shortcode/native-widget tables, LTR/RTL, 1280px/320px, decimal comma/point, precision 0/2/4/7, repeated amount changes and neighbouring table isolation. Initial PHP output and subsequent JavaScript updates must agree on percentage visibility, class and accessible label.
+
+Percentage magnitude is `abs((current - previous) / previous * 100)` for the displayed currency direction. It has no plus/minus sign; existing Price arrows and Changes colors convey direction. A positive percentage that would round to zero is displayed as `<0.01%` (localized separator). Missing previous data and unchanged rates retain a dash.
+
+The renderer compares the two formatted prices, not the rounded absolute difference. Equal displayed prices suppress both percentage and arrow, with an accessible below-precision explanation; crossing a rounding boundary still shows the direction. Only the edited table is updated. The percentage and source direction are independent of amount, so PHP supplies escaped metadata and translated labels for JavaScript to show/hide. Old cached markup without this metadata retains the previous input behavior and requires normal cache invalidation to receive the fix.
+
+This intentionally corrects values previously shown in Changes and replaces signed percentages with magnitude plus direction. It preserves rate/amount formatting, saved options/rates/widgets/pages, shortcode attributes, public method signatures and the existing 14px SVG assets. There is no migration. Revert the fix to roll back; the incorrect percentage formula and rounded-direction bug then return. The version remains unreleased 1.4.0; an older release ZIP does not contain this fix and must not be mistaken for the new candidate after merge.
+
+
+## Readable table layout regressions
+
+`tests/browser/table-layout.spec.js` adds 20 scenarios using the guarded, request-local `tests/browser-layout.php` fixture. It covers shortcode and native-widget renderers, LTR/RTL, 320/900 px, compact/full widths, caption placement and source-popup interaction, flag centering on the currency name, unchanged flag sizes, secondary region typography, readable wrapping, table-only horizontal scrolling, amount recalculation and complete base-row backgrounds. The grid matrix checks 256 combinations of direction, renderer, history availability, Code/Previous Close/Changes columns, title mode and header visibility; every colspan must be positive and match the visible grid.
+
+`tests/browser/table-columns.spec.js` adds 16 scenarios for full-width tables at 320/480/900 px. It measures actual glyph bounds and column widths: only Currency receives spare width, Code and Price stay content-sized, and the Code header shares the values' leading edge. It covers both renderers, LTR/RTL, hidden Code/headers/history, unchanged displayed values across resizing, large amounts and numeric containment.
+
+Run on a separate synthetic environment with the test Compose override:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:19260 npm test --prefix tests/browser -- table-columns.spec.js table-layout.spec.js rtl-labels.spec.js trend-arrows.spec.js
+```
+
+The fixture filters options for one HTTP request only. It does not save settings, widgets, rates or pages. The full browser suite still needs its normal seeded table/admin fixtures. Tests intentionally fail on unmodified 1.3.2 and the preceding 1.4.0 snapshot; keep the immutable baseline unchanged.
+
+Compact table captions now follow the logical start edge; full-width tables, converters and badges retain their caption behavior. Full-width tables give spare width to Currency and keep other columns content-sized; the Code header follows the same logical edge as its values. New table label classes provide a 12ch minimum, normal wrapping and non-shrinking flags; region text is smaller and regular weight. Base-row filler cells use the count of visible history columns, independently of title mode or whether headers are displayed. No public attributes, option keys, data migrations, calculations, JavaScript, translations or version metadata change. See the [acceptance report](releases/1.4.0-table-layout.md) for compatibility evidence, intentional visual differences and rollback.
+
+## Background rate refresh
+
+Rendering a page never calls the rate provider. Existing cached rates, source information and their original date remain visible when a refresh fails. With no current rates, all three shortcodes and both native widgets show the existing translated unavailable-data message. No frontend AJAX or polling is added, and an already open page does not replace its rates after a background update. Reload to read the newly saved data.
+
+The existing `exchange-rates_data_update` hook runs every 30 minutes and is repaired if absent; legacy hourly events migrate on bootstrap. Unknown/expired successful-update time or missing current data queues one `exchange-rates_data_retry` event unless a recurring event is already due. A failed background request schedules another attempt after five minutes and preserves the last successful timestamp. A successful manual update makes a pending retry unnecessary. WordPress removes each due retry before invoking its callback; a queued retry then checks freshness and exits without another provider request. Refresh callbacks must not clear other retry events, because the native cron runner may already hold them in its ready-event snapshot. Activation, explicit manual updates and source changes retain their existing synchronous administrator/service behavior.
+
+Background scheduling and workers share a per-site, five-minute lease in the non-autoloaded `exchange-rates_refresh_lock` option. A unique database insert and compare-and-swap on expiry avoid relying on persistent object-cache behavior or the `add_option()` upsert. Release checks token ownership. A killed worker therefore cannot block refresh permanently. The transient `exchange-rates_refresh_after` records retry timing separately from success metadata. Deactivation removes both cron hooks and these internal scheduling values while preserving user settings and rates. No tables or data migrations are introduced.
+
+WP-Cron normally starts on site requests, not on a wall-clock timer. Updating a quiet site independently of visitors requires the site's system scheduler to run WordPress cron. If cron is disabled or loopback requests fail, old rates remain visible but do not become fresh automatically. Full-page/CDN caches also need their own expiry or purge policy; this change does not invalidate externally cached HTML.
+
+Run on the disposable environment before seeding browser fixtures:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/background-refresh-wordpress.php
+```
+
+The 51 checks cover real shortcode/widget HTML, fresh/stale/empty caches, missing/zero legacy timestamps, failure and recovery, five-minute backoff, 30-minute scheduling, manual update coexistence, three concurrent worker processes, expired/successor lease ownership and deactivation. Child requests run in separate WordPress processes; the suite restores saved settings, rates and scheduling state. The provider is synthetic and outbound network access is blocked by the test fixture. This verifies behavior, not live-source availability.
+
+`tests/native-cron-retry-wordpress.php` runs the real `wp-cron.php` in child CLI processes, checking both orders of overlapping recurring/retry events, multiple overdue retries with fresh data, a future retry, and a failed provider. Its 38 assertions cover core diagnostics, event ownership, request counts, persistence, backoff and lease release. It snapshots and restores the disposable database options. Run it with the same `wp eval-file` command as the background suite.
+
+On PHP 5.6, run the interval suite with `wp --skip-plugins=exchange-rates eval-file /opt/tests/refresh-interval-wordpress.php`. The suite loads the plugin after its frozen clock; loading the plugin earlier can cache the native `time()` function on that PHP version and make the 1799-second assertion depend on elapsed test time.
+
+For rollback to 1.3.2, deactivate the candidate, replace only the plugin files and reactivate 1.3.2. Deactivation clears the new internal scheduling state but keeps rates, widgets, settings and posts. The old synchronous loading behavior returns with the old code. See the [background-refresh acceptance report](releases/1.4.0-background-refresh.md) for the exact versions and results tested.
+
+
+## Converter control box sizing
+
+`tests/browser/converter-box-sizing.spec.js` checks shortcode and native-widget converters in LTR/RTL at 320, 390 and 1064 CSS pixels. Input, swap button and selects retain the existing 40px height with a consistent border box; the site's 44px minimum remains effective. The suite also checks control containment, icon alignment, unrelated inputs, amount changes, swaps, currency selection, zero, neighbouring converters and the original caption/link contract.
+
+Run after seeding the disposable synthetic WordPress environment:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- converter-box-sizing.spec.js
+```
+
+CI uses deterministic bare, Astra-reset and site-minimum CSS patterns. To test captured full theme styles without external network dependencies, set `CONVERTER_THEME_CSS_DIR` to a local directory containing `astra-main.css`, `astra-settings.css`, `wp-global.css`, `fonts-local.css`, `yuri-page.css` and the referenced `font-N.ttf` files. These optional local captures are not shipped or committed. This does not replace a check with the actual theme active in WordPress.
+
+For the functional 1.3.2 baseline, install its immutable plugin export on a separate disposable site, then run with `CONVERTER_REFERENCE=legacy` and `--grep 'legacy contract'`. The sizing regression is intentionally expected to fail on unmodified 1.3.2 and the preceding 1.4.0 candidate. CSS parity normalizes only this known reference defect; all remaining computed styles and geometry are compared exactly, with the existing screenshot antialiasing tolerance.
+
+The production change only adds `box-sizing: border-box` to converter inputs, selects and swap buttons. No font, padding, height, SVG, PHP, JavaScript, saved data or public interface changes. Removing the rule restores the old box model without a migration. See [the acceptance report](releases/1.4.0-converter-box-sizing.md) for tested versions and limitations.
+
+## Source-directory validation
+
+Run `tests/source-directory-wordpress.php` with `wp eval-file` only in the isolated test environment. It covers invalid/missing timestamps, malformed rows and responses, HTTP failures, poisoned legacy caches, recovery, unchanged valid HTML, and retention across PHP requests. Rate payloads and user settings must remain byte-for-byte unchanged.
+
+`exchange-rates_sources` keeps the existing response envelope and one-hour success TTL. A valid legacy cache is copied unchanged into the non-autoloaded `exchange-rates_sources_last_good` option before expiry. Failed refreshes retain that directory, report an explicit error, and cache the failure for five minutes. There are no additional frontend requests or cron events. A fresh install with no valid directory displays the error without inventing rows or dates. Data already evicted before this version first reads it cannot be recovered.
+
+The backup is retained on deactivation and deleted on uninstall. Reverting the code requires no settings/widget migration; 1.3.2 ignores the additional backup option. The rate updater, shortcode attributes, widget IDs, rate cache, and source selection are unchanged. Fault-injection tests use synthetic responses and do not prove provider availability.
+
+## Thirty-minute refresh (1.4.1)
+
+`Cron\UpdateRates::REFRESH_INTERVAL` defines both the 1800-second recurrence and
+cache expiry (`age >= 1800`). The public `exchange-rates_data_update` hook and
+`run_hourly()` callback remain compatible, including explicit source arguments.
+The source-directory cache remains hourly; it is not the rate-refresh interval.
+Schedule metadata is available during bootstrap; its display label is translated
+from `init` onwards to avoid premature WordPress translation loading.
+
+On ordinary plugin bootstrap, the registered `exchange-rates_30_minutes` schedule
+replaces legacy default events under the existing per-site lease. The migration
+writes the replacement before removing obsolete occurrences, preserves events
+with explicit arguments and never postpones an earlier due time. It does not
+align sites to half-hour wall-clock boundaries. A rejected schedule preserves
+legacy work; a rejected removal returns failure and a later bootstrap retries.
+Cron storage is not transactional across other plugins/core workers: partial
+cleanup may temporarily leave more than one event until a successful retry.
+
+Run only in the disposable synthetic environment:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/refresh-interval-wordpress.php
+```
+
+The suite covers expiry at 1799/1800/1801 seconds (and no expiry at 899/900/901), upgrade without reactivation,
+legacy duplicates, idempotence, explicit-source events, schedule/removal failures,
+pending retries, busy/expired leases, concurrent bootstraps and deactivation.
+Existing background, manual-update, payload and source-race suites remain required.
+WP-Cron timing depends on site visits or an external cron runner. Page HTML may
+also remain cached after a successful rate refresh; this change does not purge
+third-party page caches or update already-open browser pages.
+
+## Hybrid table flags (1.4.1)
+
+The shared table label renderer handles regular and base rows. With a country
+and a flag smaller than 40 CSS pixels, the flag and currency name form the first
+row; the country spans the group below, aligned to its logical start edge. At
+40 pixels or above, the flag centers beside the combined name/country block.
+Without a country, the flag always centers on the name, with no empty second row.
+Without a flag, no slot or gap is reserved. Direction follows LTR/RTL; no client
+measurements or new settings are required. Rectangular flags retain a 4:3 ratio.
+New CSS is scoped to new markup; cached legacy markup keeps its existing rules.
+
+`tests/browser/flag-hybrid.spec.js` covers 16/24/32/39/40/41/64 px, all five flag
+modes, country on/off, 16/22 px text, LTR/RTL, 320/1064 px, compact/full tables,
+shortcodes/native widgets, base rows and long wrapped names. Geometry assertions
+check the exact vertical center, country edge, absence of empty rows/flag slots,
+unchanged image size and document overflow. Existing CSS parity reconstructs
+legacy labels and still compares immutable CSS, computed styles and pixels.
