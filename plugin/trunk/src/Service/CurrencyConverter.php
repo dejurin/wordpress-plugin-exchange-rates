@@ -57,7 +57,7 @@ class CurrencyConverter
             }
         }
 
-        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div '
+        $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'"><div '
                 .'class="'.self::WIDGET_SLUG.($this->parameters['border'] ? ' border' : '').'" '
                 .'id="'.esc_attr(self::WIDGET_SLUG.$widget_number).'" '
                 .$data_attr

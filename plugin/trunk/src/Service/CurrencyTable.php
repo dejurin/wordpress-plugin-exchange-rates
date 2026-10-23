@@ -197,7 +197,7 @@ class CurrencyTable
         }
 
         if ($err) {
-            return '<b>'.Plugin::NAME.'</b> '.esc_html__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', 'exchange-rates');
+            return '<b data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'">'.Plugin::NAME.'</b> '.esc_html__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', 'exchange-rates');
         }
 
         if ($this->parameters['base_show']) {
@@ -252,7 +252,7 @@ class CurrencyTable
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="cr-'.Plugin::PLUGIN_SLUG.'"><div class="table-responsive '.self::WIDGET_SLUG.'"><table '
+            'table_open' => '<div class="cr-'.Plugin::PLUGIN_SLUG.'" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'"><div class="table-responsive '.self::WIDGET_SLUG.'"><table '
                             .'class="'.esc_attr(trim($class)).'" '
                             .'data-decimals="'.esc_attr($this->settings['decimals']).'" '
                             .'data-decimal-point="'.esc_attr($fmt['decimal_point']).'" '
