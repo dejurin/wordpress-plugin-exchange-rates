@@ -2,6 +2,8 @@
 
 Follow the [development contract](../CONTRIBUTING.md) for language, WordPress conventions, security and compatibility requirements.
 
+The current candidate is **1.4.1**; use the [release status](release-status.md) for its identity and evidence. References to 1.3.2 and 1.4.0 below describe pinned regression baselines and the original fixes, not alternative current candidates.
+
 ## CSS parity checks
 
 `tests/browser/css-parity.spec.js` compares the candidate public stylesheet against immutable Git CSS from `cb097af1d04153dd8132a6a0214642491b5c5557`, the merged 1.4.0 snapshot before CSS cleanup. Keep this reference pinned. The WordPress CI checkout includes history so the reference is available without a second source copy.
@@ -244,7 +246,7 @@ The tests measure the rendered text with DOM `Range` rectangles, not just the fu
 WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- rtl-labels.spec.js
 ```
 
-The production fix overrides the first table header cell's alignment only under an RTL ancestor. The leading flag remains on the right and the label/region align next to it. LTR rules, PHP, JavaScript, HTML, attributes and stored settings are unchanged. Reverting the four added CSS lines rolls back the display change without a database migration. This fix is part of unreleased 1.4.0; rebuild the final ZIP and invalidate cached/minified CSS after the reviewed changes are merged.
+The production fix overrides the first table header cell's alignment only under an RTL ancestor. The leading flag remains on the right and the label/region align next to it. LTR rules, PHP, JavaScript, HTML, attributes and stored settings are unchanged. Reverting the four added CSS lines rolls back the display change without a database migration. This fix entered 1.4.0 and is retained in 1.4.1; invalidate cached/minified CSS when updating a site through a separately authorized operation.
 
 In Chromium, before the fix, both published 1.3.2 and the preceding 1.4.0 candidate fail the 20 RTL cases and pass the 20 LTR cases. For compatibility verification, seed on the immutable 1.3.2 baseline, switch only plugin files, run browser regressions and compare stored options, both widget types, pages and registrations without reseeding. Rollback should preserve that state too. These checks do not certify every third-party theme, physical device or nested mixed-direction container.
 
@@ -262,7 +264,7 @@ Rollback reverts the trend image template and CSS; no database migration is need
 
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatter regression tests and syntax checks for the manual-update test helpers.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatting, payload and percentage regression tests, and syntax checks for WordPress test helpers.
 - WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
@@ -284,7 +286,7 @@ The fixture is loaded only by the test Compose override. It filters formatting o
 
 The fix adds scoped RTL CSS for numeric cells, amount inputs, converter results and badge values. It keeps numeric runs left-to-right and isolated while retaining the previous input/badge alignment. PHP, JavaScript, calculations, format IDs, output strings, data attributes, option keys, shortcode/widget registrations and version 1.4.0 remain unchanged. No migration is required. Reverting this CSS change restores the previous display without changing saved data. Existing mobile table overflow, label alignment and mixed-direction captions are separate issues.
 
-Before publishing the still-unreleased 1.4.0, build a new ZIP from the merged revision and purge cached/minified CSS in the release smoke; older 1.4.0 candidate ZIPs do not contain this fix. This workflow does not publish to WordPress.org.
+The original 1.4.0 acceptance required rebuilding the ZIP after this fix and purging cached/minified CSS in the release smoke. Earlier candidate ZIPs did not contain it. Use the current 1.4.1 identity above for new verification; this workflow does not publish to WordPress.org.
 
 
 ## Percentage and visible-change regressions
@@ -307,7 +309,7 @@ Percentage magnitude is `abs((current - previous) / previous * 100)` for the dis
 
 The renderer compares the two formatted prices, not the rounded absolute difference. Equal displayed prices suppress both percentage and arrow, with an accessible below-precision explanation; crossing a rounding boundary still shows the direction. Only the edited table is updated. The percentage and source direction are independent of amount, so PHP supplies escaped metadata and translated labels for JavaScript to show/hide. Old cached markup without this metadata retains the previous input behavior and requires normal cache invalidation to receive the fix.
 
-This intentionally corrects values previously shown in Changes and replaces signed percentages with magnitude plus direction. It preserves rate/amount formatting, saved options/rates/widgets/pages, shortcode attributes, public method signatures and the existing 14px SVG assets. There is no migration. Revert the fix to roll back; the incorrect percentage formula and rounded-direction bug then return. The version remains unreleased 1.4.0; an older release ZIP does not contain this fix and must not be mistaken for the new candidate after merge.
+This intentionally corrects values previously shown in Changes and replaces signed percentages with magnitude plus direction. It preserves rate/amount formatting, saved options/rates/widgets/pages, shortcode attributes, public method signatures and the existing 14px SVG assets. There is no migration. Revert the fix to roll back; the incorrect percentage formula and rounded-direction bug then return. The correction entered 1.4.0 and is retained in 1.4.1. The later constructor/rendering regressions add coverage without changing that calculation.
 
 
 ## Readable table layout regressions

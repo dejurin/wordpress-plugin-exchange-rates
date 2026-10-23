@@ -12,6 +12,10 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 
 [WordPress.org](https://wordpress.org/plugins/exchange-rates/) · [Live demo](https://yuri.ws/exchange-rates/) · [Installation](#installation) · [Development](#development-quick-start) · [Support](#support-and-useful-links)
 
+## Current development version: 1.4.1
+
+`main` is the canonical development branch for the final 1.4.1 candidate. See the [release status](docs/release-status.md) for the frozen plugin tree, package checksum and verification references. GitHub consolidation does not publish the plugin to WordPress.org or update installed sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
+
 ## Features
 
 - **Currency converter:** let visitors convert amounts between currencies.
@@ -19,7 +23,7 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 - **Price badges:** show an amount in multiple currencies inside a post or page.
 - **Widgets and shortcodes:** use widget areas or embed tools directly in content.
 - **Configurable display:** adjust currencies, decimal places, flags, colors and borders.
-- **Multiple data sources:** retrieve rates through the [data service](https://api-bank.fex.to/), with hourly updates scheduled through WordPress Cron.
+- **Multiple data sources:** retrieve rates through the [data service](https://api-bank.fex.to/), with thirty-minute updates scheduled through WordPress Cron.
 
 Available currencies and update freshness depend on the selected source and successful refreshes. See the [plugin readme](plugin/trunk/readme.txt) for source details and the changelog.
 
@@ -105,7 +109,7 @@ python3 scripts/plugin.py package
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
 Output: `dist/exchange-rates.1.4.1.zip`, containing an `exchange-rates/` directory.
-The 1.4.1 candidate also prevents `could_not_set` when a scheduled refresh and retry are due together; see [native cron retry validation](docs/releases/1.4.1-cron-retry.md).
+The 1.4.1 candidate also prevents `could_not_set` when a scheduled refresh and retry are due together; see [native cron retry validation](docs/releases/1.4.1-cron-retry.md) and the [1.4.1 acceptance report](docs/releases/1.4.1.md).
 CI also saves the verified ZIP as an artifact. Download it from a successful [workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml); extract the outer Actions artifact archive and install the plugin ZIP inside it. See [packaging and release procedures](docs/release.md) for details.
 
 ## Repository and documentation
@@ -126,8 +130,11 @@ SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not s
 
 - [Local development and smoke tests](docs/development.md)
 - [Editable banner and local PNG rendering](examples/banner/README.md)
+- [Current release status and candidate identity](docs/release-status.md)
 - [Packaging and release procedures](docs/release.md)
-- [1.4.0 compatibility acceptance and known issues](docs/releases/1.4.0.md)
+- [1.4.1 compatibility acceptance and limitations](docs/releases/1.4.1.md)
+- [Future 1.5.0 integration roadmap](docs/roadmaps/1.5.0.md)
+- [Historical 1.4.0 compatibility acceptance](docs/releases/1.4.0.md)
 - [Source provenance and deferred CSS change](docs/normalization.md)
 
 ## Contributing
