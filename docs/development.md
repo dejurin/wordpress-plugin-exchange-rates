@@ -268,6 +268,8 @@ Rollback reverts the trend image template and CSS; no database migration is need
 - WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
+The WordPress job has a 30-minute limit covering dependency/browser installation, integration checks and the serial Chromium suite. The previous 20-minute budget could cancel passing tests after slow runner setup; a timeout is not a successful regression result and requires a completed rerun.
+
 Older WordPress versions and the full PHP range are not covered by CI runtime tests. Browser automation currently covers Chromium only. Normalization does not change the imported release's minimum requirements.
 CI has only `contents: read`, uses no SVN secrets and publishes no releases. PHPCS/WPCS and comprehensive security checks are not currently automated; see the [validation contract](../CONTRIBUTING.md#validation-and-review).
 CI cleanup with `down --volumes` applies only to the disposable project with a unique name for that specific run.
