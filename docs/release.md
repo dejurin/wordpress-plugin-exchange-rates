@@ -2,6 +2,8 @@
 
 Read the [development contract](../CONTRIBUTING.md) before preparing changes or a release.
 
+The current final candidate is **1.4.1**. The [release status](release-status.md) is the entry point for its source, package identity and verification references. Older acceptance reports retain their historical versions and checksums.
+
 ## Source and dependencies
 
 All installable code is in `plugin/trunk/`. The `vendor/` directory is part of the published plugin and is tracked in Git.
