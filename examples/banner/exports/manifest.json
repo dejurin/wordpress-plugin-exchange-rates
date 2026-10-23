@@ -1,0 +1,314 @@
+{
+  "generatedAt": "2026-10-20T01:21:15.860Z",
+  "browser": "156.0.8078.4",
+  "playwright": "1.64.1",
+  "deviceScaleFactor": 1,
+  "externalRequests": 0,
+  "errors": [],
+  "captures": [
+    {
+      "filename": "banner-1544x500.png",
+      "width": 1544,
+      "height": 500,
+      "bytes": 297701,
+      "sha256": "f393cb928e4ff561da0bd26e04d7543acbf6949a169ccb5679a00b777a337d54",
+      "geometry": {
+        "banner": {
+          "x": 0,
+          "y": 0,
+          "width": 1544,
+          "height": 500
+        },
+        "showcase": {
+          "x": 517.265625,
+          "y": 70,
+          "width": 975.796875,
+          "height": 360
+        },
+        "converter": {
+          "x": 517.265625,
+          "y": 70,
+          "width": 479.890625,
+          "height": 360
+        },
+        "table": {
+          "x": 1013.15625,
+          "y": 70,
+          "width": 479.90625,
+          "height": 360
+        },
+        "fontLoaded": true,
+        "images": [
+          {
+            "src": "/plugin/trunk/assets/img/bank.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/swap.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/us.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/chevron-down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/chevron-down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/gb.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/jp.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ca.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ch.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          }
+        ],
+        "rows": 5,
+        "illustrations": [
+          {
+            "role": "img",
+            "label": "Currency converter illustration with circular flags, abstract amount and selector labels, swap arrows and a result. No currency names or values are shown."
+          },
+          {
+            "role": "img",
+            "label": "Exchange-rate table illustration with circular flags, five abstract rows and upward and downward trend arrows. No currency names, rates or percentages are shown."
+          }
+        ],
+        "currencyFlags": [
+          {
+            "src": "/plugin/trunk/assets/flags/circular/us.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/gb.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/jp.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ca.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ch.svg",
+            "circular": true
+          }
+        ],
+        "concreteData": [],
+        "clippedText": []
+      }
+    },
+    {
+      "filename": "banner-772x250.png",
+      "width": 772,
+      "height": 250,
+      "bytes": 93388,
+      "sha256": "30dafb67530b81898a37863379c538f6e5b02e9485eb7ad7a1b3a20c41c9887a",
+      "geometry": {
+        "banner": {
+          "x": 0,
+          "y": 0,
+          "width": 772,
+          "height": 250
+        },
+        "showcase": {
+          "x": 258.640625,
+          "y": 35,
+          "width": 487.890625,
+          "height": 180
+        },
+        "converter": {
+          "x": 258.640625,
+          "y": 35,
+          "width": 239.9375,
+          "height": 180
+        },
+        "table": {
+          "x": 506.578125,
+          "y": 35,
+          "width": 239.953125,
+          "height": 180
+        },
+        "fontLoaded": true,
+        "images": [
+          {
+            "src": "/plugin/trunk/assets/img/bank.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/swap.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/us.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/chevron-down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/chevron-down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/gb.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/jp.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ca.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/down.svg",
+            "loaded": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ch.svg",
+            "loaded": true
+          },
+          {
+            "src": "/examples/banner/assets/up.svg",
+            "loaded": true
+          }
+        ],
+        "rows": 5,
+        "illustrations": [
+          {
+            "role": "img",
+            "label": "Currency converter illustration with circular flags, abstract amount and selector labels, swap arrows and a result. No currency names or values are shown."
+          },
+          {
+            "role": "img",
+            "label": "Exchange-rate table illustration with circular flags, five abstract rows and upward and downward trend arrows. No currency names, rates or percentages are shown."
+          }
+        ],
+        "currencyFlags": [
+          {
+            "src": "/plugin/trunk/assets/flags/circular/us.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/eu.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/gb.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/jp.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ca.svg",
+            "circular": true
+          },
+          {
+            "src": "/plugin/trunk/assets/flags/circular/ch.svg",
+            "circular": true
+          }
+        ],
+        "concreteData": [],
+        "clippedText": []
+      }
+    }
+  ],
+  "assets": {
+    "examples/banner/assets/Geist-Variable.ttf": "73894e0448cae90a92b6c2f8732b7bb9acb7b94c418bff559dad4a18e1de9659",
+    "examples/banner/assets/background.png": "1d361d39a276c9966f06e66c2ef5ef8a435342183c8ee5067aacc06fe874d98e",
+    "examples/banner/assets/chevron-down.svg": "5e55f8da62fee947dd697b7e641e6e9aa5cfefb50ad22769b729c938d1283aaa",
+    "examples/banner/assets/down.svg": "d956f92e893d7f5de14f61a5c8552e8902e18fc95bc6a3d894154171810a55c3",
+    "examples/banner/assets/phosphor-key-bold.svg": "598224bfdb39a83437167853b4021a21336941900e2dec0f64399f25723f4984",
+    "examples/banner/assets/swap.svg": "a58667219ff424df7a827d5d349b1da71547bb2cfe194c28874deeddd46abaa9",
+    "examples/banner/assets/up.svg": "11e155b0a4c15e352ef440741e1add63c93a6bc48edcc4f9a4b0a3fba534ffb8",
+    "examples/banner/banner.css": "58815895c35d0259d49f54a4d705dc6d6a922edb17c58be044c5c73a7157b7e2",
+    "examples/banner/index.html": "e4bdd799898ff276fb6c7a7e645c9265299b2cb3faffc6b4c36a14182efbb8ea",
+    "plugin/trunk/assets/flags/circular/ca.svg": "d03d5192d9e959d681932be4e80038351128b2b0c17c1b229656425ba479c3b0",
+    "plugin/trunk/assets/flags/circular/ch.svg": "de37fa78817e47abe5e6134637e5c7684644df84b55e5625efcd9bbd0c0d411f",
+    "plugin/trunk/assets/flags/circular/eu.svg": "4966d1c90e85dd32961fb72588fb913b68b80dea589b250e162497e45e77895d",
+    "plugin/trunk/assets/flags/circular/gb.svg": "93e60c2f64332f582675730275eb39e8322f1b7360da801e9ef16e510994cf11",
+    "plugin/trunk/assets/flags/circular/jp.svg": "fbc8677271ff2ef1f972a9ad984bb20dcf44273480ea1b4b20d343588d110a41",
+    "plugin/trunk/assets/flags/circular/us.svg": "9d335fcbab9bac160f0cfd0353db96af24a0e4d06d47713db9e2f05b65f2a46b",
+    "plugin/trunk/assets/img/bank.svg": "4074dab2c50de475bb64d682e2b7cbc08e09dccaf36d9954e6f2f0507d064ee9"
+  }
+}

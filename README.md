@@ -117,6 +117,7 @@ plugin/trunk/          The single plugin source tree, including vendor
 wordpress/            Local WordPress, MariaDB and WP-CLI
 scripts/              Validation, packaging and local .env generation
 tests/                Isolated smoke checks with synthetic rates
+examples/banner/      Editable HTML/CSS directory banner and local assets
 docs/                 Development, release and imported source provenance
 .github/workflows/    CI without WordPress SVN publishing
 ```
@@ -124,6 +125,7 @@ docs/                 Development, release and imported source provenance
 SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not stored in Git. Edit plugin code on the host in `plugin/trunk/`; containers use a read-only bind mount. **WordPress.org SVN is strictly read-only in this workflow.**
 
 - [Local development and smoke tests](docs/development.md)
+- [Editable banner and local PNG rendering](examples/banner/README.md)
 - [Packaging and release procedures](docs/release.md)
 - [1.4.0 compatibility acceptance and known issues](docs/releases/1.4.0.md)
 - [Source provenance and deferred CSS change](docs/normalization.md)
