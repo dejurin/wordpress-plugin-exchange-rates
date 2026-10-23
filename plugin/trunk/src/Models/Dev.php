@@ -13,7 +13,7 @@ class Dev
 {
 	/** Render the existing unavailable message when no current cache exists. */
 	public static function rates_unavailable() {
-		return '<b>' . Plugin::NAME . '</b> ' . esc_html__( 'Error: exchange-rate data is not available yet.', 'exchange-rates' );
+		return '<b data-exchange-rates-version="' . esc_attr( Plugin::VERSION ) . '">' . Plugin::NAME . '</b> ' . esc_html__( 'Error: exchange-rate data is not available yet.', 'exchange-rates' );
 	}
 
     public static function caption($parameters, $time, $widget_nubmer, $widget_slug, $source_id, $dev = 1)
@@ -112,7 +112,7 @@ class Dev
                 .'<b>API</b>: CurrencyRate'
                 .'</div>'
                 .'<div><small><b>'.esc_html__('Disclaimers.', 'exchange-rates').'</b> '.esc_html__('This plugin or website cannot guarantee the accuracy of the exchange rates displayed. You should confirm current rates before making any transactions that could be affected by changes in the exchange rates.', 'exchange-rates').'</small></div>'
-                .'<div>⚡<small>'.esc_html__('You can install this WP plugin on your website from the WordPress official website:', 'exchange-rates').' <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank" rel="noreferrer noopener nofollow"><b>Exchange Rates</b></a></small>🚀</div>'
+                .'<div>⚡<small>'.esc_html__('You can install this WP plugin on your website from the WordPress official website:', 'exchange-rates').' <a href="https://wordpress.org/plugins/exchange-rates/" target="_blank" rel="noreferrer noopener nofollow"><b>Exchange Rates</b></a> '.esc_html( Plugin::VERSION ).'</small> 🚀</div>'
                 .'</div></div>';
 
         return $html;

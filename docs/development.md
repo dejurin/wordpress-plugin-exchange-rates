@@ -264,7 +264,7 @@ Rollback reverts the trend image template and CSS; no database migration is need
 
 ## CI and limitations
 
-- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatting, payload and percentage regression tests, and syntax checks for WordPress test helpers.
+- PHP 5.6 / 8.3 / 8.4: syntax checks for all 56 plugin PHP files, including shipped vendor code, formatting, payload, percentage and version metadata regression tests, and syntax checks for WordPress test helpers.
 - WordPress 7.1.3 / PHP 8.3: isolated runtime smoke, manual-update cooldown and persisted-state regressions, saved-data formatting regressions, Chromium table-isolation, settings-label, administrative JavaScript and real manual-update regressions, saved-data preservation and HTTP availability of assets.
 - Packaging: consistent version metadata and exact ZIP content parity with `plugin/trunk/`.
 
@@ -290,6 +290,22 @@ The fix adds scoped RTL CSS for numeric cells, amount inputs, converter results 
 
 The original 1.4.0 acceptance required rebuilding the ZIP after this fix and purging cached/minified CSS in the release smoke. Earlier candidate ZIPs did not contain it. Use the current 1.4.1 identity above for new verification; this workflow does not publish to WordPress.org.
 
+
+## Widget version diagnostics (1.4.1)
+
+The existing Info caption displays the escaped `Plugin::VERSION` as plain text after the Exchange Rates link and before the rocket. Table, converter and badge markup carries `data-exchange-rates-version` on its component root. Error output carries the same attribute on the existing plugin-name element. All three shortcodes and both native widgets use the server constant; no shortcode or saved widget setting controls this value. Existing credits, links and disclaimers are unchanged.
+
+Run the focused checks in the isolated synthetic-rate environment:
+
+```sh
+php tests/version.php
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/version-wordpress.php
+WP_TEST_URL="http://127.0.0.1:${WP_PORT}" npm test --prefix tests/browser -- version.spec.js
+```
+
+The standalone test substitutes an HTML-sensitive version to prove dynamic output and context escaping. The WordPress test covers real shortcodes, native-widget sanitization, multiple instances, unavailable rates, unsupported pairs and unchanged saved settings/rates/widgets. Four Chromium cases cover LTR/RTL at 320/1064 px, opening Info, amount changes, swapping converter currencies and preservation of the original link. CI includes these checks in its existing unit, WordPress and browser jobs.
+
+Version metadata identifies the code that rendered the HTML. A page cache can retain an earlier version until that page is regenerated; inspecting this attribute does not bypass caching. No additional requests, options or migrations are introduced. Rollback reverts the caption and attribute additions; stored data needs no changes.
 
 ## Percentage and visible-change regressions
 
