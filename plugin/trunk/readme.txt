@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -562,6 +562,12 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 
 == Changelog ==
 
+= 1.4.2 =
+* Align currency names, codes, values, and editable base amounts vertically in exchange-rate tables.
+* Keep long currency badge names and values, flags, and source captions inside narrow containers while preserving RTL alignment.
+* Reserve space for converter select arrows so they do not overlap the selected currency text.
+* Translate the default converter shortcode title while preserving explicit titles and custom or empty titles returned by the shortcode attribute filter.
+
 = 1.4.1 =
 * Show the installed plugin version in the existing Info caption and HTML data attributes for widget diagnostics.
 * Prevent a cron save error when a scheduled refresh and retry run together; let WordPress remove due retry events.
@@ -681,6 +687,9 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+Fixes table and input alignment, wrapping in narrow layouts, converter select spacing, and the default converter title. Existing settings, rates, shortcodes, and widgets are preserved; no data migration is required.
 
 = 1.4.1 =
 Currency labels now adapt to flag size, with a 40 px threshold. Automatic rate checks now run every 30 minutes, subject to WordPress Cron execution. Existing hourly events migrate automatically; settings, saved rates and widgets are retained.

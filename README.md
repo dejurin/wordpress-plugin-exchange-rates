@@ -12,9 +12,9 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 
 [WordPress.org](https://wordpress.org/plugins/exchange-rates/) · [Live demo](https://yuri.ws/exchange-rates/) · [Installation](#installation) · [Development](#development-quick-start) · [Support](#support-and-useful-links)
 
-## Current development version: 1.4.1
+## Current development version: 1.4.2
 
-`main` is the canonical development branch for the final 1.4.1 candidate. See the [release status](docs/release-status.md) for the frozen plugin tree, package checksum and verification references. GitHub consolidation does not publish the plugin to WordPress.org or update installed sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
+The current candidate is 1.4.2, prepared from `main` after the reviewed visual fixes. WordPress.org already publishes 1.4.1. See the [release status](docs/release-status.md) for package identity and verification references. Candidate preparation does not publish the plugin or update installed sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
 
 ## Features
 
@@ -108,8 +108,8 @@ python3 scripts/plugin.py package
 ```
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
-Output: `dist/exchange-rates.1.4.1.zip`, containing an `exchange-rates/` directory.
-The 1.4.1 candidate also prevents `could_not_set` when a scheduled refresh and retry are due together; see [native cron retry validation](docs/releases/1.4.1-cron-retry.md) and the [1.4.1 acceptance report](docs/releases/1.4.1.md).
+Output: `dist/exchange-rates.1.4.2.zip`, containing an `exchange-rates/` directory.
+Version 1.4.2 adds the reviewed table/input alignment, narrow-layout wrapping and converter title/spacing fixes. The scheduling correction remains unchanged; see [native cron retry validation](docs/releases/1.4.1-cron-retry.md) and the historical [1.4.1 acceptance report](docs/releases/1.4.1.md).
 CI also saves the verified ZIP as an artifact. Download it from a successful [workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml); extract the outer Actions artifact archive and install the plugin ZIP inside it. See [packaging and release procedures](docs/release.md) for details.
 
 ## Repository and documentation
