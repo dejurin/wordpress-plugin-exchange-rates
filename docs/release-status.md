@@ -2,6 +2,16 @@
 
 Repository consolidation date: October 23, 2026. The final candidate remains **1.4.1**. `main` is the canonical development branch; `plugin/trunk/` is the only installable source tree. No additional release branch or source copy is required.
 
+## Local follow-up: visual regressions
+
+The local `codex/visual-regressions-141` patch corrects table cell alignment,
+bounded badge/caption wrapping, converter select arrow spacing and the translated
+default converter title. Table borders are deliberately deferred. Version metadata
+stays **1.4.1**, but this is a new installable payload and must not reuse the
+previously accepted tree or ZIP checksum below. See the [focused acceptance report](reviews/visual-regressions-1.4.1.md)
+for its identity, real WordPress regressions and rollback evidence. This local
+follow-up does not publish to WordPress.org, change a GitHub release or update sites.
+
 ## Local follow-up: widget version metadata
 
 The local `codex/widget-version-metadata` branch adds `Plugin::VERSION` to the existing Info caption and component HTML attributes, with focused regression coverage. The plugin version stays **1.4.1**, but this changes the installable payload. The identity and acceptance below describe the previously accepted GitHub payload; they must not be reused as acceptance for this local follow-up. Rebuilding `dist/exchange-rates.1.4.1.zip` produces a different checksum. This local work does not update GitHub release assets, tags, WordPress.org or installed sites. See the [diagnostic behavior and checks](development.md#widget-version-diagnostics-141).

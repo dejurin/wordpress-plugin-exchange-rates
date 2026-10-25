@@ -24,7 +24,7 @@ class CurrencyConverter
 
         // Defaults (static, predictable)
         $this->default_attr = [
-            'title'  => 'title',
+            'title'  => '',
             'amount' => 1,
             'from'   => 'USD',
             'to'     => 'EUR',
@@ -67,16 +67,20 @@ class CurrencyConverter
      */
     private function sanitize_atts(array $atts)
     {
+        // Resolve the translated default before filters customize the attributes.
+        $defaults          = $this->default_attr;
+        $defaults['title'] = __( 'Currency Converter', 'exchange-rates' );
+
         // 1) Merge with defaults so keys always exist
         //    (WP core helper keeps only known keys for this shortcode tag)
         $merged = shortcode_atts(
-            $this->default_attr,
+            $defaults,
             $atts,
             Plugin::PLUGIN_SLUG.'_currency-converter'
         );
 
         // 2) Sanitize + types
-        $title  = sanitize_text_field((string)$merged['title']);
+        $title  = sanitize_text_field( (string) $merged['title'] );
         $amount = is_numeric($merged['amount']) ? (float)$merged['amount'] : (float)$this->default_attr['amount'];
 
         $from = strtoupper(preg_replace('/[^A-Za-z]/', '', (string)$merged['from']));

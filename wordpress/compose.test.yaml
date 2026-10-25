@@ -8,6 +8,7 @@ services:
       - ../tests/browser-layout.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-layout.php:ro
       - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro
       - ../tests/browser-rtl.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-rtl.php:ro
+      - ../tests/browser-visual.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-visual.php:ro
       - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro
   cli:
     environment:
@@ -17,4 +18,5 @@ services:
       - ../tests/browser-layout.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-layout.php:ro
       - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro
       - ../tests/browser-rtl.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-rtl.php:ro
+      - ../tests/browser-visual.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-visual.php:ro
       - ../tests/http-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-data.php:ro

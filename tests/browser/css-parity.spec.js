@@ -12,13 +12,50 @@ const references = {
 };
 const reference = process.env.CSS_REFERENCE || 'release';
 if (!Object.hasOwn(references, reference)) throw new Error('Unknown CSS reference.');
-// Normalize the reference's known converter box-model defect only. The
-// dedicated converter tests independently assert 40px geometry and behavior.
-// All other legacy computed styles and pixels must still match exactly.
+// Apply only the documented intentional corrections to the immutable reference.
+// The focused visual regressions independently check cross-cell alignment,
+// bounded badges/captions and the select arrow lane on real WordPress markup.
+// Everything outside these corrections must retain exact CSS/pixel parity.
 const beforeCSS = execFileSync('git', ['show', `${references[reference]}:${stylesheet}`], { cwd: root }).toString() + `
 .cr-exchange-rates .widget-exchange-rates-currency-converter input,
 .cr-exchange-rates .widget-exchange-rates-currency-converter select,
 .cr-exchange-rates .widget-exchange-rates-currency-converter button.swap { box-sizing: border-box; }
+.cr-exchange-rates .widget-exchange-rates-currency-table table tbody th,
+.cr-exchange-rates .widget-exchange-rates-currency-table table tbody td { vertical-align: middle; }
+.cr-exchange-rates .widget-exchange-rates-currency-table input { display: block; }
+.cr-exchange-rates .exchange-rates-caption { flex-wrap: wrap; }
+.cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders {
+  display: flex !important;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  align-items: stretch;
+}
+.cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders span:first-child {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 auto !important;
+}
+.cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders img { flex-shrink: 0; }
+.cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders span+span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 auto !important;
+}
+.cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders > span {
+  border-radius: 0 !important;
+}
+[dir="rtl"] .cr-exchange-rates.shortcode-exchange-rates-badge .badge-leaders > span + span {
+  justify-content: flex-start;
+}
+.cr-exchange-rates .widget-exchange-rates-currency-converter select {
+  padding-inline-end: calc(0.8rem + 24px);
+}
 `;
 const afterCSS = fs.readFileSync(path.join(root, stylesheet), 'utf8');
 const digest = value => createHash('sha256').update(value).digest('hex');
