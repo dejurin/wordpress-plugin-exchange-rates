@@ -1,36 +1,44 @@
-# Current release status: 1.4.1
+# Current release candidate: 1.4.2
 
-Repository consolidation date: October 23, 2026. The final candidate remains **1.4.1**. `main` is the canonical development branch; `plugin/trunk/` is the only installable source tree. No additional release branch or source copy is required.
+Prepared October 25, 2026, from `main` revision
+`dfb307962b9a045763aad70f77933f2e65d721e2` on `codex/prepare-1.4.2`.
+This is a candidate only; no publication, tag, release asset or production-site
+change is authorized by this preparation.
 
-## Local follow-up: visual regressions
+## Published baseline
 
-The local `codex/visual-regressions-141` patch corrects table cell alignment,
-bounded badge/caption wrapping, converter select arrow spacing and the translated
-default converter title. Table borders are deliberately deferred. Version metadata
-stays **1.4.1**, but this is a new installable payload and must not reuse the
-previously accepted tree or ZIP checksum below. See the [focused acceptance report](reviews/visual-regressions-1.4.1.md)
-for its identity, real WordPress regressions and rollback evidence. This local
-follow-up does not publish to WordPress.org, change a GitHub release or update sites.
+The [WordPress.org API](https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request%5Bslug%5D=exchange-rates)
+and read-only SVN inspection identify **1.4.1** as the published version.
+The official downloaded ZIP contains 929 files and has SHA-256
+`843447e33f951b17e69e34c5013b8c023c3e153d1bbc45120dae2b05b7c8f4f7`.
+Its contents differ from the reviewed `main` above only in the public stylesheet
+and converter shortcode. The visual fixes therefore belong in a new **1.4.2**
+release, rather than replacing the published 1.4.1 package.
 
-## Local follow-up: widget version metadata
+## Candidate identity
 
-The local `codex/widget-version-metadata` branch adds `Plugin::VERSION` to the existing Info caption and component HTML attributes, with focused regression coverage. The plugin version stays **1.4.1**, but this changes the installable payload. The identity and acceptance below describe the previously accepted GitHub payload; they must not be reused as acceptance for this local follow-up. Rebuilding `dist/exchange-rates.1.4.1.zip` produces a different checksum. This local work does not update GitHub release assets, tags, WordPress.org or installed sites. See the [diagnostic behavior and checks](development.md#widget-version-diagnostics-141).
-
-## Previously accepted candidate identity
-
-| Item | Expected value |
+| Item | Value |
 | --- | --- |
-| Plugin header, runtime version and Stable tag | `1.4.1` |
-| Plugin Git tree | `aa5bf2170b77032fe43ecd08bb65cbdf1b238467` |
-| Installable ZIP | `dist/exchange-rates.1.4.1.zip` |
+| Header, runtime constant, Stable tag and catalog version | `1.4.2` |
+| Installable Git tree | `a8103c2ec0b3db7e855a40f627ef6244a54cc749` |
+| Installable ZIP | `dist/exchange-rates.1.4.2.zip` |
 | ZIP inventory | 929 files under `exchange-rates/` |
-| ZIP SHA-256 | `53f0a3d8407000dab9c644c4f9fd73ed0b2b3ec9959896c23352184399b51e8d` |
+| ZIP SHA-256 | `0ad817576d52591936e92fe6ecb538e57de120a2f217ad30654cb5c7ba602192` |
 | Declared minimums | WordPress 5.6 / PHP 5.6 |
 | Tested up to metadata | WordPress 7.1 |
 
-This is the same plugin payload accepted in [PR #33](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/33) and the [October 21 acceptance report](releases/1.4.1.md), present in `main` at `5f5f5e24dc03115bb960f8a46001fef4d959774a`. Subsequent repository documentation, banner and test changes do not change its Git tree or ZIP. If the tree or checksum differs, treat it as a different candidate and investigate before reusing this acceptance.
+The code fixes are already reviewed and merged in
+[PR #37](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/37).
+The preparation changes version metadata, release notes and catalog version
+headers; it adds no calculation, storage, scheduling or public API changes.
+Table-border changes remain deferred. Translation messages and plural rules are
+unchanged; compiled catalog byte changes are confined to the version header.
 
-From the repository root, verify the current checkout and build locally:
+The current validation results and remaining limits are recorded in
+[the 1.4.2 candidate report](releases/1.4.2.md). It records completed local checks. The exact candidate commit CI is tracked on
+the candidate PR and must pass before merge or publication.
+
+## Build and verify
 
 ```sh
 set -euo pipefail
@@ -39,24 +47,23 @@ git rev-parse HEAD:plugin/trunk
 python3 scripts/plugin.py check
 python3 scripts/plugin.py lint
 python3 scripts/plugin.py package
-shasum -a 256 dist/exchange-rates.1.4.1.zip
+(cd dist && shasum -a 256 -c exchange-rates.1.4.2.zip.sha256)
 ```
 
-Package only from the reviewed clean checkout. Ignored `dist/` directories may contain older artifacts; a matching filename alone does not establish identity. GitHub source archives are not installable plugin packages. ZIP byte identity assumes the same Python/zlib packaging environment; the plugin tree and per-entry content parity remain independent checks.
+A matching filename does not establish package identity. The packager compares
+every ZIP entry against `plugin/trunk/`. Packaging must preserve the reviewed
+source; dependency updates and source changes require their own checks.
 
-## Consolidated work and evidence
+## Historical evidence and release boundary
 
-- [PR #4](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/4): production compatibility and regression requirements in the canonical development contract.
-- [PR #32](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/32): editable banner, approved PNGs, licenses and render manifest outside the installable tree. See the [banner instructions](../examples/banner/README.md).
-- [PR #34](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/34): additional constructor/conversion and WordPress rendering tests, CI and documentation. Its duplicate percentage implementation was removed; the runtime correction already exists in `main`.
-- [CI #99](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/39943328454): all five jobs passed on PR #34 head `0b486da0272cdc43c654bb6ae0aee592e7cd5411`, including PHP 5.6/8.3/8.4 checks and 318 Chromium cases. Its local compatibility evidence covers 110 new calculation assertions on PHP 5.6.40/8.4.27 and 30 rendering assertions on WordPress 5.6/PHP 5.6 and WordPress 7.1.3/PHP 8.3/8.4.
+The [1.4.1 acceptance](releases/1.4.1.md) and
+[visual-fix acceptance](reviews/visual-regressions-1.4.1.md) retain their original
+versions and checksums. The locally built 1.4.1 visual-fix ZIP was never published
+by this task and is not the official 1.4.1 upgrade baseline. Do not reuse older
+Beta/native-update/live-provider acceptance for a different payload.
 
-Require successful [CI](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml?query=branch%3Amain) on the consolidated revision as well. Historical checks validate their recorded revisions, not arbitrary later changes. The [release acceptance](releases/1.4.1.md) records upgrade/rollback, saved-state and WordPress 7.2 Beta 1 checks plus their limits; it does not certify later Beta/RC builds or every browser/theme/cache combination.
-
-## Scope and history
-
-This consolidation is GitHub-only. It creates no WordPress.org publication, SVN tag, site update or automatic deployment. Publication and production acceptance require separate explicit authorization. The WordPress.org badge in the root README tracks the external published version independently of the candidate above.
-
-Older `docs/releases/1.4.0*.md` files and pinned 1.3.2/1.4.0 regression references remain historical evidence. Do not rename them to 1.4.1 or rewrite the immutable baseline manifest. The [1.5.0 Gutenberg/Elementor roadmap](roadmaps/1.5.0.md) is planning only and is outside the 1.4.1 payload.
-
-Local editorial drafts and browser captures are not release inputs. Preserve them separately when cleaning a checkout; do not apply old readme edits over the accepted plugin payload. Remove branches only after their commits are reachable from `main` and their references have been backed up. Revert repository changes through a reviewed PR; a Git revert does not change deployed sites or published assets. See the [release and rollback procedure](release.md#rollback).
+WordPress.org SVN remains read-only. Publication requires separate explicit
+authorization and a reviewed package. Preserve the official 1.4.1 ZIP for rollback,
+all QA evidence and unrelated development volumes. See
+[packaging and rollback](release.md) and the future
+[1.5.0 roadmap](roadmaps/1.5.0.md).

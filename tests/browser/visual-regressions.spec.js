@@ -8,7 +8,7 @@ async function open(page, direction, width, surface, extra = {}) {
   await page.setViewportSize({ width, height: 1000 });
   const response = await page.goto('/?' + new URLSearchParams({ 'er-visual-test': '1', surface, direction, ...extra }));
   expect(response.ok()).toBeTruthy();
-  await expect(page.locator('[data-exchange-rates-version]').first()).toHaveAttribute('data-exchange-rates-version', '1.4.1');
+  await expect(page.locator('[data-exchange-rates-version]').first()).toHaveAttribute('data-exchange-rates-version', '1.4.2');
 }
 
 for (const direction of ['ltr', 'rtl']) {
