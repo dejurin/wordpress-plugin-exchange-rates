@@ -20,8 +20,9 @@ The installable patch touches only `assets/css/public/style.css` and
 - Reserve the select arrow's 16px width plus an 8px gap beyond the existing edge
   padding, using logical padding for LTR/RTL without changing control height.
 - Resolve a missing converter title as translated `Currency Converter` during
-  rendering, after locale initialization. Explicit custom and empty titles are
-  retained. The shipped catalogs already contain this string.
+  rendering, after locale initialization and before the shortcode attribute
+  filter. Custom and empty filter results are sanitized and retained, as are
+  explicit titles. The shipped catalogs already contain this string.
 
 Calculations, stored data, public attributes, widget identifiers, JavaScript,
 dependencies, catalogs and declared WordPress/PHP minimums are unchanged. Dormant
@@ -31,12 +32,12 @@ table-border options remain out of scope to preserve existing default appearance
 
 - Metadata remains `1.4.1`; this is not a new published version.
 - ZIP: `dist/exchange-rates.1.4.1.zip`, 929 files.
-- ZIP SHA-256: `dddf78896884fd63092025df29655457d5c1795c837fec6e36ad554221b605aa`.
+- ZIP SHA-256: `3b323bc2f13ee6ddcbdd5771c145f3d2ef4f6279ca5fc4784d26fb01f5ce9549`.
 - Every ZIP entry was compared byte-for-byte with the current `plugin/trunk/`.
-- Final logs and machine-readable results: ignored `dist/visual-final-pr-20261025/`.
+- Final logs and machine-readable results: ignored `dist/pr37-title-filter-20261025/`.
 
-The final complete run below includes the input follow-up. Earlier runs on the
-preceding visual payload are not substituted for this acceptance.
+The final complete run below includes the input and title-filter follow-ups.
+Earlier runs on preceding visual payloads are not substituted for this acceptance.
 
 ## Final verification
 
@@ -44,8 +45,8 @@ preceding visual payload are not substituted for this acceptance.
 | --- | --- |
 | Metadata, installable syntax, package inventory/content parity | Passed; 56 installable PHP files, 929 ZIP entries |
 | PHP 5.6.40 / 8.3.35 / 8.4.27 | 89 repository PHP files linted and 2259 standalone assertions passed on each runtime |
-| WordPress 7.1.3 / PHP 8.3.35, complete Chromium suite | 347 passed, 0 failed/skipped/flaky, including input at 16/22px table text |
-| WordPress 5.6 / PHP 5.6.40, fresh final ZIP and focused Chromium suite | Smoke passed; 25 passed, 0 failed/skipped/flaky |
+| WordPress 7.1.3 / PHP 8.3.35, complete Chromium suite | 349 passed, 0 failed/skipped/flaky, including input at 16/22px table text |
+| WordPress 5.6 / PHP 5.6.40, fresh final ZIP and focused Chromium suite | Smoke passed; 27 passed, 0 failed/skipped/flaky |
 | Integration suites on both WordPress runtimes | Payload 322, directory 168, source identity 73, manual update 28, update state 306, interval 50, background refresh 51, native cron 38, concurrent source 91 passed |
 | Rendering and saved formatting on both runtimes | 30 percentage, 79 version and 116 formatting assertions passed |
 | Fresh POT extraction and shipped PO/MO loading on both runtimes | 7624 assertions passed on each; missing-POT negative check rejected the invalid input |
@@ -56,6 +57,11 @@ preceding visual payload are not substituted for this acceptance.
 
 The minimum-runtime legacy CLI generator uses explicit `date.timezone=UTC` for
 POT extraction; this process setting does not change the WordPress site's timezone.
+The interval suite uses the documented `--skip-plugins=exchange-rates` bootstrap
+on PHP 5.6 so its frozen clock loads before the plugin. The initial invocation
+without this flag hit the known clock-cache boundary; its log is retained, and
+the documented invocation passed all 50 checks without a source change.
+
 The upgrade source is the previously verified WordPress.org 1.4.0 ZIP, SHA-256
 `da9875d8532a6cbf9ae82dd29573e2c3497b0f6929822539d50265fe0c42dbfb`.
 The code rollback tests this visual patch against its original 1.4.1 base, not the
@@ -63,10 +69,15 @@ separate scheduling downgrade from 1.4.1 to 1.4.0.
 
 ## Regression evidence and visual comparison
 
-The initial unmodified base produced 17 failing focused tests while 8 adjacent
-cases passed. A separate real WordPress input preview exposed a 2.5px inline
-baseline gap at 22px table text; the final measured input center offset is 0px at
-720px and 320px. Entering 100 recalculates only its own table and persists on blur.
+The initial unmodified base produced 17 failing original focused tests while 8
+adjacent cases passed. The two added title-filter tests also failed against PR
+revision `238fe77`, returning the translated default instead of the custom/empty
+filter result. Both pass after the correction in English and Ukrainian, alongside
+unchanged explicit titles, native widget titles and conversion results.
+
+A separate real WordPress input preview exposed a 2.5px inline baseline gap at
+22px table text; the final measured input center offset is 0px at 720px and 320px.
+Entering 100 recalculates only its own table and persists on blur.
 
 The focused tests cover LTR/RTL, 320/900px viewports, 16/22px text, 16/32/64px flags,
 regions on/off, static/editable amounts, real shortcodes/native widgets, badge

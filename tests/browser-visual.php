@@ -66,6 +66,15 @@ add_action( 'template_redirect', function () {
 			echo '</section>';
 		}
 	} elseif ( 'converter' === $surface ) {
+		$title_filter = isset( $_GET['title-filter'] ) ? $_GET['title-filter'] : '';
+		if ( in_array( $title_filter, array( 'custom', 'empty' ), true ) ) {
+			add_filter( 'shortcode_atts_exchange-rates_currency-converter', function ( $attributes, $defaults, $atts ) use ( $title_filter ) {
+				if ( ! array_key_exists( 'title', $atts ) ) {
+					$attributes['title'] = 'custom' === $title_filter ? 'Site converter' : '';
+				}
+				return $attributes;
+			}, 10, 3 );
+		}
 		$cases = array( 'default' => '', 'custom' => ' title="Saved custom title"', 'empty' => ' title=""' );
 		foreach ( $cases as $name => $title ) {
 			echo '<section id="converter-' . esc_attr( $name ) . '"><h2>' . esc_html( ucfirst( $name ) . ' converter' ) . '</h2>';

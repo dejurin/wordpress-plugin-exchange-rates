@@ -117,3 +117,16 @@ test('default converter title is translated while explicit saved titles stay int
   await open(page, 'ltr', 900, 'converter', { language: 'uk' });
   await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > b')).toHaveText('Конвертер валют');
 });
+
+for (const [filter, title] of [['custom', 'Site converter'], ['empty', '']]) {
+  test(`shortcode title filter preserves ${filter} defaults`, async ({ page }) => {
+    for (const language of ['en', 'uk']) {
+      await open(page, 'ltr', 900, 'converter', { language, 'title-filter': filter });
+      await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > b')).toHaveText(title);
+      await expect(page.locator('#converter-custom .widget-exchange-rates-currency-converter > b')).toHaveText('Saved custom title');
+      await expect(page.locator('#converter-empty .widget-exchange-rates-currency-converter > b')).toBeEmpty();
+      await expect(page.locator('#converter-widget .widget-exchange-rates-currency-converter > b')).toHaveText('Saved widget title');
+      await expect(page.locator('#converter-default .result')).toHaveText('R11,865,569.165');
+    }
+  });
+}

@@ -462,12 +462,18 @@ After starting the isolated environment above, run:
 WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- visual-regressions.spec.js
 ```
 
-The 25 tests cover LTR/RTL, 320/900px viewports, 16/32/64px flags, regions on/off,
+The 27 tests cover LTR/RTL, 320/900px viewports, 16/32/64px flags, regions on/off,
 static/editable base amounts, all row cells, badge content and flag dimensions,
 caption text bounds, select arrow spacing, unchanged control heights, currency
 swaps and explicit saved titles. Keep before/after captures on the same runtime,
 viewport, font, fixture and data. For concurrent runtime runs, pass distinct
 Playwright `--output` directories so one runner cannot remove another's traces.
+
+Two title-filter regressions exercise `shortcode_atts_exchange-rates_currency-converter`
+with an omitted `title` in English and Ukrainian. A custom or empty title returned
+by the filter must survive sanitization and rendering; explicit saved titles and
+the native widget remain unchanged. The translated default is supplied to
+`shortcode_atts()` before the filter runs, rather than replacing its result.
 
 The change deliberately allows badge values and source captions to occupy another
 line when space is insufficient. It changes no rates, stored options, shortcode
