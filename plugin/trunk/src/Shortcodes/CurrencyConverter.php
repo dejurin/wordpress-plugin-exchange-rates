@@ -24,7 +24,7 @@ class CurrencyConverter
 
         // Defaults (static, predictable)
         $this->default_attr = [
-            'title'  => 'title',
+            'title'  => '',
             'amount' => 1,
             'from'   => 'USD',
             'to'     => 'EUR',
@@ -76,7 +76,10 @@ class CurrencyConverter
         );
 
         // 2) Sanitize + types
-        $title  = sanitize_text_field((string)$merged['title']);
+        // Resolve the default after WordPress has initialized its locale.
+        $title  = array_key_exists('title', $atts)
+            ? sanitize_text_field((string)$merged['title'])
+            : __('Currency Converter', 'exchange-rates');
         $amount = is_numeric($merged['amount']) ? (float)$merged['amount'] : (float)$this->default_attr['amount'];
 
         $from = strtoupper(preg_replace('/[^A-Za-z]/', '', (string)$merged['from']));

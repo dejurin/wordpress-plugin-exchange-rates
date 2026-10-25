@@ -16,6 +16,8 @@ WP_TEST_URL=http://127.0.0.1:19249 npm --prefix tests/browser test -- css-parity
 
 The suite covers tables, native widgets, converters, badges, flags/regions, trend arrows, expanded source information, input edits, hover/focus, currency swaps, LTR/RTL, 320/1064 px, and custom theme rules/properties. Before comparison, the test removes only the new table-layout marker classes (`exchange-rates-table-label`, `exchange-rates-table-region`, `exchange-rates-table-full`, `exchange-rates-caption-start`) to represent cached legacy markup. Every comparison then requires identical computed styles, values and geometry for all plugin elements. This protects legacy HTML, converters and badges; it does not assert pixel equality for the intentionally revised table layout, which has its own tests below. Expected screenshots are generated from the pinned reference CSS in the same DOM/state, stored under ignored `test-results/`, and compared with Playwright's image comparator (`threshold: 0.05`, `maxDiffPixels: 0`). The small color/antialiasing allowance addresses observed Chromium SVG-edge rasterization differences on identical CSS; computed-style and geometry comparisons have no tolerance. A deliberate height mutation verifies that the comparison detects a visible regression.
 
+The immutable reference receives only the documented converter box-sizing correction and the intentional visual corrections described in [the focused acceptance report](reviews/visual-regressions-1.4.1.md): table body cell centering, block-level amount inputs, wrapping captions, bounded wrapping badges and a reserved select-arrow lane. These explicit reference corrections retain complete computed-style and pixel comparisons for every other property. The dedicated visual regression tests independently fail against the unmodified plugin; do not update the reference commit or hide differences with property exclusions.
+
 `CSS_REFERENCE=legacy` selects immutable 1.3.2 CSS and LTR scenarios. Run this mode only with the actual 1.3.2 plugin installed in the disposable environment: its PNG markup must remain the baseline. To check cleaned 1.4.0 CSS against legacy markup in RTL as well, run the default `release` reference mode on that same 1.3.2 installation. Direct equality to old RTL CSS is intentionally not asserted because the approved 1.4.0 bidi fixes change its rendering.
 
 ## Purpose and boundaries
@@ -444,3 +446,31 @@ shortcodes/native widgets, base rows and long wrapped names. Geometry assertions
 check the exact vertical center, country edge, absence of empty rows/flag slots,
 unchanged image size and document overflow. Existing CSS parity reconstructs
 legacy labels and still compares immutable CSS, computed styles and pixels.
+
+## Focused visual regressions (1.4.1 follow-up)
+
+`tests/browser-visual.php` is mounted only by the disposable test override. It
+renders real WordPress shortcodes and native widgets with request-local synthetic
+settings and rates. Its generic theme baseline reproduces cross-cell baseline
+alignment without copying plugin HTML or saving settings. It also covers large
+badge values and long names, inherited 16/22px text, and default/custom/empty
+converter titles. The Ukrainian title check loads the shipped MO catalog.
+
+After starting the isolated environment above, run:
+
+```sh
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- visual-regressions.spec.js
+```
+
+The 25 tests cover LTR/RTL, 320/900px viewports, 16/32/64px flags, regions on/off,
+static/editable base amounts, all row cells, badge content and flag dimensions,
+caption text bounds, select arrow spacing, unchanged control heights, currency
+swaps and explicit saved titles. Keep before/after captures on the same runtime,
+viewport, font, fixture and data. For concurrent runtime runs, pass distinct
+Playwright `--output` directories so one runner cannot remove another's traces.
+
+The change deliberately allows badge values and source captions to occupy another
+line when space is insufficient. It changes no rates, stored options, shortcode
+attributes, widget identifiers or version metadata. Table border behavior remains
+unchanged and is deferred separately. See the [acceptance report](reviews/visual-regressions-1.4.1.md)
+for the exact payload identity, regression results, upgrade and code rollback.
