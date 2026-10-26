@@ -14,7 +14,7 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 
 ## Current development version: 1.4.2
 
-The current candidate is 1.4.2, prepared from `main` after the reviewed visual fixes. WordPress.org already publishes 1.4.1. See the [release status](docs/release-status.md) for package identity and verification references. Candidate preparation does not publish the plugin or update installed sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
+The final 1.4.2 candidate was rebuilt from `main` commit `4555660` after [PR #39](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/39) merged. It includes the visual fixes, amount-input and number-formatting corrections, small-value display, and cancellation of in-flight updates on deactivation. [CI on that main commit](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40384805712) passed all five jobs, including 497 Chromium tests. See the [release status](docs/release-status.md) for the exact ZIP, checksum, compatibility evidence and limits. This candidate has not been published by this workflow or installed on production sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
 
 ## Features
 
@@ -109,8 +109,8 @@ python3 scripts/plugin.py package
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
 Output: `dist/exchange-rates.1.4.2.zip`, containing an `exchange-rates/` directory.
-Version 1.4.2 adds the reviewed table/input alignment, narrow-layout wrapping and converter title/spacing fixes. The scheduling correction remains unchanged; see [native cron retry validation](docs/releases/1.4.1-cron-retry.md) and the historical [1.4.1 acceptance report](docs/releases/1.4.1.md).
-CI also saves the verified ZIP as an artifact. Download it from a successful [workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/workflows/ci.yml); extract the outer Actions artifact archive and install the plugin ZIP inside it. See [packaging and release procedures](docs/release.md) for details.
+Version 1.4.2 includes the reviewed table/input alignment, narrow-layout wrapping and converter title/spacing fixes. It also validates converter and table amounts, corrects negative/scientific formatting and converter precision/separator metadata, preserves small nonzero values as localized bounds, and rejects stale refresh responses after deactivation. Existing settings, rates, widgets and saved content remain compatible; the thirty-minute refresh interval is unchanged. See the [input acceptance](docs/reviews/amount-input-1.4.2.md) and [small-value/cancellation review](docs/reviews/remaining-fixes-1.4.2.md).
+CI also saves the verified ZIP as an artifact. Use the [successful final-package workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40384805712) and verify the checksum in [release status](docs/release-status.md); extract the outer Actions artifact archive and install the plugin ZIP inside it. CI artifacts have limited retention. See [packaging and release procedures](docs/release.md) for details.
 
 ## Repository and documentation
 
