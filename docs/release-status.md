@@ -1,4 +1,20 @@
-# Current release candidate: 1.4.2
+# Release preparation: 1.4.2
+
+## Pending amount-input correction (October 26)
+
+The numeric-input audit found defects in the candidate below. The focused
+`codex/amount-input-validation` patch fixes converter and table validation,
+negative/scientific number formatting, and converter precision/separator metadata.
+It requires separate review and CI before merge. See the
+[input acceptance report](reviews/amount-input-1.4.2.md).
+
+The patched local candidate is
+`dist/amount-input-142-20261026/packages/exchange-rates.1.4.2.zip`, SHA-256
+`d70d1562f983e71b729a885eb35e2a000fe2d4dfddbe66c3a10d2b9097814a96`.
+The earlier ZIP and checksum at `dist/exchange-rates.1.4.2.zip` are preserved;
+they do **not** contain this correction. Neither package is published by this task.
+
+## Previously reviewed preparation
 
 Prepared October 25, 2026, from `main` revision
 `dfb307962b9a045763aad70f77933f2e65d721e2` on `codex/prepare-1.4.2`.
@@ -15,7 +31,7 @@ Its contents differ from the reviewed `main` above only in the public stylesheet
 and converter shortcode. The visual fixes therefore belong in a new **1.4.2**
 release, rather than replacing the published 1.4.1 package.
 
-## Candidate identity
+## Previously reviewed candidate identity
 
 | Item | Value |
 | --- | --- |

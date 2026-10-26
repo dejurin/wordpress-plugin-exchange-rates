@@ -2,7 +2,7 @@
 
 Follow the [development contract](../CONTRIBUTING.md) for language, WordPress conventions, security and compatibility requirements.
 
-The current candidate is **1.4.1**; use the [release status](release-status.md) for its identity and evidence. References to 1.3.2 and 1.4.0 below describe pinned regression baselines and the original fixes, not alternative current candidates.
+The current candidate is **1.4.2**; use the [release status](release-status.md) for its identity and evidence. References to earlier versions below describe pinned regression baselines and the original fixes, not alternative current candidates.
 
 ## CSS parity checks
 
@@ -145,11 +145,27 @@ docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/table
 
 `seed` creates three pages, a saved widget and synthetic settings/rates in the disposable database. The fixture temporarily filters formatting settings per rendered table without persisting those overrides. `verify` confirms that settings, rates, widget options and saved page content are unchanged. For an upgrade check, seed before changing plugin files and run the browser suite and `verify` afterwards without seeding again. Run the general smoke and formatting fixture before this seed/verify sequence: they deliberately write their own test data.
 
-The eight Chromium tests cover a single table, mixed shortcode/widget tables in both DOM orders, repeated edits, a table without an amount input, independent precision/separators/symbol position, current and previous-close values, trend images, click/blur and the existing amount-one fallback for empty, zero, negative or invalid input. Snapshots protect the other table inputs and values, badge and converter. Captions are excluded because WordPress asynchronously replaces their emoji text with images. The suite preserves existing rendering behavior, including the lack of a symbol on the initial previous-close value. It does not attempt unrelated formatting fixes.
+The eight Chromium tests cover a single table, mixed shortcode/widget tables in both DOM orders, repeated edits, a table without an amount input, independent precision/separators/symbol position, current and previous-close values, trend images, click/blur and the existing amount-one fallback for empty, zero or negative input. Snapshots protect the other table inputs and values, badge and converter. Captions are excluded because WordPress asynchronously replaces their emoji text with images. The suite preserves existing rendering behavior, including the lack of a symbol on the initial previous-close value. Malformed input is covered separately below.
 
 The runner accepts only loopback HTTP URLs and blocks browser requests to other origins. Use only a disposable test site. Retries are disabled; failed runs retain screenshots and traces in the ignored `tests/browser/test-results/` directory. CI uploads those diagnostics on failure.
 
 The fix scopes settings and rate-cell updates to the input's containing table. It changes two selectors in `assets/js/public/common.js`; formulas, markup, public attributes, saved settings and version metadata are unchanged. There is no migration. Reverting that fix restores the old behavior without a database rollback. No WordPress.org release is published by this workflow.
+
+## Amount input validation and formatting
+
+`tests/browser/amount-input.spec.js` exercises converter and table inputs through actual WordPress shortcodes and native widgets. Run it with the same isolated environment and `WP_TEST_URL` used above:
+
+```sh
+npm test --prefix tests/browser -- amount-input.spec.js
+```
+
+The 76 tests cover invalid input and recovery, independent instances, swaps and blur, cached table trend images, all eight number formats and precision 0–7, negative grouping, decimal/scientific notation, overflow and underflow, LTR/RTL, and 320/1064 px viewports. The read-only bidi fixture accepts bounded `decimals` and `changes` parameters; it does not persist these overrides.
+
+Both inputs accept complete signed decimal numbers and scientific notation with optional surrounding whitespace. They reject partial numbers (`12abc`), comma/group separators, hexadecimal/binary notation, non-finite values and nonzero amounts that underflow to zero. Malformed input or an unrepresentable calculation displays an en dash without a currency symbol and sets `aria-invalid`; valid input clears it. Invalid table input is retained on blur so the user can correct it. This deliberately replaces the old plausible-looking amount-one result for malformed table input. Empty, zero and negative table inputs still use one; the converter still supports zero and negative amounts.
+
+The shared formatter retains existing rounding and trims trailing fractional zeros, groups only the unsigned integer digits, and expands scientific notation into decimal output. Tiny representable values can still round to zero at the selected display precision; changing that policy is separate. The converter now transmits meaningful zero precision and an empty thousands separator instead of silently using JavaScript defaults. Old cached converter HTML must be refreshed to receive those attributes.
+
+No options, rates, public attributes or widget identifiers are migrated. Rollback replaces the plugin files and restores the prior behavior, including the input defects. See the [focused acceptance report](reviews/amount-input-1.4.2.md) for the exact evidence and limits.
 
 ## Settings label regressions
 
