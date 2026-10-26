@@ -89,9 +89,7 @@ for (const direction of ['ltr', 'rtl']) {
             await expect(converter.locator('input')).toHaveCSS('direction', 'ltr');
             await converter.locator('input').fill('1234.56');
             await converter.locator('select').nth(1).selectOption('EUR');
-            // Preserve the existing converter fallback for omitted empty group separators.
-            const converterEur = format === 6 ? '1,543.2' : format === 7 ? '1,543,2' : eur;
-            await expectVisualOrder(converter.locator('.result'), symbol(converterEur, '€'));
+            await expectVisualOrder(converter.locator('.result'), symbol(eur, '€'));
             await converter.locator('select').nth(1).selectOption('BRL');
             await expectVisualOrder(converter.locator('.result'), symbol(brl, 'R$'));
             await converter.locator('input').fill('-12.34');

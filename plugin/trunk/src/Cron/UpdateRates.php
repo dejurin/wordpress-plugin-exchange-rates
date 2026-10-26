@@ -10,6 +10,7 @@ use Dejurin\ExchangeRates\Models\Settings;
 use Dejurin\ExchangeRates\Plugin;
 use Dejurin\ExchangeRates\Service\RatesData;
 use Dejurin\ExchangeRates\Service\UpdateDataSources;
+use Dejurin\ExchangeRates\Service\RefreshLifecycle;
 
 class UpdateRates {
 	public static $action_name = Plugin::PLUGIN_SLUG . '_data_update';
@@ -58,6 +59,9 @@ class UpdateRates {
 	}
 
 	public static function register_task() {
+		if ( ! RefreshLifecycle::matches( RefreshLifecycle::generation() ) ) {
+			return false;
+		}
 		if ( self::schedule_is_current( self::recurring_events() ) ) {
 			return true;
 		}
@@ -98,6 +102,9 @@ class UpdateRates {
 
 	/** Queue work only. Rendering must never wait for the rate provider. */
 	public static function queue_if_due() {
+		if ( ! RefreshLifecycle::matches( RefreshLifecycle::generation() ) ) {
+			return false;
+		}
 		if ( ! self::is_due() ) {
 			return false;
 		}
@@ -126,6 +133,9 @@ class UpdateRates {
 	}
 
 	private static function schedule_retry( $timestamp ) {
+		if ( ! RefreshLifecycle::matches( RefreshLifecycle::generation() ) ) {
+			return false;
+		}
 		// Recheck under the lease so concurrent page requests share one event.
 		return wp_next_scheduled( self::$retry_action_name ) ? true : wp_schedule_single_event( $timestamp, self::$retry_action_name );
 	}
@@ -137,6 +147,9 @@ class UpdateRates {
 
 	/** Core owns retry removal; queued callbacks skip already-fresh data. */
 	public static function run_retry() {
+		if ( ! RefreshLifecycle::matches( RefreshLifecycle::generation() ) ) {
+			return false;
+		}
 		// An explicit/manual update may already have refreshed this cache.
 		if ( ! self::is_due() ) {
 			delete_transient( self::$retry_transient );
@@ -146,6 +159,10 @@ class UpdateRates {
 	}
 
 	private static function refresh( $force_source_id = null ) {
+		$generation = RefreshLifecycle::generation();
+		if ( ! RefreshLifecycle::matches( $generation ) ) {
+			return false;
+		}
 		$token = self::acquire_lock();
 		if ( false === $token ) {
 			return false;
@@ -156,7 +173,11 @@ class UpdateRates {
 				self::schedule_retry( $retry_at );
 				return false;
 			}
-			if ( UpdateDataSources::update( $force_source_id ) ) {
+			$success = UpdateDataSources::update( $force_source_id );
+			if ( ! RefreshLifecycle::matches( $generation ) ) {
+				return false;
+			}
+			if ( $success ) {
 				delete_transient( self::$retry_transient );
 				return true;
 			}

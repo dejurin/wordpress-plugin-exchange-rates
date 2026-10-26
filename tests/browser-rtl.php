@@ -18,13 +18,16 @@ add_action( 'template_redirect', function () {
 	}
 	$format = isset( $_GET['format'] ) ? max( 0, min( 7, (int) $_GET['format'] ) ) : 0;
 	$after = isset( $_GET['after'] ) && '1' === $_GET['after'];
-	add_filter( 'option_exchange-rates', function ( $settings ) use ( $format ) {
+	$decimals = isset( $_GET['decimals'] ) ? max( 0, min( 7, (int) $_GET['decimals'] ) ) : 2;
+	$changes = isset( $_GET['changes'] ) && '1' === $_GET['changes'];
+	add_filter( 'option_exchange-rates', function ( $settings ) use ( $format, $decimals ) {
 		$settings['currency_format'] = $format;
-		$settings['decimals'] = 2;
+		$settings['decimals'] = $decimals;
 		return $settings;
 	} );
 	$common = array( 'amount' => '1234.56', 'symbol' => true, 'after' => $after, 'flag_type' => 'none', 'code' => true );
 	$table = array_merge( $common, array( 'currency_list' => array( 'EUR', 'BRL' ), 'base_currency' => 'USD', 'base_show' => true, 'amount_active' => true, 'table_headers_previous_close_show' => true ) );
+	$table['table_headers_changes_show'] = $changes;
 	$converter = array_merge( $common, array( 'from' => 'USD', 'to' => 'BRL' ) );
 	$position = $after ? 'true' : 'false';
 	header( 'Content-Type: text/html; charset=UTF-8' );
@@ -33,7 +36,7 @@ add_action( 'template_redirect', function () {
 	echo '<style>body{margin:16px;font-family:Arial,sans-serif}section{max-width:640px;margin-bottom:24px}</style></head><body>';
 	echo '<h1>Numeric direction regression fixture</h1><p>Local synthetic rates only. العربية עברית</p>';
 	echo '<section id="shortcode-table">';
-	echo do_shortcode( '[exchange-rates_currency-table amount="1234.56" currency_list="EUR,BRL" base_show="true" amount_active="true" flag_type="none" code="true" symbol="true" after="' . $position . '" table_headers_previous_close_show="true"]' );
+	echo do_shortcode( '[exchange-rates_currency-table amount="1234.56" currency_list="EUR,BRL" base_show="true" amount_active="true" flag_type="none" code="true" symbol="true" after="' . $position . '" table_headers_previous_close_show="true" table_headers_changes_show="' . ( $changes ? 'true' : 'false' ) . '"]' );
 	echo '</section><section id="widget-table">';
 	the_widget( '\Dejurin\ExchangeRates\Widgets\Table', $table );
 	echo '</section><section id="static-table">';

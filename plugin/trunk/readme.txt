@@ -563,6 +563,10 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Changelog ==
 
 = 1.4.2 =
+* Show an unavailable result for malformed or unrepresentable converter and table amounts, and recover normally after valid input.
+* Correct negative and scientific-notation number formatting; honor converter zero precision and formats without thousands separators.
+* Keep small nonzero values distinct from zero and unavailable data at the selected display precision.
+* Cancel in-flight rate updates after deactivation so their responses cannot overwrite cached rates or recreate retries.
 * Align currency names, codes, values, and editable base amounts vertically in exchange-rate tables.
 * Keep long currency badge names and values, flags, and source captions inside narrow containers while preserving RTL alignment.
 * Reserve space for converter select arrows so they do not overlap the selected currency text.
@@ -689,7 +693,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 == Upgrade Notice ==
 
 = 1.4.2 =
-Fixes table and input alignment, wrapping in narrow layouts, converter select spacing, and the default converter title. Existing settings, rates, shortcodes, and widgets are preserved; no data migration is required.
+Fixes amount validation and number formatting, table and input alignment, narrow-layout wrapping, converter select spacing, and the default converter title. Existing settings, rates, shortcodes, and widgets are preserved; no data migration is required.
 
 = 1.4.1 =
 Currency labels now adapt to flag size, with a 40 px threshold. Automatic rate checks now run every 30 minutes, subject to WordPress Cron execution. Existing hourly events migrate automatically; settings, saved rates and widgets are retained.

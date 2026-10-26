@@ -26,7 +26,9 @@ class Plugin
     }
 
     public function run()
-    {   /*
+    {
+        Service\RefreshLifecycle::generation();
+        /*
          * Backend and Frontend Register Script & Styles
          */
         add_action('admin_enqueue_scripts', [$this, 'register_admin_script_style']);

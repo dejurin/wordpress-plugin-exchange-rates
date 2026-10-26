@@ -62,10 +62,10 @@ test('click and blur without editing restore the saved amount', async ({ page })
   expect(await snapshot(first)).toEqual(before);
 });
 
-test('empty, zero, negative and invalid input retain the existing amount-one fallback', async ({ page }) => {
+test('empty, zero and negative input retain the existing amount-one fallback', async ({ page }) => {
   await openFixture(page, 'single');
   const first = table(page, 'first');
-  for (const value of ['', '0', '-5', 'invalid']) {
+  for (const value of ['', '0', '-5']) {
     await first.locator('input').fill(value);
     await expect(prices(first)).toHaveText(['1.25', '1.2']);
     await first.locator('input').blur();

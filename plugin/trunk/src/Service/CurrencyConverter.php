@@ -52,7 +52,9 @@ class CurrencyConverter
         $this->parameters['base_currency'] = RatesData::get_base($rates, $this->settings['base_currency']);
 
         foreach ($this->parameters as $key => $value) {
-            if (!empty($value) && !is_array($value) && !is_object($value)) {
+            // Zero precision and an empty grouping separator are meaningful settings.
+            $format_setting = in_array($key, ['decimals', 'thousands_sep'], true);
+            if ((!empty($value) || $format_setting) && !is_array($value) && !is_object($value)) {
                 $data_attr .= 'data-'.esc_attr(str_replace('_', '-', $key)).'="'.esc_attr($value).'" ';
             }
         }

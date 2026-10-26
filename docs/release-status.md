@@ -1,4 +1,26 @@
-# Current release candidate: 1.4.2
+# Release preparation: 1.4.2
+
+## Pending input and cancellation fixes (October 26)
+
+The numeric-input audit found defects in the candidate below. The focused
+`codex/amount-input-validation` patch fixes converter and table validation,
+negative/scientific number formatting, converter precision/separator metadata,
+small nonzero value display, and cancellation of in-flight updates on deactivation.
+The changes are tracked in [PR #39](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/39).
+Exact-head CI must pass before merge. See the historical
+[input acceptance report](reviews/amount-input-1.4.2.md) and the
+[follow-up review and acceptance](reviews/remaining-fixes-1.4.2.md).
+
+The patched local candidate is
+`dist/pr39-final-review-20261026/exchange-rates.1.4.2.zip`, SHA-256
+`813028842039f6bb51badb0c22271cd3192bd7d8b9c2b5597d89a79b809f248d` (930 files).
+It differs from the runtime-accepted follow-up ZIP only in `readme.txt`, which
+adds the two changelog entries. Executable code, assets and catalogs are identical.
+The earlier packages, including `dist/exchange-rates.1.4.2.zip`, are preserved as
+historical artifacts. The canonical ZIP predates these corrections. No package
+is published by this task.
+
+## Previously reviewed preparation
 
 Prepared October 25, 2026, from `main` revision
 `dfb307962b9a045763aad70f77933f2e65d721e2` on `codex/prepare-1.4.2`.
@@ -15,7 +37,7 @@ Its contents differ from the reviewed `main` above only in the public stylesheet
 and converter shortcode. The visual fixes therefore belong in a new **1.4.2**
 release, rather than replacing the published 1.4.1 package.
 
-## Candidate identity
+## Previously reviewed candidate identity
 
 | Item | Value |
 | --- | --- |

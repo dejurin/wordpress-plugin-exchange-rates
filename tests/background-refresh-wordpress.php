@@ -141,6 +141,7 @@ $original = background_state();
 $original_cron = get_option( 'cron' );
 $original_lock = get_option( 'exchange-rates_refresh_lock' );
 $original_retry = get_transient( 'exchange-rates_refresh_after' );
+$original_generation = get_option( 'exchange-rates_refresh_generation' );
 global $checks, $failed, $defaults;
 $checks = 0;
 $failed = 0;
@@ -280,6 +281,7 @@ try {
 	background_check( ! $clean['events'] && ! $clean['lock'] && ! $clean['retry_at'], 'Deactivation removes only background scheduling state, not cached data' );
 	background_check( background_same_data( $clean['before'], $clean['after'] ), 'Deactivation preserves existing settings and cached rates' );
 } finally {
+	if ( false === $original_generation ) { delete_option( 'exchange-rates_refresh_generation' ); } else { update_option( 'exchange-rates_refresh_generation', $original_generation, false ); }
 	background_state();
 	update_option( 'exchange-rates', $original['settings'] );
 	update_option( 'exchange-rates_rates', $original['rates'] );

@@ -1,4 +1,16 @@
 jQuery(document).ready(function() {
+    var unavailable = '\u2013';
+
+    function readAmount(value) {
+        value = String(value).trim();
+        if (value === '') return 0;
+        // Reject partial numbers, alternate radices and unrepresentable amounts.
+        if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value)) return null;
+        var amount = Number(value);
+        if (!isFinite(amount) || (amount === 0 && /[1-9]/.test(value.split(/e/i)[0]))) return null;
+        return amount;
+    }
+
     function formatNumber(r, n, p, ts, dp) {
         var t = [];
 
@@ -6,15 +18,39 @@ jQuery(document).ready(function() {
         if (typeof ts == 'undefined') ts = ',';
         if (typeof dp == 'undefined') dp = '.';
 
-        n = Number((r * n).toFixed(p));
-        n = n.toString().split('.');
+        r = Number(r);
+        if (typeof n !== 'number' || !isFinite(n) || !isFinite(r) || r <= 0) return null;
+        var value = r * n;
+        if (!isFinite(value) || (value === 0 && n !== 0)) return null;
+
+        // Preserve existing rounding, then group only unsigned decimal digits.
+        n = Number(value.toFixed(p));
+        // Keep a nonzero amount distinct from both zero and unavailable data.
+        if (n === 0 && value !== 0) {
+            return (value < 0 ? '>-' : '<') + (p > 0 ? '0' + dp + new Array(Number(p)).join('0') + '1' : '1');
+        }
+        var sign = n < 0 ? '-' : '';
+        n = Math.abs(n).toString();
+        var exponent = n.split('e');
+        if (exponent.length === 2) {
+            var digits = exponent[0].replace('.', '');
+            var point = (exponent[0].indexOf('.') < 0 ? exponent[0].length : exponent[0].indexOf('.')) + Number(exponent[1]);
+            if (point <= 0) {
+                n = '0.' + new Array(1 - point).join('0') + digits;
+            } else if (point >= digits.length) {
+                n = digits + new Array(point - digits.length + 1).join('0');
+            } else {
+                n = digits.slice(0, point) + '.' + digits.slice(point);
+            }
+        }
+        n = n.split('.');
 
         for (var iLen = n[0].length, i = iLen ? iLen % 3 || 3 : 0, j = 0; i <= iLen; i += 3) {
             t.push(n[0].substring(j, i));
             j = i;
         }
 
-        return t.join(ts) + (n[1] ? dp + n[1] : '');
+        return sign + t.join(ts) + (n[1] ? dp + n[1] : '');
     }
     function updateChange(cell, amount, settings) {
         // Cached legacy markup has no change metadata; keep its existing behavior.
@@ -23,8 +59,9 @@ jQuery(document).ready(function() {
         var trend = Number(cell.attr('data-change-trend'));
         var current = formatNumber(cell.data('rate'), amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
         var previous = formatNumber(Number(cell.attr('data-previous-rate')), amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
-        var visible = trend !== 0 && current !== previous;
-        var label = cell.attr(visible ? 'data-change-label' : 'data-change-hidden-label');
+        var visible = current !== null && previous !== null && trend !== 0 && current !== previous;
+        var invalid = current === null || (cell.attr('data-previous-rate') && previous === null);
+        var label = invalid ? unavailable : cell.attr(visible ? 'data-change-label' : 'data-change-hidden-label');
         var icon = cell.find('img.exchange-rates-trend');
 
         if (!visible) {
@@ -68,12 +105,15 @@ jQuery(document).ready(function() {
     });
 
     jQuery('.widget-exchange-rates-currency-table input').on('input', function(event) {
-        var amount = parseFloat(jQuery(this).val());
+        var rawAmount = jQuery(this).val();
+        var amount = readAmount(rawAmount);
         var settings = jQuery(this).closest('table');
+        var invalid = amount === null;
 
-        amount = (amount > 0) ? amount : 1;
+        // Keep the table's existing empty/zero/negative amount-one policy.
+        if (amount !== null && amount <= 0) amount = 1;
 
-        jQuery(this).data('amount', amount);
+        jQuery(this).data('amount', amount === null ? rawAmount : amount);
         settings.find('tbody td[data-rate]').each(function(index, value) {
             var rate = jQuery(value).data('rate');
             var pre = jQuery(value).data('symbol');
@@ -84,12 +124,19 @@ jQuery(document).ready(function() {
                 pre = '';
             }
 
-            var result = pre + formatNumber(rate, amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point')) + after;
+            var formatted = formatNumber(rate, amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
             var img = jQuery(value).find('img').clone();
-            jQuery(value).html(result);
+            invalid = invalid || formatted === null;
+            jQuery(value).text(formatted === null ? unavailable : pre + formatted + after);
+            // Cached legacy cells lack trend metadata; retain their image for recovery.
+            img.each(function() {
+                if (formatted === null) this.style.setProperty('display', 'none', 'important');
+                else this.style.removeProperty('display');
+            });
             img.appendTo(value);
             updateChange(jQuery(value), amount, settings);
         });
+        jQuery(this).attr('aria-invalid', invalid ? 'true' : null);
     });
     /* Currency Table - end */
 
@@ -132,7 +179,7 @@ jQuery(document).ready(function() {
         });
 
         jQuery(input).on('input', function() {
-            var amount = jQuery(this).val();
+            var amount = readAmount(jQuery(this).val());
             var base_currency = el.data('base-currency');
 
             var from = jQuery(el.find('select')[0]).find('option:selected').val();
@@ -146,15 +193,15 @@ jQuery(document).ready(function() {
                 pre = '';
             }
 
-            result.html(
-                pre + formatNumber(
-                    rate,
-                    amount,
-                    el.data('decimals'),
-                    el.data('thousands-sep'),
-                    el.data('decimal-point')
-                ) + after
+            var formatted = formatNumber(
+                rate,
+                amount,
+                el.data('decimals'),
+                el.data('thousands-sep'),
+                el.data('decimal-point')
             );
+            input.attr('aria-invalid', formatted === null ? 'true' : null);
+            result.text(formatted === null ? unavailable : pre + formatted + after);
         });
 
         var result = jQuery('<div>').attr('class', 'result').text(0).appendTo(el);

@@ -128,13 +128,30 @@ class Currency
 
     public function get_rate_format($index = 0, $amount = true, $decimals = false)
     {
+        if ( ! $this->has_rate( $index ) ) {
+            return $this->zero_symbol;
+        }
+        $rate = $this->get_rate( $index );
+        $multiplier = $amount ? $this->parameters['amount'] : 1;
+        $value = $rate * $multiplier;
+        if ( ! is_finite( $rate ) || $rate <= 0 || ! is_finite( $value ) || ( 0 == $value && 0 != $multiplier ) ) {
+            return $this->zero_symbol;
+        }
+        if ( 0 == $value ) {
+            return '0';
+        }
+        $precision = max( 0, min( 7, (int) ( $decimals ? $this->parameters['decimals'] : $this->settings['decimals'] ) ) );
         $result = self::for_format(
-            $this->get_rate($index) * ($amount ? $this->parameters['amount'] : 1),
+            $value,
             $this->settings['currency_format'],
-            ($decimals) ? $this->parameters['decimals'] : $this->settings['decimals']
+            $precision
         );
 
-        return strcmp($result, '0') ? $result : $this->zero_symbol;
+        // A rounded nonzero rate is below display precision, not unavailable.
+        if ( 0 != $value && ( '0' === $result || '-0' === $result ) ) {
+            return ( $value < 0 ? '&gt;-' : '&lt;' ) . self::for_format( pow( 10, -$precision ), $this->settings['currency_format'], $precision );
+        }
+        return $result;
     }
 
     public function get_amount()
