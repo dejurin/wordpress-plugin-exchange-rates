@@ -2069,3 +2069,7 @@ msgstr "Показване на заглавката на таблицата"
 #: src/Cron/UpdateRates.php:29
 msgid "Every 30 minutes"
 msgstr "На всеки 30 минути"
+
+#: src/Deactivation.php:15
+msgid "Unable to cancel exchange-rate updates. Please try deactivating the plugin again."
+msgstr "Актуализациите на валутните курсове не можаха да бъдат отменени. Опитайте отново да деактивирате разширението."

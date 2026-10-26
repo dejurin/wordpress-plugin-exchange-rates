@@ -2066,6 +2066,10 @@ msgstr "Table headers"
 #: src/Widgets/Table.php:249
 msgid "Show table header"
 msgstr "Show table header"
+
+#: src/Deactivation.php:15
+msgid "Unable to cancel exchange-rate updates. Please try deactivating the plugin again."
+msgstr "Unable to cancel exchange-rate updates. Please try deactivating the plugin again."
 #: src/Cron/UpdateRates.php:29
 msgid "Every 30 minutes"
 msgstr "Every 30 minutes"

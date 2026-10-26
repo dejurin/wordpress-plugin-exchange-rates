@@ -112,7 +112,7 @@ foreach ( $expected_thousands as $format_id => $expected ) {
 		$widget_html = ob_get_clean();
 		check_saved_formatting( array( $expected ), formatting_html_values( $widget_html, '//td[@data-rate="1"]' ), 'Saved widget' );
 		$currency = new Currency( array( 'base_currency' => 'USD', 'amount' => 0, 'inverse' => false, 'reverse' => true ), 'EUR' );
-		check_saved_formatting( '&ndash;', $currency->get_rate_format(), 'Existing zero-rate placeholder' );
+		check_saved_formatting( '0', $currency->get_rate_format(), 'A valid zero amount is distinct from an unavailable rate' );
 		check_saved_formatting( '&ndash;', $currency->get_change_format(), 'Existing zero-change placeholder' );
 		check_saved_formatting( null, $currency->get_change_format( true ), 'Existing raw zero-change sentinel' );
 		remove_filter( 'option_exchange-rates', $filter );

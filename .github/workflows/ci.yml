@@ -34,6 +34,9 @@ jobs:
       - run: php -l tests/source-directory-wordpress.php
       - run: php -l tests/deactivation-inflight-wordpress.php
       - run: php tests/formatting.php
+      - run: php tests/small-values.php
+      - run: php -l tests/deactivation-cancellation-wordpress.php
+      - run: php -l tests/browser-small-values.php
       - run: php tests/change-percentage.php
       - run: php tests/percentage.php
       - run: php -l tests/percentage-wordpress.php
@@ -115,6 +118,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/background-refresh-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/native-cron-retry-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/concurrent-source-wordpress.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/deactivation-cancellation-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php seed
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/formatting-wordpress.php verify
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/table-isolation-wordpress.php seed

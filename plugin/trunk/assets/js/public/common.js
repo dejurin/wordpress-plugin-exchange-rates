@@ -25,6 +25,10 @@ jQuery(document).ready(function() {
 
         // Preserve existing rounding, then group only unsigned decimal digits.
         n = Number(value.toFixed(p));
+        // Keep a nonzero amount distinct from both zero and unavailable data.
+        if (n === 0 && value !== 0) {
+            return (value < 0 ? '>-' : '<') + (p > 0 ? '0' + dp + new Array(Number(p)).join('0') + '1' : '1');
+        }
         var sign = n < 0 ? '-' : '';
         n = Math.abs(n).toString();
         var exponent = n.split('e');

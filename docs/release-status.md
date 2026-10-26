@@ -1,18 +1,24 @@
 # Release preparation: 1.4.2
 
-## Pending amount-input correction (October 26)
+## Pending input and cancellation fixes (October 26)
 
 The numeric-input audit found defects in the candidate below. The focused
 `codex/amount-input-validation` patch fixes converter and table validation,
-negative/scientific number formatting, and converter precision/separator metadata.
-It requires separate review and CI before merge. See the
-[input acceptance report](reviews/amount-input-1.4.2.md).
+negative/scientific number formatting, converter precision/separator metadata,
+small nonzero value display, and cancellation of in-flight updates on deactivation.
+The changes are tracked in [PR #39](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/39).
+Exact-head CI must pass before merge. See the historical
+[input acceptance report](reviews/amount-input-1.4.2.md) and the
+[follow-up review and acceptance](reviews/remaining-fixes-1.4.2.md).
 
 The patched local candidate is
-`dist/amount-input-142-20261026/packages/exchange-rates.1.4.2.zip`, SHA-256
-`d70d1562f983e71b729a885eb35e2a000fe2d4dfddbe66c3a10d2b9097814a96`.
-The earlier ZIP and checksum at `dist/exchange-rates.1.4.2.zip` are preserved;
-they do **not** contain this correction. Neither package is published by this task.
+`dist/pr39-final-review-20261026/exchange-rates.1.4.2.zip`, SHA-256
+`813028842039f6bb51badb0c22271cd3192bd7d8b9c2b5597d89a79b809f248d` (930 files).
+It differs from the runtime-accepted follow-up ZIP only in `readme.txt`, which
+adds the two changelog entries. Executable code, assets and catalogs are identical.
+The earlier packages, including `dist/exchange-rates.1.4.2.zip`, are preserved as
+historical artifacts. The canonical ZIP predates these corrections. No package
+is published by this task.
 
 ## Previously reviewed preparation
 

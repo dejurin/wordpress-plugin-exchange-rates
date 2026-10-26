@@ -10,6 +10,7 @@ class Activation
 {
     public static function run()
     {
+        Service\RefreshLifecycle::activate();
         /*
          * Cron task for update currency rates every 30 minutes.
          */

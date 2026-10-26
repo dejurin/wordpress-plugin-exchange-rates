@@ -2066,6 +2066,10 @@ msgstr "Заголовки таблиць"
 #: src/Widgets/Table.php:249
 msgid "Show table header"
 msgstr "Показати заголовок таблиці"
+
+#: src/Deactivation.php:15
+msgid "Unable to cancel exchange-rate updates. Please try deactivating the plugin again."
+msgstr "Не вдалося скасувати оновлення курсів валют. Спробуйте деактивувати плагін ще раз."
 #: src/Cron/UpdateRates.php:29
 msgid "Every 30 minutes"
 msgstr "Кожні 30 хвилин"

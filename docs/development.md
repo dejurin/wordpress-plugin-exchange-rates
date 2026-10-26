@@ -163,7 +163,7 @@ The 76 tests cover invalid input and recovery, independent instances, swaps and 
 
 Both inputs accept complete signed decimal numbers and scientific notation with optional surrounding whitespace. They reject partial numbers (`12abc`), comma/group separators, hexadecimal/binary notation, non-finite values and nonzero amounts that underflow to zero. Malformed input or an unrepresentable calculation displays an en dash without a currency symbol and sets `aria-invalid`; valid input clears it. Invalid table input is retained on blur so the user can correct it. This deliberately replaces the old plausible-looking amount-one result for malformed table input. Empty, zero and negative table inputs still use one; the converter still supports zero and negative amounts.
 
-The shared formatter retains existing rounding and trims trailing fractional zeros, groups only the unsigned integer digits, and expands scientific notation into decimal output. Tiny representable values can still round to zero at the selected display precision; changing that policy is separate. The converter now transmits meaningful zero precision and an empty thousands separator instead of silently using JavaScript defaults. Old cached converter HTML must be refreshed to receive those attributes.
+The shared formatter retains existing rounding and trims trailing fractional zeros, groups only the unsigned integer digits, and expands scientific notation into decimal output. Nonzero values that round to zero display a localized bound, such as `<0.0001` or `>-0.0001` at precision four; actual zero remains `0`. PHP rate rendering uses the same display policy. The converter now transmits meaningful zero precision and an empty thousands separator instead of silently using JavaScript defaults. Old cached converter HTML must be refreshed to receive those attributes.
 
 No options, rates, public attributes or widget identifiers are migrated. Rollback replaces the plugin files and restores the prior behavior, including the input defects. See the [focused acceptance report](reviews/amount-input-1.4.2.md) for the exact evidence and limits.
 
@@ -496,3 +496,30 @@ line when space is insufficient. It changes no rates, stored options, shortcode
 attributes, widget identifiers or version metadata. Table border behavior remains
 unchanged and is deferred separately. See the [acceptance report](reviews/visual-regressions-1.4.1.md)
 for the exact payload identity, regression results, upgrade and code rollback.
+
+## Small values and cancellation during deactivation
+
+Run the focused checks against the disposable test Compose project:
+
+```sh
+set -euo pipefail
+php tests/small-values.php
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/deactivation-cancellation-wordpress.php
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- small-values.spec.js amount-input.spec.js
+```
+
+The cancellation suite launches independent WordPress processes and restores its
+original synthetic state. Do not run it concurrently with browser or other
+state-mutating tests on the same database. Different disposable runtime projects
+can run independently.
+
+For a manual visual check, open `/?er-small-test=1&precision=4` on the test site.
+The fixture supplies 1 USD = 0.00001234 BTC without saving rates. Both tables
+must show `<0.0001` initially and after typing `2`, then `1`. Precision seven
+must show `0.0000123` initially and after restoring amount `1`. At precision four,
+in either converter, `-1` must show `>-0.0001`,
+zero must show `0`, and invalid input must show an en dash and recover after
+valid input. The fixture is mounted only by the test Compose override.
+
+See [the focused review](reviews/remaining-fixes-1.4.2.md) for intentional display
+changes, the cancellation generation, compatibility boundaries and rollback.

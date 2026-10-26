@@ -19,6 +19,10 @@ class UpdateDataSources
 
     public static function update($force_source_id = null)
     {
+        $generation = RefreshLifecycle::generation();
+        if ( ! RefreshLifecycle::matches( $generation ) ) {
+            return self::cancelled();
+        }
         // Keep a database snapshot: get_option() may still contain another request's old settings.
         $settings_snapshot = self::option_snapshot( Settings::$option_name );
         self::clear_option_cache( Settings::$option_name );
@@ -32,7 +36,7 @@ class UpdateDataSources
         }
 
         if (!isset(Sources::get_list()[$source_id])) {
-            self::save_state( array( 'rates_available' => false ), $settings_snapshot );
+            self::save_state( array( 'rates_available' => false ), $settings_snapshot, $generation );
 
             self::$req_rates = [
                 'status' => false,
@@ -46,6 +50,10 @@ class UpdateDataSources
         $req = new Request(self::$rates_api_uri.'rates/'.$source_id.'.json');
         self::$req_rates = $req->data();
 
+        if ( ! RefreshLifecycle::matches( $generation ) ) {
+            return self::cancelled();
+        }
+
         if (self::$req_rates['status']) {
             $payload_error = RatesData::validate_payload(self::$req_rates['data'], $source_id);
             if ('' !== $payload_error) {
@@ -56,7 +64,7 @@ class UpdateDataSources
 
         $state = array();
         if (self::$req_rates['status']) {
-            if ( ! self::guarded_update_option( self::$rates_option_name, self::$req_rates['data'], $settings_snapshot ) ) {
+            if ( ! self::guarded_update_option( self::$rates_option_name, self::$req_rates['data'], $settings_snapshot, $generation ) ) {
                 self::$req_rates['status'] = false;
                 self::$req_rates['error'] = 'Unable to save exchange-rate data.';
             } else {
@@ -66,14 +74,19 @@ class UpdateDataSources
         }
 
         $state['rates_available'] = self::$req_rates['status'];
-        if ( ! self::save_state( $state, $settings_snapshot ) ) {
+        if ( ! self::save_state( $state, $settings_snapshot, $generation ) ) {
             self::$req_rates['status'] = false;
             self::$req_rates['error'] = $settings_snapshot !== self::option_snapshot( Settings::$option_name )
                 ? 'Exchange-rate settings changed during the update.'
                 : 'Unable to save exchange-rate settings.';
         }
 
-        return self::$req_rates['status'];
+        return RefreshLifecycle::matches( $generation ) ? self::$req_rates['status'] : self::cancelled();
+    }
+
+    private static function cancelled() {
+        self::$req_rates = array( 'status' => false, 'data' => null, 'error' => 'Exchange-rate update cancelled after plugin deactivation.' );
+        return false;
     }
 
     /**
@@ -81,9 +94,10 @@ class UpdateDataSources
      *
      * @param array $state Availability and, after a validated success, base and UTC time.
      * @param string|null $settings_snapshot Serialized settings before the provider request.
+     * @param string|null $generation Cancellation generation captured when the plugin loaded.
      * @return bool Whether the requested state is stored, including an unchanged value.
      */
-    private static function save_state( array $state, $settings_snapshot )
+    private static function save_state( array $state, $settings_snapshot, $generation )
     {
         $settings = wp_parse_args( maybe_unserialize( $settings_snapshot ), Settings::get_defaults() );
         // The form sanitizer remains active. This scoped filter adds only our internal patch.
@@ -93,7 +107,7 @@ class UpdateDataSources
         $filter = 'sanitize_option_' . Settings::$option_name;
         add_filter( $filter, $apply_state, 20 );
         try {
-            if ( ! self::guarded_update_option( Settings::$option_name, array_merge( $settings, $state ), $settings_snapshot ) ) {
+            if ( ! self::guarded_update_option( Settings::$option_name, array_merge( $settings, $state ), $settings_snapshot, $generation ) ) {
                 return false;
             }
         } finally {
@@ -133,9 +147,10 @@ class UpdateDataSources
 	 * @param string      $option Option owned by this service.
 	 * @param array       $value Exact validated value to persist.
 	 * @param string|null $settings_snapshot Serialized settings before HTTP.
+	 * @param string|null $generation Cancellation generation captured before HTTP.
 	 * @return bool Whether this request saved the exact value, or it was unchanged.
 	 */
-	private static function guarded_update_option( $option, array $value, $settings_snapshot ) {
+	private static function guarded_update_option( $option, array $value, $settings_snapshot, $generation ) {
 		global $wpdb;
 		$previous = self::option_snapshot( $option );
 		self::clear_option_cache( $option );
@@ -148,27 +163,33 @@ class UpdateDataSources
 		}
 		$serialized = maybe_serialize( $value );
 		if ( $previous === $serialized ) {
-			return $settings_snapshot === self::option_snapshot( Settings::$option_name )
+			return RefreshLifecycle::matches( $generation ) && $settings_snapshot === self::option_snapshot( Settings::$option_name )
 				&& $serialized === self::option_snapshot( $option );
 		}
 		$guard = null === $settings_snapshot ? 'selected.option_value IS NULL' : 'BINARY selected.option_value = BINARY %s';
+		$lifecycle_guard = null === $generation ? 'lifecycle.option_value IS NULL' : 'BINARY lifecycle.option_value = BINARY %s';
+		$lifecycle_join = $wpdb->prepare( " LEFT JOIN {$wpdb->options} AS lifecycle ON lifecycle.option_name = %s ", RefreshLifecycle::OPTION );
 		if ( null === $previous ) {
 			do_action( 'add_option', $option, $value );
 			$sql = "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload)
 				SELECT %s, %s, 'no' FROM (SELECT 1) AS seed
 				LEFT JOIN {$wpdb->options} AS selected ON selected.option_name = %s
-				WHERE {$guard}";
+				{$lifecycle_join} WHERE {$guard} AND {$lifecycle_guard}";
 			$parameters = array( $option, $serialized, Settings::$option_name );
 		} else {
 			do_action( 'update_option', $option, $old_value, $value );
 			$sql = "UPDATE {$wpdb->options} AS target
 				LEFT JOIN {$wpdb->options} AS selected ON selected.option_name = %s
+				{$lifecycle_join}
 				SET target.option_value = %s
-				WHERE target.option_name = %s AND BINARY target.option_value = BINARY %s AND {$guard}";
+				WHERE target.option_name = %s AND BINARY target.option_value = BINARY %s AND {$guard} AND {$lifecycle_guard}";
 			$parameters = array( Settings::$option_name, $serialized, $option, $previous );
 		}
 		if ( null !== $settings_snapshot ) {
 			$parameters[] = $settings_snapshot;
+		}
+		if ( null !== $generation ) {
+			$parameters[] = $generation;
 		}
 		$written = $wpdb->query( $wpdb->prepare( $sql, $parameters ) );
 		if ( 1 !== $written ) {

@@ -21,7 +21,7 @@ if ('dispatch'===$mode) {
  $command=WP_CLI::runcommand('cron event run exchange-rates_data_retry',array('return'=>'all','exit_error'=>false,'launch'=>false));
  echo wp_json_encode(array('exit'=>$command->return_code,'http'=>$http,'after'=>er_probe_state()));return;
 }
-$names=array('exchange-rates','exchange-rates_rates','cron','active_plugins','exchange-rates_refresh_lock');$original=array();foreach($names as $name){$original[$name]=get_option($name);}
+$names=array('exchange-rates','exchange-rates_rates','cron','active_plugins','exchange-rates_refresh_lock','exchange-rates_refresh_generation');$original=array();foreach($names as $name){$original[$name]=get_option($name);}
 $transients=array();foreach(array('exchange-rates_refresh_after','exchange-rates_sources')as$name){$transients[$name]=get_transient($name);}
 $reports=array();
 try {

@@ -565,6 +565,8 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 = 1.4.2 =
 * Show an unavailable result for malformed or unrepresentable converter and table amounts, and recover normally after valid input.
 * Correct negative and scientific-notation number formatting; honor converter zero precision and formats without thousands separators.
+* Keep small nonzero values distinct from zero and unavailable data at the selected display precision.
+* Cancel in-flight rate updates after deactivation so their responses cannot overwrite cached rates or recreate retries.
 * Align currency names, codes, values, and editable base amounts vertically in exchange-rate tables.
 * Keep long currency badge names and values, flags, and source captions inside narrow containers while preserving RTL alignment.
 * Reserve space for converter select arrows so they do not overlap the selected currency text.

@@ -4,6 +4,7 @@ services:
     environment:
       EXCHANGE_RATES_TEST_MODE: "1"
     volumes:
+      - ../tests/browser-small-values.php:/var/www/html/wp-content/mu-plugins/exchange-rates-small-values.php:ro
       - ../tests/source-identity-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-source-fixture.php:ro
       - ../tests/browser-layout.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-layout.php:ro
       - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro
@@ -14,6 +15,7 @@ services:
     environment:
       EXCHANGE_RATES_TEST_MODE: "1"
     volumes:
+      - ../tests/browser-small-values.php:/var/www/html/wp-content/mu-plugins/exchange-rates-small-values.php:ro
       - ../tests/source-identity-fixture.php:/var/www/html/wp-content/mu-plugins/exchange-rates-source-fixture.php:ro
       - ../tests/browser-layout.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-layout.php:ro
       - ../tests/browser-trends.php:/var/www/html/wp-content/mu-plugins/exchange-rates-test-trends.php:ro

@@ -35,7 +35,7 @@ if ( isset( $args[0] ) && 'worker' === $args[0] ) {
 	return;
 }
 $original = array();
-foreach ( array( 'cron', 'exchange-rates', 'exchange-rates_rates', 'exchange-rates_refresh_lock', '_transient_exchange-rates_refresh_after', '_transient_timeout_exchange-rates_refresh_after' ) as $option ) {
+foreach ( array( 'cron', 'exchange-rates', 'exchange-rates_rates', 'exchange-rates_refresh_lock', 'exchange-rates_refresh_generation', '_transient_exchange-rates_refresh_after', '_transient_timeout_exchange-rates_refresh_after' ) as $option ) {
 	$original[ $option ] = get_option( $option );
 }
 global $checks, $failed;

@@ -83,7 +83,8 @@ for (let format = 0; format < 8; format++) {
       for (const host of ['shortcode', 'widget']) {
         const converter = page.locator(`#${host}-converter`);
         await converter.locator('select').nth(1).selectOption('EUR');
-        for (const [amount, expected] of [['987.654321', roundedEur[decimals]], ['-100', '-125'], ['-1000', '-1|250'], ['0', '0'], ['-0.000000001', '0']]) {
+        const minimum = ['1', '0:1', '0:01', '0:001', '0:0001', '0:00001', '0:000001', '0:0000001'][decimals];
+        for (const [amount, expected] of [['987.654321', roundedEur[decimals]], ['-100', '-125'], ['-1000', '-1|250'], ['0', '0'], ['-0.000000001', '>-' + minimum]]) {
           await converter.locator('input').fill(amount);
           await expect(converter.locator('.result')).toHaveText(symbol(output(expected, format)));
           await expect(converter.locator('input')).not.toHaveAttribute('aria-invalid', 'true');
@@ -104,7 +105,7 @@ test('finite decimal and scientific notation stay decimal; zero policies are pre
   const cases = [
     ['  +.5e1  ', '5', '6.25'], ['0012.50', '12.5', '15.625'], ['5.', '5', '6.25'],
     ['.5', '0.5', '0.625'], ['1e3', '1,000', '1,250'],
-    ['1e-7', '0.0000001', '0.0000001'], ['0.00000001', '0', '0'],
+    ['1e-7', '0.0000001', '0.0000001'], ['0.00000001', '<0.0000001', '<0.0000001'],
     ['1e21', '1,000,000,000,000,000,000,000', '1,250,000,000,000,000,000,000'],
     ['', '0', '1.25'], ['   ', '0', '1.25'], ['-0', '0', '1.25'], ['-10', '-10', '1.25'],
     ['0e999', '0', '1.25'],
@@ -157,8 +158,8 @@ test('a nonzero amount whose product underflows is unavailable and recovers', as
       await expect(component.locator('input')).not.toHaveAttribute('aria-invalid', 'true');
     }
     // Representable tiny results still follow the configured display precision.
-    await expect(converter.locator('.result')).toHaveText('R$0');
-    await expect(table.locator('td[data-rate]').nth(2)).toHaveText(host === 'widget' ? 'R$0' : '0');
+    await expect(converter.locator('.result')).toHaveText('R$<0.0000001');
+    await expect(table.locator('td[data-rate]').nth(2)).toHaveText(host === 'widget' ? 'R$<0.0000001' : '<0.0000001');
   }
 });
 

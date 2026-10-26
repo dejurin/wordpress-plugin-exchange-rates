@@ -1,5 +1,10 @@
 # Amount input correction: 1.4.2
 
+This report records the first correction at `883d0e9`. The subsequent
+[small-value and cancellation follow-up](remaining-fixes-1.4.2.md) supersedes its
+remaining-issue statements and package identity; the original evidence below is
+retained for traceability.
+
 ## Scope and exact payload
 
 Prepared on October 26, 2026, on `codex/amount-input-validation`, based on
