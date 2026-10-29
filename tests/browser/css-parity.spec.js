@@ -204,7 +204,9 @@ for (const direction of directions) {
               text.before(document.createTextNode('\u00a0'));
               node.classList.remove('exchange-rates-table-hybrid', 'exchange-rates-table-stacked');
             });
-            for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start', 'exchange-rates-table-history', 'exchange-rates-table-reflow', 'exchange-rates-table-compact', 'exchange-rates-table-short']) {
+            // Cached published markup has no dedicated trend lane. The intentional
+            // alignment correction on new markup is covered by numeric-axis.spec.js.
+            for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start', 'exchange-rates-table-history', 'exchange-rates-table-reflow', 'exchange-rates-table-compact', 'exchange-rates-table-short', 'exchange-rates-table-trends', 'exchange-rates-table-price']) {
               document.querySelectorAll('.' + name).forEach(node => node.classList.remove(name));
             }
           });

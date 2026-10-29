@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase 2 — native browser acceptance</title><style>body{font:15px/1.5 system-ui;margin:24px;color:#243142}button{font:inherit;padding:9px 18px}iframe{display:block;border:1px solid #ccd3dd;height:900px;margin-top:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}#progress{font-weight:600}#result{max-width:1000px}</style></head><body><h1>Phase 2 · public compositions</h1><p id="agent"></p><p>Installed 1.4.2 and 1.5.0 packages. Six sites, desktop and 390 px, frozen data. Local only.</p><button id="run">Run all 12 compositions</button><p id="progress">Ready</p><p id="saved"></p><pre id="result"></pre><iframe id="subject" title="Isolated composition"></iframe><script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase 2 — native browser acceptance</title><style>body{font:15px/1.5 system-ui;margin:24px;color:#243142}button{font:inherit;padding:9px 18px}iframe{display:block;border:1px solid #ccd3dd;height:900px;margin-top:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}#progress{font-weight:600}#result{max-width:1000px}</style></head><body><h1>Phase 2 · public compositions</h1><p id="agent"></p><p>Installed 1.4.2 and 1.5.0 packages. Six sites, desktop and 390 px, frozen data. Local only.</p><button id="run">Run all 12 compositions</button><p id="progress">Ready</p><p id="saved"></p><pre id="result"></pre><iframe id="subject" title="Isolated composition"></iframe><script>__ACCEPTED_DIFFERENCES__</script><script>
 'use strict';
 const cases = __CASES__;
 const browser = navigator.userAgent.includes('Firefox/') ? 'firefox' : !navigator.userAgent.includes('Chrome/') && navigator.userAgent.includes('Safari/') ? 'safari' : null;
@@ -34,8 +34,11 @@ document.getElementById('run').onclick=async()=>{
     if(row.baseline.error||row.candidate.error)throw new Error(row.baseline.error||row.candidate.error);
     if(row.baseline.version!=='1.4.2'||row.candidate.version!=='1.5.0')throw new Error('Wrong installed package');
     row.changes=compare(row.baseline.body,row.candidate.body);
-    row.review=row.changes.filter(d=>d.property.startsWith('border-')&&String(d.before).includes('rgba(0, 0, 0, 0.05)')&&String(d.after).includes('rgb(133, 139, 147)'));
-    row.unexpected=row.changes.filter(d=>!row.review.includes(d));
+    const classified=erPublicAcceptedDifferences.partition(row.changes,row.baseline.body,row.candidate.body,c.surface);
+    row.review=classified.review;
+    row.knownBorderReview=classified.border;
+    row.knownNumericAxisReview=classified.numericAxis;
+    row.unexpected=classified.unexpected;
     row.failures=[...row.baseline.checks,...row.candidate.checks].filter(c=>!c.pass).map(c=>c.name);
     if(row.candidate.bodyOverflow&&!row.baseline.bodyOverflow)row.failures.push('New body overflow');
     if(row.baseline.input){

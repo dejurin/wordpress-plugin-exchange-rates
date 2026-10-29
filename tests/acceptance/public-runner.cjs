@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const acceptedDifferences = require('./public-accepted-differences');
 const { chromium } = require('../browser/node_modules/@playwright/test');
 const root = path.resolve(__dirname, '../..');
 const args = Object.fromEntries(process.argv.slice(2).map(arg => {
@@ -124,8 +125,10 @@ async function run() {
       if(before.body&&after.body){
         record.fidelity=differences(referenceNodes(c,env),before.body);
         record.changes=differences(before.body,after.body);
-        record.knownBorderReview=record.changes.filter(d=>d.property.startsWith('border-')&&String(d.before).includes('rgba(0, 0, 0, 0.05)')&&String(d.after).includes('rgb(133, 139, 147)'));
-        record.unexpected=record.changes.filter(d=>!record.knownBorderReview.includes(d));
+        const classified=acceptedDifferences.partition(record.changes,before.body,after.body,c.surface);
+        record.knownBorderReview=classified.border;
+        record.knownNumericAxisReview=classified.numericAxis;
+        record.unexpected=classified.unexpected;
         record.failures=[];
         if(record.unexpected.length)record.failures.push('Unexpected body differences');
         if(after.footer?.overflow||after.footer?.overlapsBody||after.neighborOverlaps)record.failures.push('Footer or following content overlaps');
@@ -137,7 +140,7 @@ async function run() {
         if(after.footer?.links.some(l=>l.rel.includes('nofollow')||l.decoration!=='none')||after.modal?.links.some(l=>!l.rel.includes('nofollow')||l.decoration!=='none'))record.failures.push('Link contract changed');
         if(after.linkStates.some(l=>l.hover!=='none'||l.focus!=='none'))record.failures.push('Theme adds link decoration on hover or focus');
         if(c.surface==='converter'&&['twice','zero','recovered'].some(k=>before[k]!==after[k]))record.failures.push('Conversion differs');
-        record.status=record.failures.length?'FAIL':record.fidelity.length?'FIDELITY REVIEW':record.knownBorderReview.length?'DESIGN REVIEW':'PASS';
+        record.status=record.failures.length?'FAIL':record.fidelity.length?'FIDELITY REVIEW':classified.review.length?'DESIGN REVIEW':'PASS';
       } else record.status='ERROR';
       summary.cases.push(record);done++;
       const seconds=(Date.now()-started)/1000;

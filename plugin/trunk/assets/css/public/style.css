@@ -172,6 +172,24 @@
 	vertical-align: -2px;
 }
 
+/* Keep one price axis even when a row has no visible trend indicator. */
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-trends {
+	--er-price-cell-padding: 0.4rem;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-trends .exchange-rates-table-price {
+	position: relative;
+	padding-right: calc(var(--er-price-cell-padding) + 18px) !important;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table table.exchange-rates-table-trends .exchange-rates-table-price img.exchange-rates-trend {
+	position: absolute;
+	top: 50%;
+	right: var(--er-price-cell-padding);
+	margin: 0 !important;
+	transform: translateY(-50%);
+}
+
 .cr-exchange-rates .widget-exchange-rates-currency-table table td {
 	white-space: nowrap;
 }
@@ -317,6 +335,10 @@
 .cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-compact table td {
 	padding-left: 0.25rem !important;
 	padding-right: 0.25rem !important;
+}
+
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-compact table.exchange-rates-table-trends {
+	--er-price-cell-padding: 0.25rem;
 }
 
 .cr-exchange-rates .exchange-rates-table-scroll-note {

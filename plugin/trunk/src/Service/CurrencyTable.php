@@ -78,6 +78,7 @@ class CurrencyTable
         // Retained rates keep their own source, even after a failed selection change.
         $source_id = RatesData::get_source($rates, $this->settings['source_id']);
         $last_currency = null;
+        $has_trend = false;
 
         $flag_types = ['none', 'rectangular', 'square', 'circular', 'emoji'];
         if (!isset($this->parameters['flag_type']) || !in_array($this->parameters['flag_type'], $flag_types, true)) {
@@ -96,7 +97,7 @@ class CurrencyTable
             }
 
             $heading[2]['data'] = $this->parameters['table_headers_mid']; // .($this->parameters['inverse'] ? '' : ' ('.$this->parameters['base_currency'].')')
-            $heading[2]['class'] = 'text-right';
+            $heading[2]['class'] = 'text-right exchange-rates-table-price';
 
             if ($show_previous_close) {
                 $heading[3] = $this->history_heading( $this->parameters['table_headers_previous_close'], __( 'Previous Close', 'exchange-rates' ), __( 'Prev.', 'exchange-rates' ) );
@@ -132,6 +133,7 @@ class CurrencyTable
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
 
                 $trend = $currency->get_trend();
+                $has_trend = $has_trend || (bool) $trend;
                 $change_visible = $trend && $currency->get_rate_format(0, true) !== $currency->get_rate_format(1, true);
                 $percentage = $currency->get_change_percentage();
                 $percentage_text = html_entity_decode($percentage, ENT_QUOTES, 'UTF-8');
@@ -171,7 +173,7 @@ class CurrencyTable
                     'data' => $pre.$currency->get_rate_format(0, true).$after.$svg_trend,
                     'data-rate' => $currency->get_rate(0),
                     'data-symbol' => $symbol,
-                    'class' => 'text-right',
+                    'class' => 'text-right exchange-rates-table-price',
                     'data-previous-rate' => $currency->has_previous_rate() ? esc_attr($currency->get_rate(1)) : '',
                     'data-change-trend' => (int) $trend,
                     'data-change-percent' => esc_attr($percentage_text),
@@ -238,7 +240,7 @@ class CurrencyTable
 
             $output_data[2] = [
                 'data' => sprintf($amount_template, $last_currency->get_amount()),
-                'class' => 'text-right active',
+                'class' => 'text-right active exchange-rates-table-price',
             ];
 
             // Complete only the visible history columns; the label mode does not change the grid.
@@ -259,6 +261,7 @@ class CurrencyTable
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
         $class = $this->parameters['full_width'] ? 'exchange-rates-table-full' : '';
+        $class .= $has_trend ? ' exchange-rates-table-trends' : '';
         $class .= ($this->parameters['border'] ? ' table-border' : '');
         $class .= ($this->parameters['border_hori'] ? ' table-border-hori' : '');
         $class .= ($this->parameters['border_vert'] ? ' table-border-vert' : '');

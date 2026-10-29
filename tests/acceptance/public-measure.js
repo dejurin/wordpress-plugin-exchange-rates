@@ -25,7 +25,7 @@
   const hostRect = host.getBoundingClientRect();
   return {
     version:root.dataset.exchangeRatesVersion,viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},
-    body:nodes.map(node=>({tag:node.matches('b,h2')?'HEADING':node.tagName,class:node.className,text:text(node),box:box(node),computed:Object.fromEntries(properties.map(p=>[p,getComputedStyle(node).getPropertyValue(p)]))})),
+    body:nodes.map(node=>({tag:node.matches('b,h2')?'HEADING':node.tagName,class:node.className,parentIndex:nodes.indexOf(node.parentElement),tableIndex:nodes.indexOf(node.closest('table')),text:text(node),box:box(node),computed:Object.fromEntries(properties.map(p=>[p,getComputedStyle(node).getPropertyValue(p)]))})),
     footer:footer?{box:box(footer),overlapsBody:footer.getBoundingClientRect().top<bodyBottom-1,
       overflow:[...footer.querySelectorAll('a,button')].some(n=>{const r=n.getBoundingClientRect();return r.left<hostRect.left-1||r.right>hostRect.right+1;}),
       links:[...footer.querySelectorAll('a')].map(a=>({text:text(a),href:a.href,rel:a.rel,decoration:getComputedStyle(a).textDecorationLine}))}:null,

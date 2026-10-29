@@ -1,17 +1,76 @@
 # Release preparation: 1.5.0
 
-Updated October 29, 2026. The local emoji flag revision is packaged and has passed
-local source checks and Docker installation/state verification. Static and
-runtime Plugin Check confirm both offloaded flag findings are resolved; seven
-documented analyzer errors and 22 reviewed warnings remain. Focused native
-browser and both LocalWP checks passed; new CI must be confirmed on the reviewed
-head. The previous candidate's completed CI remains tied to its own ZIP.
-Nothing here authorizes publication.
+Updated October 29, 2026. The maintainer accepted the numeric-axis correction.
+Final verification uses one frozen ZIP across the three release phases and
+official Plugin Check. Native package round trips, general Safari/Firefox,
+phase-two compositions and LocalWP Chromium/Safari/Firefox/lifecycle checks
+completed with no unexplained regression. Final source/CI/artifact review
+remains required. Nothing here authorizes merge or publication.
 
-## Current package
+## Current package: final candidate verification
 
 - ZIP: `dist/exchange-rates.1.5.0.zip`, also preserved as
-  `dist/emoji-local-20261029/candidate.zip`; 1,198 files, 1,761,425 bytes.
+  `dist/numeric-axis-20261029/candidate.zip`; 1,198 files, 1,761,628 bytes.
+- SHA-256: `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`.
+- Archive: `dist/archive/1.5.0/c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8/exchange-rates.1.5.0.zip`.
+- Compared with `e34b2ce0…7a2e`: only `src/Service/CurrencyTable.php` and
+  `assets/css/public/style.css` changed; 1,196 files unchanged, none added or
+  removed. No API, timestamp, saved-data, JavaScript, catalog or emoji change.
+- A separate trend lane aligns Price headings, quoted values and static/editable
+  base amounts. Tables with no trend retain their existing content inset.
+- Metadata/package checks, 58 PHP lint checks, 9 PHP unit suites and 8 Python
+  tooling tests passed. Chromium passed 217 cases: 10 numeric-axis, 182 adjacent
+  cases and 25 published-CSS parity cases. The new regression first failed with
+  an 18 px misalignment; green checks require at most 1 px.
+- Native Safari/Firefox RTL desktop before/after review passed at 100% zoom.
+  The successful Docker native-installer retry has 1,198/1,198 hashes equal to
+  the ZIP, with persisted state unchanged. The initial failure was caused by
+  ownership of two prototype files; both attempts remain in the evidence.
+- The [numeric-axis receipt](reviews/1.5.0-numeric-axis.md) retains the focused
+  correction checks. The maintainer accepted this difference and retained
+  right alignment in RTL; see [visual decisions](reviews/1.5.0-visual-decisions.md).
+- Fresh final phase-one matrix: eight native upgrade/rollback rows passed from
+  1.3.2, 1.4.0, 1.4.1 and 1.4.2 on WordPress 5.6 / PHP 5.6.40 and WordPress
+  7.1.3 / PHP 8.3.31. Saved state and all 1,198 final installed files match.
+  Two fresh-candidate installations and lifecycle checks also passed; all ten
+  final inventories match the ZIP, with 1,100 server-render assertions and
+  exactly one recurring/no retry event each. Matrix containers are stopped,
+  with volumes preserved.
+- Native Safari 27.0.1 and Firefox 159.0: 86 cases each, 172 total, zero failures
+  on the installed ZIP, with baseline/candidate identity and state preserved.
+- Both LocalWP sites (7.1.3 and pinned 7.2 Beta 2) completed
+  1.4.2 → 1.5.0 → 1.4.2 → 1.5.0 without reseeding. Chromium passed 156 cases /
+  2,116 assertions; initial values and raw saved configuration match the released
+  baseline. Lifecycle/cron passed separately, with only the expected refresh
+  timestamp change. Both sites end with 1,198 matching files, unchanged core and
+  ordinary configuration, one recurring event and no retry event.
+- Fresh Safari/Firefox on both LocalWP sites passed 108 cases / 1,756
+  assertions. The LocalWP total is 264 cases / 3,872 assertions; post-browser
+  checks confirm the same saved state, core/configuration and exact ZIP files,
+  with one recurring/no retry event. Earlier native reports are preserved.
+- Phase two: each of Chromium, Safari and Firefox completed six frozen
+  existing-site compositions at 1280/390 px: four PASS and eight DESIGN REVIEW,
+  with no unexpected differences or functional failures. Review labels retain
+  only the accepted converter borders and numeric-axis differences. The shared
+  classifier has eight tests; original raw differences and earlier results are
+  preserved. These are local reproductions, not customer-site updates.
+- Plugin Check 2.1.0 static/runtime on this exact ZIP each report seven errors
+  and 22 warnings, identical to the preceding emoji ZIP: zero new findings.
+  Raw reports, default exclusions and reviewed dispositions remain visible.
+  This is not a clean raw checker pass.
+- The [final candidate receipt](reviews/1.5.0-rc.md) and
+  `dist/rc-1.5.0-20261029/` hold the new evidence. Final source commit/tree and
+  CI/artifact identity must be recorded on the reviewed head. The
+  [PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks)
+  must be green with an artifact matching this SHA. Earlier green CI belongs to
+  its earlier ZIP. [Draft PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
+  remains unmerged; VoiceOver is explicitly excluded.
+
+## Previous verified package: local emoji SVGs
+
+- Preserved ZIP: `dist/emoji-local-20261029/candidate.zip`;
+  1,198 files, 1,761,425 bytes. The canonical filename now identifies the newer
+  candidate above.
 - SHA-256: `e34b2ce0a26200e8d75f54bb25f771dd0599d64bb9c98c64ca913d71fab77a2e`.
 - Archive: `dist/archive/1.5.0/e34b2ce0a26200e8d75f54bb25f771dd0599d64bb9c98c64ca913d71fab77a2e/exchange-rates.1.5.0.zip`.
 - Compared with `5a812eda…65c7`: 261 added files (259 exact SVGs and two notices),
@@ -39,16 +98,18 @@ Nothing here authorizes publication.
   passed eight emoji cases (40 composition comparisons) and eight saved
   converter/modal smoke cases across the two sites; no reseeding or rollback
   rerun. These are new scoped results, not the previous native 108-case matrix.
-- New source commit and CI artifact identity are not recorded in this receipt;
-  CI was pending at receipt creation. See
-  [current PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks)
-  for subsequent results.
-  [Draft PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
-  remains unmerged; see the [local emoji receipt](reviews/1.5.0-local-emoji.md).
+- [CI run 40852210023](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40852210023):
+  PASS, five jobs and 535 Chromium cases on source head
+  `7b5d28ef5fcae135642a11d86d952c36db95043a`.
+- Artifact `12888195025` is byte-identical to this previous ZIP, with all 1,198
+  files matching. Evidence: `dist/emoji-local-20261029/ci-40852210023/summary.json`
+  and `comparison.json`; see the [local emoji receipt](reviews/1.5.0-local-emoji.md).
+  These results do not verify the subsequent numeric-axis payload.
 
 ## Previous verified package: before local emoji SVGs
 
-- ZIP: `dist/exchange-rates.1.5.0.zip`; 937 files.
+- Historical ZIP: 937 files; use the preserved archive below rather than the
+  mutable canonical filename.
 - SHA-256: `5a812edadb81e9947e6eeefd0efcdb07496f3369d5a7e56fccf5f46d66e365c7`.
 - Preserved copy: `dist/archive/1.5.0/5a812edadb81e9947e6eeefd0efcdb07496f3369d5a7e56fccf5f46d66e365c7/exchange-rates.1.5.0.zip`.
 - Compared with the intermediate `bfc05332…ba91` package: eight changed files
@@ -104,7 +165,8 @@ See the [previous verification receipt](reviews/1.5.0-final-gates.md),
 [Plugin Check dispositions](reviews/1.5.0-plugin-check.md). Five new footer
 EscapeOutput reports and two inherited SQL reports have documented analyzer
 limitations; all 22 inherited warnings were reviewed. Two inherited external
-emoji SVG findings remain unresolved. No findings were suppressed.
+emoji SVG findings were unresolved in that ZIP and were fixed in the later
+`e34b2ce0…7a2e` revision. No findings were suppressed.
 
 Only acceptance tooling changed during that rerun; the ZIP stayed unchanged.
 The permanent unit runner passed 8/8 suites, including the asset-revision
@@ -142,7 +204,7 @@ version number.
 | Tested up to metadata | WordPress 7.1 |
 | Additional pinned local core | WordPress `7.2-beta2`; not final 7.2 compatibility |
 | Original acceptance branch | `codex/zero-converter-accessibility` |
-| Source commit for this historical matrix | Not recorded at the time; the current payload commit is recorded above |
+| Source commit for this historical matrix | Not recorded at the time; later payload commits are recorded separately above |
 | PR / CI for this historical matrix | Not recorded |
 
 At completion of the recorded recheck, every source file and all installed
@@ -184,6 +246,8 @@ claims, remap timestamps or change the API.
   and reusable regression, package-upgrade and visual-acceptance tooling.
 - Local copies of the exact emoji flag SVGs, with their license and attribution,
   replacing the table and badge's direct offsite image URLs.
+- Consistent numeric alignment of Price headings, quote values and base amounts,
+  including unchanged/missing-history rows and zero/invalid input recovery.
 
 Saved option schemas, widget IDs and shortcode contracts remain compatible.
 There is no required data migration or widget recreation. The changelog and
@@ -221,14 +285,21 @@ No WCAG/EAA certification is claimed.
 
 ## Remaining release gates
 
-1. Record the maintainer's remaining overall visual acceptance for the final
-   reviewed payload, without reopening already accepted individual differences.
-2. Record the new source-payload commit/tree, complete remote PR review and
-   obtain green CI on the final reviewed head. Prove that its plugin payload
-   matches the current local emoji ZIP; retain earlier source commits and
-   receipts with their own package identities.
-3. Obtain separate publication authorization. WordPress.org SVN remains read-only
-   in this workflow; neither local tests nor a merge publish the plugin.
+1. Record the source-payload commit/tree, finish PR review and obtain green CI
+   on the final reviewed head. Compare its artifact byte-for-byte with the
+   frozen ZIP and retain the exact evidence identity.
+2. Record the final candidate review with all required gates and explicit
+   limitations. Any unexplained new difference remains a blocker; automated
+   success is not blanket human visual acceptance.
+
+The current-ZIP phase-one, phase-two and LocalWP rows are complete. Do not
+transfer earlier ZIP results or reopen the already accepted numeric alignment,
+converter borders or emoji differences. Official Plugin Check has been executed
+on this ZIP with the unchanged documented findings listed above.
+
+Publication is a later, separately authorized step, not permission implied by
+candidate completion. WordPress.org SVN remains read-only in this workflow;
+neither local tests nor a merge publish the plugin.
 
 VoiceOver is outside the explicitly authorized final rerun. Its omission is
 recorded as a coverage limit, not a successful current-package test.
@@ -254,7 +325,7 @@ shasum -a 256 dist/exchange-rates.1.5.0.zip
 ```
 
 The first checksum must equal the reviewed `f511fa42…48f4` identity. The last
-checksum must equal `e34b2ce0…7a2e` for the current recorded source; investigate
+checksum must equal `c4f8f597…26a8` for the current recorded source; investigate
 any difference before reusing this receipt. Packaging verifies entry-by-entry
 source equality, but does not itself complete runtime or visual acceptance.
 

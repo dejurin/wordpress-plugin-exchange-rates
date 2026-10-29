@@ -270,6 +270,16 @@
       "status": "registered"
     },
     {
+      "id": "ER-numeric-axis",
+      "recorded_scope": "1.5.0",
+      "contract": "Current-price text, the Price heading and static/editable base amounts share a right edge regardless of trend visibility, missing history, input state or document direction.",
+      "tests": [
+        "tests/browser/numeric-axis.spec.js",
+        "tests/browser/public-accepted-differences.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
       "id": "ER-trend-arrows",
       "recorded_scope": "1.4.0",
       "contract": "Trend direction and assets match actual current/previous data.",

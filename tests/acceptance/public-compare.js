@@ -33,8 +33,10 @@
     document.querySelector('#modal').src=`screenshots/${selected.versions.candidate.modalScreenshot}`;
     document.querySelector('#findings').textContent=selected.status==='FAIL'||selected.status==='ERROR'
       ? 'FAILED: inspect the recorded errors and measured differences. This composition is not accepted.'
+      : selected.knownNumericAxisReview?.length
+      ? 'DESIGN REVIEW: the accepted price-axis correction reserves 18 px beside Price cells and reduces the nested base input width by the same amount. Raw differences remain recorded; unrelated changes still fail.'
       : selected.knownBorderReview.length
-      ? 'REVIEW: converter borders changed from faint gray to #858b93 for visibility. Geometry, values and input behavior match. The border change still needs maintainer acceptance.'
+      ? 'REVIEW: converter borders changed from faint gray to #858b93 for visibility. Geometry, values and input behavior match. This accepted difference remains recorded as DESIGN REVIEW.'
       : selected.fidelity.length ? 'REVIEW: public-to-local body differences remain. Inspect the measured evidence before accepting reproduction fidelity.'
       : 'Body geometry, typography, values and currency order match the observed composition. Footer and modal are intentional changes and remain subject to visual acceptance.';
     document.querySelector('#metrics').textContent=JSON.stringify({chromium:selected},null,2);

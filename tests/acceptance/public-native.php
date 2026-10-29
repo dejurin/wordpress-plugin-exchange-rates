@@ -27,6 +27,7 @@ add_action( 'template_redirect', function () {
 		foreach ( array_keys( $case['environments'] ) as $width ) { $config[] = array( 'id' => $case['id'], 'surface' => $case['surface'], 'width' => (int) $width ); }
 	}
 	$html = file_get_contents( '/opt/tests/acceptance/public-native.html' );
-	echo str_replace( array( '__NONCE__', '__CASES__' ), array( esc_attr( wp_create_nonce( 'er-public-native' ) ), wp_json_encode( $config ) ), $html );
+	$accepted_differences = file_get_contents( '/opt/tests/acceptance/public-accepted-differences.js' );
+	echo str_replace( array( '__NONCE__', '__CASES__', '__ACCEPTED_DIFFERENCES__' ), array( esc_attr( wp_create_nonce( 'er-public-native' ) ), wp_json_encode( $config ), $accepted_differences ), $html );
 	exit;
 }, -1000 );

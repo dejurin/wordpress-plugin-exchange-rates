@@ -20,20 +20,35 @@ only four POT/PO source catalogs, with all runtime files and compiled translatio
 unchanged; its [catalog refresh receipt](reviews/1.5.0-release-docs.md) remains
 historical evidence for that package.
 
-The current ZIP is `e34b2ce0a26200e8d75f54bb25f771dd0599d64bb9c98c64ca913d71fab77a2e`
-(1,198 files). The [local emoji receipt](reviews/1.5.0-local-emoji.md) records 259
-bundled SVGs, two notices and the table/badge path change. Local source and Docker
-installation/state checks passed. Plugin Check confirms both offloaded-asset
-findings are resolved. Focused Chromium, real desktop Safari/Firefox/Chrome and
-both LocalWP checks passed within the new receipt's scope; new CI and its exact
-artifact must still be confirmed on the reviewed head.
+The current ZIP is `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`
+(1,198 files). The maintainer accepted the numeric-axis correction, including
+right alignment in RTL. The [final candidate receipt](reviews/1.5.0-rc.md)
+records fresh native package round trips on the declared minimum/current
+runtimes, native Safari/Firefox, all six phase-two compositions at desktop/mobile
+widths in three browsers, and full LocalWP cycles. LocalWP Chromium/Safari/Firefox
+passed 264 cases / 3,872 assertions, with saved state and installed hashes
+verified after the browser runs. Official Plugin Check static/runtime
+each retain seven errors and 22 warnings, with no added findings. These reviewed
+analyzer reports remain visible; there is no clean raw checker claim.
+
+Before merge, confirm the final source commit/tree, green
+[PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks)
+and a matching CI artifact. This pre-CI receipt does not claim a current CI pass.
+VoiceOver remains excluded from the final rerun.
+
+The previous `e34b2ce0…7a2e` ZIP bundled 259 SVGs with two notices and changed the
+table/badge image paths. Its [local emoji receipt](reviews/1.5.0-local-emoji.md)
+records scoped source, Docker, PCP, native desktop and LocalWP acceptance.
+[CI run 40852210023](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40852210023)
+passed five jobs and 535 Chromium cases on `7b5d28e…`; artifact `12888195025`
+was byte-identical to that package. It does not verify the newer numeric-axis ZIP.
 
 The prior `5a812eda…65c7` ZIP (937 files) retained the published Check:/Latest
 change: labels and passed [CI run 40843663026](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40843663026)
 on `546b070…`: five jobs and 531 Chromium cases. Artifact `12884285591` was
 byte-identical to that prior ZIP. Its [date-label receipt](reviews/1.5.0-date-labels.md)
 and [focused acceptance](reviews/1.5.0-final-gates.md) remain separate from the
-new emoji payload and earlier full matrix. VoiceOver was explicitly excluded
+later emoji/numeric-axis payloads and earlier full matrix. VoiceOver was explicitly excluded
 from the rerun. Do not transfer prior native, rollback, lifecycle, VoiceOver or
 CI results to a different ZIP.
 
@@ -94,11 +109,17 @@ in both static and runtime modes: each reported 9 errors and 22 warnings,
 compared with 4 errors and 22 warnings in the released 1.4.2 baseline. Five new
 footer escaping reports and two inherited SQL reports have documented analyzer
 limitations; 22 inherited warnings have recorded dispositions. Two real external
-emoji SVG findings required a fix. Static and runtime checks on the new local
-SVG ZIP each report seven errors and 22 warnings: both OffloadedContent errors
+emoji SVG findings required a fix. Static and runtime checks on the
+`e34b2ce0…7a2e` local SVG ZIP each reported seven errors and 22 warnings: both OffloadedContent errors
 are absent, with the remaining groups/counts unchanged. This resolves the two
 real findings but is not a clean raw checker result. No suppressions were added;
-retain both package identities and raw reports with their manual dispositions.
+retain the package identities and raw reports with their manual dispositions.
+The final candidate rerun on `c4f8f597…26a8` reports the same seven errors and
+22 warnings in each mode, with 29 identical findings and no additions or
+removals. All 1,198 installed files match the ZIP. Raw output, checker identity,
+default exclusions, state preservation and the inherited checker-bootstrap
+notice are retained in `dist/rc-1.5.0-20261029/plugin-check/`; see the
+[final candidate receipt](reviews/1.5.0-rc.md). No suppression was added.
 
 ## Imported 1.3.2 baseline
 
