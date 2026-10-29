@@ -14,7 +14,7 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 
 ## Current development version: 1.5.0
 
-Version 1.5.0 adds compact widget footers, a shared data-details dialog, visitor-local footer dates, keyboard and screen-reader improvements, narrow historical tables and missing-history input recovery. Existing settings, widgets and shortcodes retain their contracts. This is an unpublished development candidate; its final commit, PR review, CI and remaining visual acceptance are not yet recorded.
+Version 1.5.0 adds compact widget footers, a shared data-details dialog, visitor-local footer dates, keyboard and screen-reader improvements, narrow historical tables and missing-history input recovery. Existing settings, widgets and shortcodes retain their contracts. This is an unpublished development candidate. Its local source-payload commit is `f3c21788901a6bedf3fd3a027718294240642e0d`, Git tree `7cf91a44d269faf08aa00f4cad7316069786b2e3`; later documentation-only commits are separate. Remote PR review, final CI and remaining visual acceptance are pending.
 
 The current ZIP has SHA-256 `5a812edadb81e9947e6eeefd0efcdb07496f3369d5a7e56fccf5f46d66e365c7` (937 files). It restores the published 1.4.2 modal labels and order: **Check:** (`put_time`), then **Latest change:** (`local_time`), with timestamp values and explanatory titles unchanged. Focused native Safari/Firefox checks passed, as did four LocalWP browser runs on WordPress 7.1.3 and 7.2 Beta 2. VoiceOver was excluded from this rerun at the maintainer's request. See [release status](docs/release-status.md) and the [current verification receipt](docs/reviews/1.5.0-final-gates.md).
 

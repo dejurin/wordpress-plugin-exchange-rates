@@ -23,8 +23,11 @@ authorizes publication or claims that uncommitted changes passed final CI.
   Results: 1,651 footer assertions, 8,038 WordPress localization assertions and
   three modal scenarios at 320/390/1064 px passed. All 937 installed file hashes
   match the current ZIP; 58 PHP files pass lint.
-- Current branch: `codex/release-1.5.0-final`; final source commit, PR review and
-  final CI are not yet recorded.
+- Current branch: `codex/release-1.5.0-final`.
+- Local source-payload commit: `f3c21788901a6bedf3fd3a027718294240642e0d`;
+  Git tree: `7cf91a44d269faf08aa00f4cad7316069786b2e3`. Its installable source
+  matches all 937 files in the reviewed ZIP. Subsequent documentation-only
+  commits are separate; remote PR review and final CI remain pending.
 
 ### Current ZIP: October 29 verification
 
@@ -80,8 +83,8 @@ version number.
 | Tested up to metadata | WordPress 7.1 |
 | Additional pinned local core | WordPress `7.2-beta2`; not final 7.2 compatibility |
 | Original acceptance branch | `codex/zero-converter-accessibility` |
-| Final 1.5.0 source commit / Git tree | **Not yet recorded — changes remain in the working tree** |
-| Final 1.5.0 PR / CI | **Not yet recorded** |
+| Source commit for this historical matrix | Not recorded at the time; the current payload commit is recorded above |
+| PR / CI for this historical matrix | Not recorded |
 
 At completion of the recorded recheck, every source file and all installed
 candidate files on the Docker and two LocalWP stands matched the reviewed ZIP.
@@ -163,10 +166,10 @@ No WCAG/EAA certification is claimed.
    checks appropriate to the changed behavior.
 2. Record the maintainer's remaining overall visual acceptance for the final
    reviewed payload, without reopening already accepted individual differences.
-3. Commit the intended source and documentation, complete PR review and obtain
-   green CI on the final commit. Record its Git tree and prove its payload
-   matches the accepted package; retain current and historical receipts with
-   their respective identities, and investigate any differences.
+3. Complete remote PR review and obtain green CI on
+   the final reviewed head. Record that head/tree and reconfirm that its plugin
+   payload matches the recorded source-payload commit and accepted ZIP; retain
+   current and historical receipts with their respective identities.
 4. Obtain separate publication authorization. WordPress.org SVN remains read-only
    in this workflow; neither local tests nor a merge publish the plugin.
 
