@@ -24,15 +24,31 @@ authorizes publication or claims that uncommitted changes passed final CI.
   three modal scenarios at 320/390/1064 px passed. All 937 installed file hashes
   match the current ZIP; 58 PHP files pass lint.
 - Current branch: `codex/release-1.5.0-final`.
-- Local source-payload commit: `f3c21788901a6bedf3fd3a027718294240642e0d`;
+- Source-payload commit: `f3c21788901a6bedf3fd3a027718294240642e0d`;
   Git tree: `7cf91a44d269faf08aa00f4cad7316069786b2e3`. Its installable source
-  matches all 937 files in the reviewed ZIP. Subsequent documentation-only
-  commits are separate; remote PR review and final CI remain pending.
+  matches all 937 files in the reviewed ZIP. Subsequent test/documentation
+  commits are separate.
+- [Draft PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41):
+  first CI head `645ae79f385b192cd0dcbc5a96326a3cdeacf5f9`, tree
+  `2437c86aecd6af83e1cb2b63762d11b9af1d9f49`. Review remains pending; not merged.
+- [CI run 40840217684](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40840217684):
+  **FAILED.** Package and PHP 5.6/8.3/8.4 syntax/unit jobs succeeded, as did
+  WordPress integration steps. Chromium reported 507 passed and 24 failed;
+  all failures were CSS-parity cases. The test-only correction passed locally:
+  25 release-parity cases and 36 current layout/history/modal cases. The plugin
+  ZIP is unchanged. Local results do not establish remote CI success; subsequent
+  head results are available in [current PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks).
+- Downloaded Actions artifact `12882018816`: its inner plugin ZIP has the exact
+  reviewed SHA-256 above and is byte-identical, with 937/937 file hashes matching.
+  Evidence: `dist/final-gates-20261029/ci-40840217684/comparison.json`.
 
 ### Current ZIP: October 29 verification
 
 | Layer | Result |
 | --- | --- |
+| First CI on PR head `645ae79…` | FAILED: four jobs passed; WordPress integrations passed; Chromium 507 passed / 24 CSS-parity failures |
+| Local test correction | Release CSS parity 25 passed; current table-fit/layout/history/modal 36 passed; subsequent remote results tracked in PR checks |
+| CI package comparison | Artifact `12882018816`: inner ZIP bytes and 937 file hashes match the reviewed candidate |
 | Restored date labels in native Safari / Firefox | 27 cases / 513 assertions per browser; 54 / 1,026 total; PASS |
 | LocalWP 7.1.3 and pinned 7.2 Beta 2, Safari / Firefox | Four runs of 27 cases / 439 assertions; 108 / 1,756 total; PASS |
 | Native LocalWP update and persisted state | Both sites: 937 installed files match; settings, rates, widgets, sidebars and pages unchanged after browser tests |

@@ -6,6 +6,13 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '../..');
 const stylesheet = 'plugin/trunk/assets/css/public/style.css';
+// CSS parity uses published behavior so the candidate's table-fit observers do
+// not mutate the legacy fixture while its stylesheet is being exchanged.
+// Current behavior is covered by table-fit, table-layout, table-history-input
+// and footer-modal tests, which keep the candidate JavaScript.
+const publishedScript = execFileSync('git', [
+  'show', '4555660d7eb50a5c90e76828e02950eb5f60801a:plugin/trunk/assets/js/public/common.js',
+], { cwd: root }).toString();
 const references = {
   release: 'cb097af1d04153dd8132a6a0214642491b5c5557',
   legacy: 'e2fa9407b8068a3c8b34400a938da4962d30c43f',
@@ -55,6 +62,22 @@ const beforeCSS = execFileSync('git', ['show', `${references[reference]}:${style
 }
 .cr-exchange-rates .widget-exchange-rates-currency-converter select {
   padding-inline-end: calc(0.8rem + 24px);
+}
+/* Accepted 1.5.0 correction: scrolling is visible, including legacy tables. */
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive {
+  -ms-overflow-style: auto;
+  scrollbar-width: auto;
+}
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar {
+  display: block;
+  height: 10px;
+}
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-thumb {
+  background: #858b93;
+  border-radius: 5px;
+}
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-track {
+  background: #edf0f3;
 }
 `;
 const afterCSS = fs.readFileSync(path.join(root, stylesheet), 'utf8');
@@ -132,6 +155,11 @@ test.beforeEach(async ({ page, baseURL }) => {
     if (url.pathname.endsWith('/exchange-rates/assets/css/public/style.css')) {
       return route.fulfill({ contentType: 'text/css', body: beforeCSS });
     }
+    // Actual historical installations must keep their own script and PNG markup.
+    if (reference === 'release' && url.searchParams.get('ver') === '1.5.0' &&
+        url.pathname.endsWith('/exchange-rates/assets/js/public/common.js')) {
+      return route.fulfill({ contentType: 'text/javascript', body: publishedScript });
+    }
     return route.continue();
   });
 });
@@ -156,6 +184,14 @@ for (const direction of directions) {
           // Preserve exact CSS parity for cached legacy markup. Current table
           // layout intentionally changes and has dedicated table-layout tests.
           await page.evaluate(() => {
+            document.querySelectorAll('.exchange-rates-table-short-title').forEach(node => node.remove());
+            document.querySelectorAll('.exchange-rates-table-full-title').forEach(node => {
+              node.replaceWith(...node.childNodes);
+            });
+            // Published behavior must not create candidate-only table-fit UI.
+            if (document.querySelector('.exchange-rates-table-scroll-note')) {
+              throw new Error('The CSS parity fixture unexpectedly ran candidate table-fit behavior.');
+            }
             document.querySelectorAll('.exchange-rates-table-hybrid').forEach(node => {
               const text = node.querySelector('.d-flex-wrap');
               const region = node.querySelector('.exchange-rates-region-text');
@@ -168,7 +204,7 @@ for (const direction of directions) {
               text.before(document.createTextNode('\u00a0'));
               node.classList.remove('exchange-rates-table-hybrid', 'exchange-rates-table-stacked');
             });
-            for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start']) {
+            for (const name of ['exchange-rates-table-label', 'exchange-rates-table-region', 'exchange-rates-table-full', 'exchange-rates-caption-start', 'exchange-rates-table-history', 'exchange-rates-table-reflow', 'exchange-rates-table-compact', 'exchange-rates-table-short']) {
               document.querySelectorAll('.' + name).forEach(node => node.classList.remove(name));
             }
           });

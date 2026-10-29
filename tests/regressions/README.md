@@ -13,7 +13,7 @@ python3 scripts/regressions.py run-unit --output "dist/regression-units-$(date -
 
 The registry validates stable IDs, test paths, explicit coverage gaps and ownership of all browser specs/WordPress integration suites. CI validates it without running a second copy of the existing test framework. Add a registry entry or extend an existing contract when adding a regression; do not delete historical cases to obtain green. `registered` means a test exists, not that it passed.
 
-The unit command runs the seven PHP suites, saves their complete logs, hashes the primary plugin and test files, detects edits during the run and reports skipped layers. It refuses to overwrite an earlier evidence directory. This command is intentionally **not** the full WordPress/browser/release matrix.
+The unit command runs the registered PHP suites, saves their complete logs, hashes the primary plugin and test files, detects edits during the run and reports skipped layers. It refuses to overwrite an earlier evidence directory. This command is intentionally **not** the full WordPress/browser/release matrix.
 
 For the existing WordPress/browser matrix use [development.md](../../docs/development.md) and the maintained [CI sequence](../../.github/workflows/ci.yml). Keep its fixture order: smoke/integration tests, formatting seed/verify, table seed, browser tests, table verify. Upgrade preservation is a separate sequence: seed before replacement and never reseed between replacement and verification.
 
