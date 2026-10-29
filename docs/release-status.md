@@ -4,8 +4,9 @@ Updated October 29, 2026. The maintainer accepted the numeric-axis correction.
 Final verification uses one frozen ZIP across the three release phases and
 official Plugin Check. Native package round trips, general Safari/Firefox,
 phase-two compositions and LocalWP Chromium/Safari/Firefox/lifecycle checks
-completed with no unexplained regression. Final source/CI/artifact review
-remains required. Nothing here authorizes merge or publication.
+completed with no unexplained regression. Final source/CI/artifact comparison
+and independent review passed. The maintainer authorized documentation and
+GitHub integration; publication is deferred to a separate explicit instruction.
 
 ## Current package: final candidate verification
 
@@ -58,13 +59,20 @@ remains required. Nothing here authorizes merge or publication.
   and 22 warnings, identical to the preceding emoji ZIP: zero new findings.
   Raw reports, default exclusions and reviewed dispositions remain visible.
   This is not a clean raw checker pass.
-- The [final candidate receipt](reviews/1.5.0-rc.md) and
-  `dist/rc-1.5.0-20261029/` hold the new evidence. Final source commit/tree and
-  CI/artifact identity must be recorded on the reviewed head. The
-  [PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks)
-  must be green with an artifact matching this SHA. Earlier green CI belongs to
-  its earlier ZIP. [Draft PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
-  remains unmerged; VoiceOver is explicitly excluded.
+- Runtime-source commit: `78d7a47fa962e955230044d36588f541b5225565`;
+  repository tree: `7cd60cba7e941ea27f68a65ed63ef145e474c64c`;
+  plugin subtree: `e8ec51ecf2ccdc47e810d2561ff68925eb55f44c`.
+- [CI run 40872883274](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40872883274)
+  passed five jobs and 553/553 Chromium tests, with no failed, skipped or flaky
+  tests. Post-browser state, HTTP/assets and CI cleanup passed. Artifact
+  `12895534953` is byte-identical to the frozen ZIP, with all 1,198 files matching.
+- Independent final review found no actionable P1/P2 issue; there were no open
+  PR review threads. The [final candidate receipt](reviews/1.5.0-rc.md) and
+  `dist/rc-1.5.0-20261029/` preserve these results. The
+  [preparation record](releases/1.5.0-preparation.md) separates the tested runtime
+  source from subsequent documentation-only commits. [PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
+  records GitHub integration and its current checks; publication remains separate.
+  VoiceOver is explicitly excluded.
 
 ## Previous verified package: local emoji SVGs
 
@@ -283,23 +291,24 @@ redundant percentage speech in the optional Changes column, remain assigned to
 [1.5.6](roadmaps/1.5.6.md); Gutenberg remains assigned to [1.6.0](roadmaps/1.6.0.md).
 No WCAG/EAA certification is claimed.
 
-## Remaining release gates
+## Preparation complete; publication deferred
 
-1. Record the source-payload commit/tree, finish PR review and obtain green CI
-   on the final reviewed head. Compare its artifact byte-for-byte with the
-   frozen ZIP and retain the exact evidence identity.
-2. Record the final candidate review with all required gates and explicit
-   limitations. Any unexplained new difference remains a blocker; automated
-   success is not blanket human visual acceptance.
+The source identity, runtime CI, matching artifact and final independent review
+are recorded above. Documentation-only preparation does not change the plugin
+payload. GitHub integration is tracked in [PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41);
+its final head must retain the reviewed plugin subtree and pass its required
+checks. These are integration checks, not missing runtime acceptance results.
 
 The current-ZIP phase-one, phase-two and LocalWP rows are complete. Do not
 transfer earlier ZIP results or reopen the already accepted numeric alignment,
 converter borders or emoji differences. Official Plugin Check has been executed
 on this ZIP with the unchanged documented findings listed above.
 
-Publication is a later, separately authorized step, not permission implied by
-candidate completion. WordPress.org SVN remains read-only in this workflow;
-neither local tests nor a merge publish the plugin.
+The remaining release action is a separate publication instruction. Until then,
+WordPress.org SVN remains read-only; no release tag, GitHub Release, production
+update or WordPress.org write is part of preparation. The
+[publication handoff](releases/1.5.0-preparation.md#publication-handoff)
+records the exact package, post-publication checks and rollback references.
 
 VoiceOver is outside the explicitly authorized final rerun. Its omission is
 recorded as a coverage limit, not a successful current-package test.

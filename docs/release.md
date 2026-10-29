@@ -31,10 +31,16 @@ verified after the browser runs. Official Plugin Check static/runtime
 each retain seven errors and 22 warnings, with no added findings. These reviewed
 analyzer reports remain visible; there is no clean raw checker claim.
 
-Before merge, confirm the final source commit/tree, green
-[PR checks](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41/checks)
-and a matching CI artifact. This pre-CI receipt does not claim a current CI pass.
-VoiceOver remains excluded from the final rerun.
+Final runtime verification is recorded on source commit
+`78d7a47fa962e955230044d36588f541b5225565`, plugin subtree
+`e8ec51ecf2ccdc47e810d2561ff68925eb55f44c`.
+[CI run 40872883274](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40872883274)
+passed all five jobs and 553/553 Chromium tests; artifact `12895534953` matches
+the frozen ZIP byte-for-byte. Final independent review found no actionable
+P1/P2 issue. Subsequent documentation-only preparation keeps this plugin tree;
+confirm its integration state through [PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
+and its current checks. See the [preparation record](releases/1.5.0-preparation.md)
+for the publication handoff. VoiceOver remains excluded from this rerun.
 
 The previous `e34b2ce0…7a2e` ZIP bundled 259 SVGs with two notices and changed the
 table/badge image paths. Its [local emoji receipt](reviews/1.5.0-local-emoji.md)
@@ -159,6 +165,12 @@ The isolated 1.4.0 acceptance reproduced the old table behavior when a page cach
 Always pass an explicit `docker compose -p <dedicated-test-project>` for release tests. An env-file may define `COMPOSE_PROJECT_NAME` and override a Compose file's `name`. Before starting a new environment, inspect the resolved project, port, mounts and named volumes without printing credentials. Never reuse ordinary development site/database volumes for release fixtures. Preserve full debug logs and sanitized receipts before deleting only the disposable test resources.
 
 ### Rollback
+
+The current `c4f8f597…26a8` candidate completed the same eight native
+upgrade/rollback paths and both LocalWP round trips again; these results are
+recorded in the [final candidate receipt](reviews/1.5.0-rc.md). The exact
+released 1.4.2 ZIP and hashes are listed in the
+[preparation record](releases/1.5.0-preparation.md). No data migration is required.
 
 For the historical `f511fa42…48f4` 1.5.0 package, the isolated native matrix verified direct
 upgrade and rollback from 1.3.2, 1.4.0, 1.4.1 and 1.4.2 on both the minimum and
