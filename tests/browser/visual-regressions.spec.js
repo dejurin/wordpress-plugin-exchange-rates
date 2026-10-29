@@ -1,4 +1,7 @@
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs');
+const path = require('node:path');
+const version = fs.readFileSync(path.resolve(__dirname, '../../plugin/trunk/src/Plugin.php'), 'utf8').match(/const VERSION = '([^']+)'/)[1];
 
 test.beforeEach(async ({ page, baseURL }) => {
   await page.route('**/*', route => new URL(route.request().url()).origin === new URL(baseURL).origin ? route.continue() : route.abort());
@@ -8,7 +11,7 @@ async function open(page, direction, width, surface, extra = {}) {
   await page.setViewportSize({ width, height: 1000 });
   const response = await page.goto('/?' + new URLSearchParams({ 'er-visual-test': '1', surface, direction, ...extra }));
   expect(response.ok()).toBeTruthy();
-  await expect(page.locator('[data-exchange-rates-version]').first()).toHaveAttribute('data-exchange-rates-version', '1.4.2');
+  await expect(page.locator('[data-exchange-rates-version]').first()).toHaveAttribute('data-exchange-rates-version', version);
 }
 
 for (const direction of ['ltr', 'rtl']) {
@@ -27,6 +30,8 @@ for (const direction of ['ltr', 'rtl']) {
                   return Array.from(row.cells).slice(1).map(cell => {
                     const input = cell.querySelector('input');
                     const range = document.createRange(); range.selectNodeContents(cell);
+                    const speech = cell.querySelector(':scope > .er-a11y-sr-only');
+                    if (speech) range.setEndBefore(speech);
                     const box = input ? input.getBoundingClientRect() : range.getBoundingClientRect();
                     return Math.abs(box.top + box.height / 2 - center);
                   });
@@ -46,9 +51,11 @@ for (const direction of ['ltr', 'rtl']) {
       await open(page, direction, width, 'badge');
       const rows = await page.locator('.badge-leaders').evaluateAll(nodes => nodes.map(row => {
         const bounds = row.getBoundingClientRect();
-        return { text: row.textContent.trim(), width: row.clientWidth, scroll: row.scrollWidth,
+        const visible = row.cloneNode(true);
+        visible.querySelectorAll('.er-a11y-sr-only').forEach(node => node.remove());
+        return { text: visible.textContent.trim(), width: row.clientWidth, scroll: row.scrollWidth,
           flags: Array.from(row.querySelectorAll('img')).map(node => node.getBoundingClientRect().width),
-          contained: Array.from(row.children).every(span => {
+          contained: Array.from(row.children).filter(span => !span.classList.contains('er-a11y-sr-only')).every(span => {
             const range = document.createRange(); range.selectNodeContents(span);
             return Array.from(range.getClientRects()).every(r => r.left >= bounds.left - 1 && r.right <= bounds.right + 1);
           }) };
@@ -69,7 +76,7 @@ for (const direction of ['ltr', 'rtl']) {
     for (const font of [16, 22]) {
       test(`${direction} ${width}px ${font}px: source captions stay inside the viewport`, async ({ page }) => {
         await open(page, direction, width, 'converter', { font: String(font) });
-        const parts = await page.locator('.exchange-rates-caption').evaluateAll(nodes => nodes.flatMap(node => {
+        const parts = await page.locator('.er-footer-slot').evaluateAll(nodes => nodes.flatMap(node => {
           const bounds = node.getBoundingClientRect();
           return Array.from(node.childNodes).flatMap(child => {
             const range = document.createRange(); range.selectNodeContents(child);
@@ -110,22 +117,22 @@ for (const direction of ['ltr', 'rtl']) {
 
 test('default converter title is translated while explicit saved titles stay intact', async ({ page }) => {
   await open(page, 'ltr', 900, 'converter');
-  await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > b')).toHaveText('Currency Converter');
-  await expect(page.locator('#converter-custom .widget-exchange-rates-currency-converter > b')).toHaveText('Saved custom title');
-  await expect(page.locator('#converter-empty .widget-exchange-rates-currency-converter > b')).toBeEmpty();
-  await expect(page.locator('#converter-widget .widget-exchange-rates-currency-converter > b')).toHaveText('Saved widget title');
+  await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > h2')).toHaveText('Currency Converter');
+  await expect(page.locator('#converter-custom .widget-exchange-rates-currency-converter > h2')).toHaveText('Saved custom title');
+  await expect(page.locator('#converter-empty .widget-exchange-rates-currency-converter > h2')).toBeEmpty();
+  await expect(page.locator('#converter-widget .widget-exchange-rates-currency-converter > h2')).toHaveText('Saved widget title');
   await open(page, 'ltr', 900, 'converter', { language: 'uk' });
-  await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > b')).toHaveText('Конвертер валют');
+  await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > h2')).toHaveText('Конвертер валют');
 });
 
 for (const [filter, title] of [['custom', 'Site converter'], ['empty', '']]) {
   test(`shortcode title filter preserves ${filter} defaults`, async ({ page }) => {
     for (const language of ['en', 'uk']) {
       await open(page, 'ltr', 900, 'converter', { language, 'title-filter': filter });
-      await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > b')).toHaveText(title);
-      await expect(page.locator('#converter-custom .widget-exchange-rates-currency-converter > b')).toHaveText('Saved custom title');
-      await expect(page.locator('#converter-empty .widget-exchange-rates-currency-converter > b')).toBeEmpty();
-      await expect(page.locator('#converter-widget .widget-exchange-rates-currency-converter > b')).toHaveText('Saved widget title');
+      await expect(page.locator('#converter-default .widget-exchange-rates-currency-converter > h2')).toHaveText(title);
+      await expect(page.locator('#converter-custom .widget-exchange-rates-currency-converter > h2')).toHaveText('Saved custom title');
+      await expect(page.locator('#converter-empty .widget-exchange-rates-currency-converter > h2')).toBeEmpty();
+      await expect(page.locator('#converter-widget .widget-exchange-rates-currency-converter > h2')).toHaveText('Saved widget title');
       await expect(page.locator('#converter-default .result')).toHaveText('R11,865,569.165');
     }
   });

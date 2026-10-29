@@ -1,0 +1,101 @@
+{
+  "purpose": "Phase 2 public observations and local component coverage; not live-site update proof or human acceptance",
+  "historical_audit_date": "2026-10-25",
+  "historical_artifact": "exchange-rates-public-audit/discovery.json and report.html from the October 25 public audit",
+  "cases": [
+    {
+      "url": "https://www.katurubdc.com/",
+      "surface": "table",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/katuru.json",
+      "acceptance": "PENDING HUMAN REVIEW",
+      "id": "katuru",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "mobile_screenshot": "VERIFIED"
+    },
+    {
+      "url": "https://todayafrica.co.za/",
+      "surface": "table",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/todayafrica.json",
+      "acceptance": "PENDING HUMAN REVIEW",
+      "id": "todayafrica",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "mobile_screenshot": "VERIFIED"
+    },
+    {
+      "url": "https://editorialrn.com.ar/",
+      "surface": "converter",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/editorialrn.json",
+      "acceptance": "PENDING HUMAN REVIEW",
+      "id": "editorialrn",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "mobile_screenshot": "VERIFIED"
+    },
+    {
+      "url": "https://themorningtelegraph.com/",
+      "surface": "converter",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/morningtelegraph.json",
+      "acceptance": "PENDING HUMAN REVIEW",
+      "id": "morningtelegraph",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "mobile_screenshot": "VERIFIED"
+    },
+    {
+      "url": "https://www.centralbank.org.sz/",
+      "surface": "badge",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/centralbank.json",
+      "acceptance": "PENDING HUMAN REVIEW",
+      "id": "centralbank",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "mobile_screenshot": "VERIFIED"
+    },
+    {
+      "url": "https://mofzanzibar.go.tz/",
+      "surface": "badge",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "NOT VERIFIED: net::ERR_ADDRESS_UNREACHABLE",
+      "local_replica": "NOT CREATED",
+      "acceptance": "NOT RUN",
+      "replacement": "sovereign"
+    },
+    {
+      "id": "sovereign",
+      "url": "https://sovereignfinanceltd.com/",
+      "surface": "badge",
+      "historically_observed_plugin": "1.4.1",
+      "current_version": "1.4.2",
+      "local_replica": "tests/acceptance/public-cases/sovereign.json",
+      "observed_viewports": [
+        1280,
+        390
+      ],
+      "acceptance": "PENDING HUMAN REVIEW",
+      "mobile_screenshot": "VERIFIED"
+    }
+  ],
+  "observed_date": "2026-10-28"
+}

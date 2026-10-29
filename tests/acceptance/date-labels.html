@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Native date-label acceptance</title>
+<style>body{font:14px/1.5 system-ui;margin:24px;color:#26313b}button{font:inherit;padding:8px 14px}iframe{display:block;height:900px;border:1px solid #ccc;margin-top:20px}pre{white-space:pre-wrap}#progress{font-weight:600}</style>
+<h1>Published date labels — installed 1.5.0</h1>
+<p>Three widgets · three locales · 320, 390 and 1064 CSS px. Synthetic data, isolated WordPress.</p>
+<p id="browser"></p><button id="run">Run date-label checks</button>
+<p id="progress">Ready</p><pre id="summary"></pre>
+<iframe id="subject" title="Installed widget under test"></iframe>
+<details><summary>Full evidence</summary><pre id="results"></pre></details>
+<script>
+'use strict';
+const names = {
+  en_US: ['Check:', 'Latest change:'],
+  uk: ['Перевірка:', 'Останні зміни:'],
+  bg_BG: ['Проверка:', 'Последна промяна:']
+};
+const browser = navigator.userAgent.includes('Firefox/') ? 'firefox' :
+  (!navigator.userAgent.includes('Chrome/') && navigator.userAgent.includes('Safari/') ? 'safari' : null);
+document.getElementById('browser').textContent = navigator.userAgent;
+let frame = document.getElementById('subject');
+async function load(config) {
+  const next = document.createElement('iframe');
+  next.id = 'subject'; next.title = 'Installed widget under test';
+  next.style.width = config.width + 'px'; frame.replaceWith(next); frame = next;
+  const query = new URLSearchParams({page_id: '4', theme: 'kadence', surface: config.surface,
+    er_locale: config.locale, source: config.surface === 'badge' ? 'currencyrate' : 'eu-ecb', count: '5'});
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Frame load timeout')), 18000);
+    frame.onload = () => { clearTimeout(timer); resolve(); };
+    frame.src = '/?' + query;
+  });
+  await frame.contentDocument.fonts.ready;
+  return frame.contentWindow;
+}
+async function runCase(config) {
+  const w = await load(config), d = w.document, failures = [];
+  let assertions = 0;
+  const check = (condition, message) => { assertions++; if (!condition) failures.push(message); };
+  const root = d.querySelector('#lab-fixture');
+  const modal = d.querySelector('#exchange-rates-information');
+  check(w.innerWidth === config.width, 'exact CSS viewport');
+  check(!!root?.querySelector('[data-exchange-rates-version="1.5.0"]'), 'installed version');
+  check(!!modal && w.getComputedStyle(modal).display === 'none', 'closed dialog absent');
+  if (!root || !modal) return {...config, assertions, failures, pass: false};
+  const button = root.querySelector('[data-er-info]');
+  check(!!button, 'details control exists');
+  if (!button) return {...config, assertions, failures, pass: false};
+  button.focus(); button.click();
+  await new Promise(resolve => w.requestAnimationFrame(resolve));
+  check(modal.matches(':modal'), 'dialog uses top layer');
+  check(d.activeElement === modal.querySelector('h2'), 'initial heading focus');
+  const labels = [...modal.querySelectorAll('dt')].slice(1).map(n => n.textContent.trim());
+  check(JSON.stringify(labels) === JSON.stringify(names[config.locale]), 'published translated labels and order');
+  const source = modal.querySelector('[data-er-modal-date]');
+  const saved = modal.querySelector('[data-er-modal-recorded]');
+  check(saved.dateTime === new Date(button.dataset.recordedAt).toISOString(), 'Check uses saved-entry instant');
+  check(source.dateTime === new Date(button.querySelector('time').dateTime).toISOString(), 'Latest change uses source instant');
+  check(saved.dateTime !== source.dateTime, 'fixture distinguishes the two timestamps');
+  check(source.textContent.includes('UTC') && saved.textContent.includes('UTC'), 'details retain UTC');
+  const bounds = modal.getBoundingClientRect();
+  check(bounds.left >= 0 && bounds.top >= 0 && bounds.right <= w.innerWidth + 1 && bounds.bottom <= w.innerHeight + 1, 'dialog contained');
+  check(modal.scrollWidth <= modal.clientWidth + 1, 'no horizontal modal overflow');
+  for (const row of modal.querySelectorAll('.er-dialog-details > div')) {
+    const label = row.querySelector('dt').getBoundingClientRect();
+    const value = row.querySelector('dd').getBoundingClientRect();
+    const box = row.getBoundingClientRect();
+    check(label.right <= box.right + 1 && value.right <= box.right + 1 &&
+      (label.right <= value.left + 1 || label.bottom <= value.top + 1), 'label/value contained without overlap');
+  }
+  modal.querySelector('.er-dialog-close').click();
+  check(!modal.open && w.getComputedStyle(modal).display === 'none', 'close hides modal');
+  check(d.activeElement === button, 'focus returns to opener');
+  check(!(w.erNativeErrors || []).length, 'no uncaught JavaScript errors');
+  return {...config, labels, sourceDate: source.dateTime, savedDate: saved.dateTime, assertions, failures, pass: !failures.length};
+}
+document.getElementById('run').onclick = async () => {
+  if (!browser) throw new Error('Use native Safari or Firefox');
+  const run = document.getElementById('run'); run.disabled = true;
+  const report = {browser, run: 'date-labels', userAgent: navigator.userAgent, started: new Date().toISOString(), cases: []};
+  const configs = [];
+  for (const locale of Object.keys(names)) for (const width of [320, 390, 1064])
+    for (const surface of ['table', 'converter', 'badge']) configs.push({locale, width, surface});
+  const start = performance.now();
+  try {
+    for (const config of configs) {
+      try { report.cases.push(await runCase(config)); }
+      catch (error) { report.cases.push({...config, assertions: 0, failures: [error.message], pass: false}); }
+      document.getElementById('progress').textContent = report.cases.length + '/' + configs.length + ' · ' + Math.round(100 * report.cases.length / configs.length) + '% · ' + Math.round((performance.now() - start) / 1000) + 's';
+    }
+    report.finished = new Date().toISOString();
+    document.getElementById('results').textContent = JSON.stringify(report, null, 2);
+    document.getElementById('summary').textContent = JSON.stringify({cases: report.cases.length,
+      assertions: report.cases.reduce((n, c) => n + c.assertions, 0), passed: report.cases.filter(c => c.pass).length,
+      failures: report.cases.filter(c => !c.pass)}, null, 2);
+    const response = await fetch('/?er-native-acceptance=date-labels', {method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Acceptance-Nonce': '__ACCEPTANCE_NONCE__'}, body: JSON.stringify(report)});
+    if (!response.ok || !(await response.json()).success) throw new Error('Report save failed');
+    document.getElementById('progress').textContent = 'Completed and saved · ' + browser;
+  } finally { run.disabled = false; }
+};
+</script></html>

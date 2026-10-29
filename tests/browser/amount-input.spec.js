@@ -1,4 +1,6 @@
+const { rateText, expectRateText } = require('./rate-text');
 const { test, expect } = require('@playwright/test');
+const { captionHtml } = require('./captions');
 
 // Explicit decimal strings keep expected rounding independent of the formatter.
 const roundedEur = ['1|235', '1|234:6', '1|234:57', '1|234:568', '1|234:5679', '1|234:5679', '1|234:567901', '1|234:5679012'];
@@ -48,7 +50,7 @@ for (const direction of ['ltr', 'rtl']) {
               await expect(section.locator('.result')).toHaveText('–');
               await section.locator('button.swap').click();
             } else {
-              await expect(section.locator('td[data-rate]')).toHaveText(['–', '–', '–', '–']);
+              await expectRateText(section.locator('td[data-rate]'), ['–', '–', '–', '–']);
               await expect(section.locator('td[data-change]')).toHaveText(['–', '–']);
               await expect(section.locator('td[data-rate] img')).toHaveCount(0);
               await input.blur();
@@ -60,9 +62,10 @@ for (const direction of ['ltr', 'rtl']) {
             await expect(input).not.toHaveAttribute('aria-invalid', 'true');
             if (kind === 'converter') {
               await expect(section.locator('.result')).toHaveText('€10');
+              await expect(section.getByRole('status')).toHaveText('8 USD equals 10 EUR');
             } else {
-              await expect(section.locator('td[data-rate]').nth(0)).toHaveText(host === 'widget' ? '€10' : '10');
-              await expect(section.locator('td[data-rate]').nth(1)).toHaveText(host === 'widget' ? '€9.6' : '9.6');
+              await expectRateText(section.locator('td[data-rate]').nth(0), host === 'widget' ? '€10' : '10');
+              await expectRateText(section.locator('td[data-rate]').nth(1), host === 'widget' ? '€9.6' : '9.6');
               await expect(section.locator('td[data-change]').first()).not.toHaveText('–');
               expect(await section.locator('td[data-rate] img').count()).toBeGreaterThan(0);
             }
@@ -92,23 +95,23 @@ for (let format = 0; format < 8; format++) {
         const table = page.locator(`#${host}-table`);
         await table.locator('input').fill('987.654321');
         const sign = value => host === 'widget' ? symbol(value) : value;
-        await expect(table.locator('td[data-rate]').nth(0)).toHaveText(sign(output(roundedEur[decimals], format)));
-        await expect(table.locator('td[data-rate]').nth(1)).toHaveText(sign(output(roundedPrevious[decimals], format)));
+        await expectRateText(table.locator('td[data-rate]').nth(0), sign(output(roundedEur[decimals], format)));
+        await expectRateText(table.locator('td[data-rate]').nth(1), sign(output(roundedPrevious[decimals], format)));
         await expect(table.locator('input')).not.toHaveAttribute('aria-invalid', 'true');
       }
     });
   }
 }
 
-test('finite decimal and scientific notation stay decimal; zero policies are preserved', async ({ page, baseURL }) => {
+test('finite decimal and scientific notation stay decimal; empty and negative table policies are preserved', async ({ page, baseURL }) => {
   await openFixture(page, baseURL, { decimals: 7 });
   const cases = [
     ['  +.5e1  ', '5', '6.25'], ['0012.50', '12.5', '15.625'], ['5.', '5', '6.25'],
     ['.5', '0.5', '0.625'], ['1e3', '1,000', '1,250'],
     ['1e-7', '0.0000001', '0.0000001'], ['0.00000001', '<0.0000001', '<0.0000001'],
     ['1e21', '1,000,000,000,000,000,000,000', '1,250,000,000,000,000,000,000'],
-    ['', '0', '1.25'], ['   ', '0', '1.25'], ['-0', '0', '1.25'], ['-10', '-10', '1.25'],
-    ['0e999', '0', '1.25'],
+    ['', '0', '1.25'], ['   ', '0', '1.25'], ['-0', '0', '0'], ['-10', '-10', '1.25'],
+    ['0e999', '0', '0'],
   ];
   for (const host of ['shortcode', 'widget']) {
     const converter = page.locator(`#${host}-converter`);
@@ -118,12 +121,46 @@ test('finite decimal and scientific notation stay decimal; zero policies are pre
       await converter.locator('input').fill(input);
       await expect(converter.locator('.result')).toHaveText('$' + converted);
       await table.locator('input').fill(input);
-      await expect(table.locator('td[data-rate]').first()).toHaveText((host === 'widget' ? '€' : '') + rate);
+      await expectRateText(table.locator('td[data-rate]').first(), (host === 'widget' ? '€' : '') + rate);
       await expect(converter.locator('input')).not.toHaveAttribute('aria-invalid', 'true');
       await expect(table.locator('input')).not.toHaveAttribute('aria-invalid', 'true');
     }
   }
 });
+
+for (const direction of ['ltr', 'rtl']) {
+  for (const width of [320, 1064]) {
+    test(`explicit zero stays zero in tables: ${direction} ${width}px`, async ({ page, baseURL }) => {
+      const after = width === 320;
+      await openFixture(page, baseURL, { direction, width, after });
+      const captions = await captionHtml(page);
+      for (const host of ['shortcode', 'widget']) {
+        const id = `${host}-table`;
+        const section = page.locator('#' + id);
+        const input = section.locator('input');
+        const before = await untouched(page, id);
+        const zeros = host === 'widget' ? (after ? ['0€', '0€', '0R$', '0R$'] : ['€0', '€0', 'R$0', 'R$0']) : ['0', '0', '0', '0'];
+        for (const value of ['0', '-0', '+0.00', '0e999']) {
+          await input.fill(value);
+          await expectRateText(section.locator('td[data-rate]'), zeros);
+          await expect(section.locator('td[data-change]')).toHaveText(['–', '–']);
+          await expect(section.locator('td[data-rate] img')).toHaveCount(0);
+          await expect(input).not.toHaveAttribute('aria-invalid', 'true');
+          await input.blur();
+          await expect(input).toHaveValue('0');
+          await input.click();
+          await input.blur();
+          await expect(input).toHaveValue('0');
+          expect(await untouched(page, id)).toEqual(before);
+        }
+        await input.fill('8');
+        await expectRateText(section.locator('td[data-rate]').first(), host === 'widget' ? (after ? '10€' : '€10') : '10');
+        expect(await section.locator('td[data-rate] img').count()).toBeGreaterThan(0);
+      }
+      expect(await captionHtml(page)).toEqual(captions);
+    });
+  }
+}
 
 test('finite amount with overflowing result is unavailable in both components', async ({ page, baseURL }) => {
   await openFixture(page, baseURL);
@@ -135,8 +172,8 @@ test('finite amount with overflowing result is unavailable in both components', 
       await component.locator('input').fill('1.79e308');
     }
     await expect(converter.locator('.result')).toHaveText('–');
-    await expect(table.locator('td[data-rate]').nth(0)).toHaveText('–');
-    await expect(table.locator('td[data-rate]').nth(1)).toHaveText('–');
+    await expectRateText(table.locator('td[data-rate]').nth(0), '–');
+    await expectRateText(table.locator('td[data-rate]').nth(1), '–');
     await expect(table.locator('td[data-change]').first()).toHaveText('–');
     for (const component of [converter, table]) await expect(component.locator('input')).toHaveAttribute('aria-invalid', 'true');
   }
@@ -150,7 +187,7 @@ test('a nonzero amount whose product underflows is unavailable and recovers', as
     const table = page.locator(`#${host}-table`);
     for (const component of [converter, table]) await component.locator('input').fill('5e-324');
     await expect(converter.locator('.result')).toHaveText('–');
-    await expect(table.locator('td[data-rate]').nth(2)).toHaveText('–');
+    await expectRateText(table.locator('td[data-rate]').nth(2), '–');
     await expect(table.locator('td[data-change]').nth(1)).toHaveText('–');
     for (const component of [converter, table]) {
       await expect(component.locator('input')).toHaveAttribute('aria-invalid', 'true');
@@ -159,7 +196,7 @@ test('a nonzero amount whose product underflows is unavailable and recovers', as
     }
     // Representable tiny results still follow the configured display precision.
     await expect(converter.locator('.result')).toHaveText('R$<0.0000001');
-    await expect(table.locator('td[data-rate]').nth(2)).toHaveText(host === 'widget' ? 'R$<0.0000001' : '<0.0000001');
+    await expectRateText(table.locator('td[data-rate]').nth(2), host === 'widget' ? 'R$<0.0000001' : '<0.0000001');
   }
 });
 
@@ -175,10 +212,10 @@ test('cached table markup restores its existing trend image after invalid-input 
   const sources = await images.evaluateAll(nodes => nodes.map(node => node.src));
   expect(sources.length).toBeGreaterThan(0);
   await table.locator('input').fill('1e309');
-  await expect(table.locator('td[data-rate]').first()).toHaveText('–');
+  await expectRateText(table.locator('td[data-rate]').first(), '–');
   for (const image of await images.all()) await expect(image).toBeHidden();
   await table.locator('input').fill('8');
-  await expect(table.locator('td[data-rate]').first()).toHaveText('10');
+  await expectRateText(table.locator('td[data-rate]').first(), '10');
   expect(await images.evaluateAll(nodes => nodes.map(node => node.src))).toEqual(sources);
   for (const image of await images.all()) await expect(image).toBeVisible();
 });

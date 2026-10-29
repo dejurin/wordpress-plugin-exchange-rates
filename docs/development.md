@@ -4,6 +4,10 @@ Follow the [development contract](../CONTRIBUTING.md) for language, WordPress co
 
 The current candidate is **1.4.2**; use the [release status](release-status.md) for its identity and evidence. References to earlier versions below describe pinned regression baselines and the original fixes, not alternative current candidates.
 
+## Permanent release acceptance
+
+Follow the [three-phase release gates](acceptance/release-gates.md). The [permanent regression registry](../tests/regressions/README.md) links historical regressions to existing suites, validates coverage in CI and provides a repeatable native ZIP checker and visual comparison UI. Registered coverage and old receipts are not evidence for a new candidate.
+
 ## CSS parity checks
 
 `tests/browser/css-parity.spec.js` compares the candidate public stylesheet against immutable Git CSS from `cb097af1d04153dd8132a6a0214642491b5c5557`, the merged 1.4.0 snapshot before CSS cleanup. Keep this reference pinned. The WordPress CI checkout includes history so the reference is available without a second source copy.
@@ -523,3 +527,74 @@ valid input. The fixture is mounted only by the test Compose override.
 
 See [the focused review](reviews/remaining-fixes-1.4.2.md) for intentional display
 changes, the cancellation generation, compatibility boundaries and rollback.
+
+## Explicit table zero and converter control names
+
+An explicit numeric zero entered in an editable table now produces zero current
+and previous values. Signed zero and zero scientific notation follow the same
+rule; blur and click-without-edit preserve the accepted zero. Empty/whitespace
+and negative table input retain the existing amount-one fallback. Invalid input,
+rounding, tiny-value bounds and positive amounts keep their existing behavior.
+This intentionally supersedes the zero-input policy described in older reviews.
+
+Converter amount, source-currency and target-currency fields and the swap button
+receive accessible names from escaped, translated metadata rendered by PHP.
+English, Ukrainian and Bulgarian catalogs include the new currency/swap labels;
+the existing Amount translation is reused. Both shortcodes and native widgets
+use the same renderer. There are no visible labels or CSS changes. Old cached
+HTML without the new metadata still calculates and swaps; accessible names
+require refreshed HTML. The public script depends on jQuery without the unused
+jQuery UI Autocomplete dependency. Conditional asset loading remains deferred.
+
+Captions, their link destinations/attributes, dates, disclosure behavior and the
+disclaimer are unchanged. No settings, widget, rate-cache or content migration
+is required. Reverting the patch restores the previous zero-input behavior and
+dependencies without changing stored data.
+
+Run only against the isolated synthetic WordPress environment described above:
+
+```sh
+docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/converter-controls-wordpress.php
+WP_TEST_URL=http://127.0.0.1:18973 npm --prefix tests/browser test -- amount-input.spec.js converter-controls.spec.js table-isolation.spec.js converter-box-sizing.spec.js small-values.spec.js
+```
+
+The new WordPress suite verifies translated and escaped label metadata after
+native-widget sanitization, dependency registration and unchanged stored state.
+Browser coverage checks accessible names and keyboard swapping in three locales,
+LTR/RTL at 320/1064 px, zero variants, blur/recovery, independent instances,
+unchanged captions and the absence of jQuery UI requests. Caption comparisons
+normalize only WordPress's asynchronous emoji-image replacement back to its
+equivalent character. Existing localization, version and CSS-parity suites
+remain applicable; these checks do not establish full screen-reader conformance
+or authorize a release.
+
+See the [phase-one acceptance](reviews/technical-controls-phase1.md) for the exact
+tested package, runtime results, preserved-state comparison and limitations.
+
+## Accumulated release acceptance
+
+Use the [regression collection](../tests/regressions/README.md) for the maintained unit/WordPress runner, native historical upgrade and rollback matrix, and installed-package Safari/Firefox harness. Keep new cases in the permanent registry and preserve failed receipts. The [release gates](acceptance/release-gates.md) distinguish automated checks, human visual approval, public-site reproductions and actual LocalWP acceptance.
+
+### Actual LocalWP acceptance
+
+Create a new disposable `ER-150-Acceptance-*` site through the installed LocalWP application or its official `localwp new` command. Keep existing sites and application-wide preferences unchanged. Use localhost routing; this harness rejects non-loopback sites. Place the reviewed ZIPs as `baseline.zip` and `candidate.zip` inside a new ignored evidence directory's `packages/` folder before preparing the site.
+
+```sh
+python3 scripts/localwp-acceptance.py prepare --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+python3 scripts/localwp-acceptance.py baseline --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+# Run /?er_localwp=runner&stage=baseline in the browser and wait for saved results.
+python3 scripts/localwp-acceptance.py candidate --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+# Run the candidate browser stage before replacing the package again.
+python3 scripts/localwp-acceptance.py rollback --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+# Run the rollback browser stage, then restore the candidate for review.
+python3 scripts/localwp-acceptance.py restored --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+python3 scripts/localwp-acceptance.py lifecycle --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+# Run the restored browser stage, then collect its reports.
+python3 scripts/localwp-acceptance.py collect --site ER-150-Acceptance-20261028 --evidence dist/acceptance-1.5.0-localwp-20261028
+```
+
+The commands above describe the recorded run; use a **new site and evidence path** for another run. Preparation and seeding deliberately refuse to overwrite prior fixtures. The lifecycle test runs only after the byte-identical update/rollback check: activation and cron normally advance the successful-update timestamp. Do not rerun the strict pre-refresh raw-state comparison after that intentional refresh and mistake the expected timestamp change for data loss.
+
+The browser runner uses saved options and content, with synthetic outbound HTTP only. It stores reports inside the dedicated site's `wp-content/localwp-acceptance`; `collect` copies them into ignored evidence. Capture screenshots through the browser, then use `scripts/localwp-report.py --evidence PATH --output LOCAL_REPORT_DIRECTORY` with a Python runtime containing Pillow to assemble the comparison. Keep environment versions and real-keyboard observations with that evidence. See the [phase 3 receipt](reviews/1.5.0-phase3-localwp.md) for the exact tested artifact and remaining release gates.
+
+For the [WordPress 7.2 Beta 2 matrix](reviews/1.5.0-phase3-wp72-beta2.md), create a separate LocalWP site and update its core from the official pinned ZIP **before** running `prepare` (which blocks outbound HTTP). Use `localwp cli SITE_ID -- core update /absolute/path/wordpress-7.2-beta2.zip --version=7.2-beta2 --force`, then `core update-db` and `core version`. Only target the newly created disposable site. Store the original archive under `core/` and a `core.json` object with `version`, `sha256`, `source` and `announcement`. The report generator verifies all archive core files outside `wp-content` against the installed site. Run the same plugin update/rollback/browser sequence in a new evidence directory; do not replace the stable-site evidence or change release metadata based on a beta result.

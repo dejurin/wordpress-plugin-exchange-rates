@@ -1,3 +1,4 @@
+const { rateText, expectRateText } = require('./rate-text');
 const { test, expect } = require('@playwright/test');
 
 // Explicit output expectations, independent of the plugin formatter.
@@ -15,12 +16,13 @@ const formats = [
 // Text assertions alone cannot detect bidi reordering. Read each character's
 // actual rendered position, excluding trend images and their alternative text.
 async function expectVisualOrder(locator, expected) {
-  await expect(locator).toHaveText(expected);
+  await expectRateText(locator, expected);
   const positions = await locator.evaluate(element => {
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
     const result = [];
     let node;
     while ((node = walker.nextNode())) {
+      if (node.parentElement.closest('.er-a11y-sr-only')) continue;
       for (let index = 0; index < node.length; index++) {
         const range = document.createRange();
         range.setStart(node, index);
@@ -96,7 +98,7 @@ for (const direction of ['ltr', 'rtl']) {
             await expectVisualOrder(converter.locator('.result'), symbol([0, 2, 5, 7].includes(format) ? '-2,47' : '-2.47', 'R$'));
           }
           expect(await page.locator('#badges .badge-leaders').evaluateAll(elements => elements.map(element => element.outerHTML))).toEqual(unchangedBadge);
-          const badges = page.locator('#badges .badge-leaders > span + span');
+          const badges = page.locator('#badges .badge-leaders > span:nth-child(2)');
           await expectVisualOrder(badges.nth(0), symbol(eur, '€'));
           await expectVisualOrder(badges.nth(1), symbol(brl, 'R$'));
           expect(errors).toEqual([]);

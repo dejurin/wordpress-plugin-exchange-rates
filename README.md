@@ -12,9 +12,17 @@ Add currency tools to posts, pages and widget areas with configurable widgets an
 
 [WordPress.org](https://wordpress.org/plugins/exchange-rates/) · [Live demo](https://yuri.ws/exchange-rates/) · [Installation](#installation) · [Development](#development-quick-start) · [Support](#support-and-useful-links)
 
-## Current development version: 1.4.2
+## Current development version: 1.5.0
 
-The final 1.4.2 candidate was rebuilt from `main` commit `4555660` after [PR #39](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/39) merged. It includes the visual fixes, amount-input and number-formatting corrections, small-value display, and cancellation of in-flight updates on deactivation. [CI on that main commit](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40384805712) passed all five jobs, including 497 Chromium tests. See the [release status](docs/release-status.md) for the exact ZIP, checksum, compatibility evidence and limits. This candidate has not been published by this workflow or installed on production sites. The separate [1.5.0 roadmap](docs/roadmaps/1.5.0.md) is future work.
+Version 1.5.0 adds compact widget footers, a shared data-details dialog, visitor-local footer dates, keyboard and screen-reader improvements, narrow historical tables and missing-history input recovery. Existing settings, widgets and shortcodes retain their contracts. This is an unpublished development candidate; its final commit, PR review, CI and remaining visual acceptance are not yet recorded.
+
+The current ZIP has SHA-256 `5a812edadb81e9947e6eeefd0efcdb07496f3369d5a7e56fccf5f46d66e365c7` (937 files). It restores the published 1.4.2 modal labels and order: **Check:** (`put_time`), then **Latest change:** (`local_time`), with timestamp values and explanatory titles unchanged. Focused native Safari/Firefox checks passed, as did four LocalWP browser runs on WordPress 7.1.3 and 7.2 Beta 2. VoiceOver was excluded from this rerun at the maintainer's request. See [release status](docs/release-status.md) and the [current verification receipt](docs/reviews/1.5.0-final-gates.md).
+
+Official Plugin Check 2.1.0 reported **9 errors and 22 warnings**, compared with 4 errors and 22 warnings in 1.4.2. Manual review records analyzer limitations and inherited warnings; **two external emoji SVG findings remain open**. This is not a clean Plugin Check pass. See the [checker receipt](docs/reviews/1.5.0-plugin-check.md).
+
+The full browser/VoiceOver/LocalWP matrix belongs to `f511fa42…48f4`; the intermediate `bfc05332…ba91` package changed only source gettext metadata, as recorded in the [catalog refresh receipt](docs/reviews/1.5.0-release-docs.md). Neither earlier receipt represents a new full-matrix run of the current ZIP. The [1.4.2 candidate receipt](docs/releases/1.4.2-final-candidate.md) remains historical evidence, not the current 1.5.0 CI result.
+
+The [roadmap](docs/roadmaps/README.md) assigns additional accessibility work to 1.5.6 and Gutenberg blocks to 1.6.0. These plans do not make a WCAG/EAA certification or publication claim.
 
 ## Features
 
@@ -74,8 +82,11 @@ The selected data source must provide the currencies used in the examples. Confi
 | Declared minimum PHP | 5.6 |
 | CI syntax checks | PHP 5.6, 8.3 and 8.4 |
 | CI runtime smoke | WordPress 7.1.3 / PHP 8.3 |
+| Local compatibility of the reviewed `f511fa42…48f4` ZIP | WordPress 7.1.3 and **7.2 Beta 2** / PHP 8.2.29 ([receipt](docs/reviews/1.5.0-final-recheck.md)) |
 
 The version badge tracks the published WordPress.org release; the CI badge tracks this repository's `main` branch. WordPress/PHP requirement badges reflect the plugin metadata, not a full runtime test matrix. Syntax checks do not establish runtime compatibility with every supported version.
+
+The beta check covers the pinned 7.2-beta2 build, not the future final WordPress 7.2 release. The plugin's `Tested up to` remains 7.1: [WordPress.org permits this field up to the current release candidate, not a beta](https://developer.wordpress.org/plugins/wordpress-org/plugin-developer-faq/#what-version-of-wordpress-should-the-tested-up-to-value-be).
 
 ## Development quick start
 
@@ -108,9 +119,11 @@ python3 scripts/plugin.py package
 ```
 
 Lint requires PHP. The ZIP and SHA-256 are written to `dist/`; repackaging replaces only these generated files.
-Output: `dist/exchange-rates.1.4.2.zip`, containing an `exchange-rates/` directory.
-Version 1.4.2 includes the reviewed table/input alignment, narrow-layout wrapping and converter title/spacing fixes. It also validates converter and table amounts, corrects negative/scientific formatting and converter precision/separator metadata, preserves small nonzero values as localized bounds, and rejects stale refresh responses after deactivation. Existing settings, rates, widgets and saved content remain compatible; the thirty-minute refresh interval is unchanged. See the [input acceptance](docs/reviews/amount-input-1.4.2.md) and [small-value/cancellation review](docs/reviews/remaining-fixes-1.4.2.md).
-CI also saves the verified ZIP as an artifact. Use the [successful final-package workflow run](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40384805712) and verify the checksum in [release status](docs/release-status.md); extract the outer Actions artifact archive and install the plugin ZIP inside it. CI artifacts have limited retention. See [packaging and release procedures](docs/release.md) for details.
+Output: `dist/exchange-rates.1.5.0.zip`, containing an `exchange-rates/` directory. Preserve the reviewed ZIP before rebuilding; a versioned filename alone does not identify its contents. The [release status](docs/release-status.md) distinguishes the verified package from subsequent source revisions and retains their checksums.
+
+The current 1.5.0 work includes the accepted footer/dialog composition, local footer timestamps, accessible controls and announcements, explicit zero handling, adaptive historical tables, missing-history JPY recovery and removal of the unused jQuery UI Autocomplete dependency. See the [table integration](docs/reviews/1.5.0-table-integration.md) and [exact-ZIP recheck](docs/reviews/1.5.0-final-recheck.md) for scoped evidence.
+
+CI saves a ZIP artifact when its workflow runs. An old 1.4.2 CI run is not evidence for the current working tree. After the final 1.5.0 commit passes CI, compare its installable tree and package checksum with the reviewed artifact. Extract the outer Actions artifact archive and install only the plugin ZIP inside it. Artifacts have limited retention; see [packaging and release procedures](docs/release.md).
 
 ## Repository and documentation
 
@@ -129,11 +142,14 @@ docs/                 Development, release and imported source provenance
 SVN `tags/`, `.svn`, WordPress core, databases and actual `.env` files are not stored in Git. Edit plugin code on the host in `plugin/trunk/`; containers use a read-only bind mount. **WordPress.org SVN is strictly read-only in this workflow.**
 
 - [Local development and smoke tests](docs/development.md)
+- [Mandatory three-phase release acceptance](docs/acceptance/release-gates.md)
+- [Permanent regression registry and runner](tests/regressions/README.md)
 - [Editable banner and local PNG rendering](examples/banner/README.md)
 - [Current release status and candidate identity](docs/release-status.md)
 - [Packaging and release procedures](docs/release.md)
 - [1.4.1 compatibility acceptance and limitations](docs/releases/1.4.1.md)
-- [Future 1.5.0 integration roadmap](docs/roadmaps/1.5.0.md)
+- [Current roadmap: 1.5.0 / 1.5.6 / 1.6.0](docs/roadmaps/README.md)
+- [1.5.0 completed-work checkpoint](docs/reviews/1.5.0-checkpoint.md)
 - [Historical 1.4.0 compatibility acceptance](docs/releases/1.4.0.md)
 - [Source provenance and deferred CSS change](docs/normalization.md)
 

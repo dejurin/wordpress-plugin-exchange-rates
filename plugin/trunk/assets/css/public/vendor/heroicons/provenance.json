@@ -1,0 +1,11 @@
+{
+  "project": "Heroicons",
+  "version": "v2.2.0",
+  "license": "MIT",
+  "icon": "24/solid/check-badge",
+  "svg_source": "https://raw.githubusercontent.com/tailwindlabs/heroicons/v2.2.0/optimized/24/solid/check-badge.svg",
+  "license_source": "https://raw.githubusercontent.com/tailwindlabs/heroicons/v2.2.0/LICENSE",
+  "svg_sha256": "562a313c99d1ca5c74ce2137135d7fb5348f7d3c8ce4a957624ac7f814e1e05d",
+  "license_sha256": "60e0b68c0f35c078eef3a5d29419d0b03ff84ec1df9c3f9d6e39a519a5ae7985",
+  "modifications": "None; rendered through a local CSS mask at 16px with inherited color."
+}

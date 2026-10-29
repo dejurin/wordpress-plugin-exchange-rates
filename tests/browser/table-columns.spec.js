@@ -7,7 +7,7 @@ test.beforeEach(async ({ page, baseURL }) => {
 async function columns(table) {
   return table.evaluate(element => {
     const rectangle = node => { const box = node.getBoundingClientRect(); return { left: box.left, right: box.right, width: box.width }; };
-    const content = node => { const range = document.createRange(); range.selectNodeContents(node); return rectangle(range); };
+    const content = node => { const range = document.createRange(); range.selectNodeContents(node); const speech = node.querySelector(':scope > .er-a11y-sr-only'); if (speech) range.setEndBefore(speech); return rectangle(range); };
     const rows = [...element.querySelectorAll('tbody tr')];
     const headers = [...element.querySelectorAll('thead th')];
     const direction = getComputedStyle(element).direction;
@@ -21,7 +21,7 @@ async function columns(table) {
         leading: cells.map(node => content(node)[direction === 'rtl' ? 'right' : 'left']),
       };
     });
-    return { width: rectangle(element).width, measurements,
+    return { width: rectangle(element).width, measurements, layoutMode: element.parentElement.className,
       values: rows.map(row => row.textContent),
       numericHeaders: headers.slice(1).filter(node => node.classList.contains('text-right')).map(node => getComputedStyle(node).textAlign),
     };
@@ -59,6 +59,9 @@ for (const direction of ['ltr', 'rtl']) {
               const previous = snapshots[kind];
               if (previous) {
                 expect(result.values).toEqual(previous.values);
+              }
+              // Accepted adaptive spacing/headings may change at a fit transition.
+              if (previous && previous.layoutMode === result.layoutMode) {
                 const extraWidth = result.width - previous.width;
                 const labelGrowth = result.measurements[0].width - previous.measurements[0].width;
                 expect(Math.abs(extraWidth - labelGrowth), `${kind}: only Currency absorbs spare width`).toBeLessThanOrEqual(2);

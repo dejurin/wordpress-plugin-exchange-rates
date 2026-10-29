@@ -29,6 +29,10 @@ namespace {
 	function esc_attr__( $value, $domain ) {
 		return esc_attr( $value );
 	}
+	function __( $text, $domain ) { return $text; }
+	function esc_html_e( $text, $domain ) { echo esc_html( $text ); }
+	function esc_attr_e( $text, $domain ) { echo esc_attr( $text ); }
+	function add_action() {}
 	function wp_date( $format, $timestamp ) {
 		return gmdate( $format, $timestamp );
 	}
@@ -58,16 +62,18 @@ namespace {
 			array( 'put_time' => '2026-01-02 12:01:00', 'local_time' => '2026-01-02 12:00:00' ),
 			1, 'test-widget', 'currencyrate', $mode
 		);
-		$xpath = version_xpath( $html );
-		$links = $xpath->query( '//a[@href="https://wordpress.org/plugins/exchange-rates/"]' );
-		check_version( 1, $links->length, 'One original plugin link, mode ' . $mode );
-		$link = $links->item( 0 );
-		check_version( 'Exchange Rates', $link->textContent, 'Version is outside the link, mode ' . $mode );
-		check_version( ' ' . \Dejurin\ExchangeRates\Plugin::VERSION, $link->nextSibling ? $link->nextSibling->nodeValue : null, 'Dynamic plain-text version, mode ' . $mode );
-		check_version( true, false !== strpos( $html, '</a> ' . esc_html( \Dejurin\ExchangeRates\Plugin::VERSION ) . '</small>' ), 'Version is HTML-escaped, mode ' . $mode );
-		check_version( true, false !== strpos( $link->parentNode->parentNode->textContent, \Dejurin\ExchangeRates\Plugin::VERSION . ' 🚀' ), 'Version precedes the rocket, mode ' . $mode );
-		check_version( 'noreferrer noopener nofollow', $link->getAttribute( 'rel' ), 'Original link attributes, mode ' . $mode );
-	}
+        check_version( true, false !== strpos( $html, 'aria-controls="exchange-rates-information"' ), 'Shared dialog target, mode ' . $mode );
+    }
+    ob_start(); \Dejurin\ExchangeRates\Service\Footer::render_dialog(); $html = ob_get_clean();
+    $xpath = version_xpath( $html );
+    $links = $xpath->query( '//a[@href="https://wordpress.org/plugins/exchange-rates/"]' );
+    check_version( 1, $links->length, 'One original plugin link in shared dialog' );
+    $link = $links->item( 0 );
+    check_version( false, false !== strpos( $link->textContent, \Dejurin\ExchangeRates\Plugin::VERSION ), 'Version remains outside the plugin link' );
+    check_version( true, false !== strpos( $html, esc_html( \Dejurin\ExchangeRates\Plugin::VERSION ) ), 'Version is HTML-escaped' );
+    check_version( true, false !== strpos( $link->parentNode->textContent, \Dejurin\ExchangeRates\Plugin::VERSION . ' 🚀' ), 'Version precedes the rocket' );
+    check_version( 'noreferrer noopener nofollow', $link->getAttribute( 'rel' ), 'Original dialog link attributes' );
+
 	$html = \Dejurin\ExchangeRates\Models\Dev::rates_unavailable();
 	$nodes = version_xpath( $html )->query( '//*[@data-exchange-rates-version]' );
 	check_version( 1, $nodes->length, 'Unavailable output carries one version' );

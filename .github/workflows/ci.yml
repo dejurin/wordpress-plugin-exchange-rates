@@ -41,7 +41,10 @@ jobs:
       - run: php tests/percentage.php
       - run: php -l tests/percentage-wordpress.php
       - run: php tests/version.php
+      - run: php tests/footer.php
+      - run: php tests/acceptance-asset-revision.php
       - run: php -l tests/version-wordpress.php
+      - run: php -l tests/converter-controls-wordpress.php
       - run: php -l tests/localization.php
       - run: php -l tests/browser-empty-update.php
       - run: php -l tests/formatting-wordpress.php
@@ -65,6 +68,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Validate accumulated regression coverage
+        run: |
+          python3 scripts/regressions.py check
+          python3 -m unittest discover -s tests/regressions -p 'test_*.py'
       - run: python3 scripts/plugin.py package
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -98,6 +105,7 @@ jobs:
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/smoke.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/percentage-wordpress.php
       - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/version-wordpress.php
+      - run: docker compose --env-file wordpress/.env run --rm cli eval-file /opt/tests/converter-controls-wordpress.php
       - name: Check current translation catalogs and WordPress loading
         run: |
           docker compose --env-file wordpress/.env run --rm --entrypoint sh cli -c '

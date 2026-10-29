@@ -74,19 +74,17 @@ try {
 		$nodes = $xpath->query( '//*[@data-exchange-rates-version]' );
 		check_rendered_version( 1, $nodes->length, $name . ': one component version' );
 		check_rendered_version( Plugin::VERSION, $nodes->length ? $nodes->item( 0 )->getAttribute( 'data-exchange-rates-version' ) : null, $name . ': server version survives output sanitization' );
-		$links = $xpath->query( '//a[@href="https://wordpress.org/plugins/exchange-rates/"]' );
-		check_rendered_version( 1, $links->length, $name . ': original plugin link' );
-		$link = $links->item( 0 );
-		check_rendered_version( 'Exchange Rates', $link->textContent, $name . ': version is not part of the link' );
-		check_rendered_version( ' ' . Plugin::VERSION, $link->nextSibling ? $link->nextSibling->nodeValue : null, $name . ': plain version after link' );
-		check_rendered_version( true, false !== strpos( $link->parentNode->parentNode->textContent, Plugin::VERSION . ' 🚀' ), $name . ': version before rocket' );
-		check_rendered_version( '_blank', $link->getAttribute( 'target' ), $name . ': existing link target' );
-		check_rendered_version( 'noreferrer noopener nofollow', $link->getAttribute( 'rel' ), $name . ': existing link rel' );
-		check_rendered_version( true, false !== strpos( $html, esc_html__( 'This plugin or website cannot guarantee the accuracy of the exchange rates displayed. You should confirm current rates before making any transactions that could be affected by changes in the exchange rates.', 'exchange-rates' ) ), $name . ': original disclaimer' );
-		check_rendered_version( true, false !== strpos( $link->parentNode->textContent, __( 'You can install this WP plugin on your website from the WordPress official website:', 'exchange-rates' ) ), $name . ': original translated credit' );
+        check_rendered_version( 1, $xpath->query('//*[@data-er-info and @aria-controls="exchange-rates-information"]')->length, $name . ': shared dialog opener survives sanitization' );
+
 	}
 	$xpath = rendered_version_xpath( implode( '', $normal ) );
 	check_rendered_version( 5, $xpath->query( '//*[@data-exchange-rates-version]' )->length, 'Multiple components keep one version each' );
+
+    ob_start(); \Dejurin\ExchangeRates\Service\Footer::render_dialog(); $dialog = ob_get_clean();
+    $dialog_xpath = rendered_version_xpath($dialog);
+    check_rendered_version( 1, $dialog_xpath->query('//a[@href="https://wordpress.org/plugins/exchange-rates/" and contains(@rel,"nofollow")]')->length, 'Shared plugin link retains rel' );
+    check_rendered_version( true, false !== strpos($dialog, Plugin::VERSION), 'Shared dialog displays runtime version' );
+    check_rendered_version( true, false !== strpos($dialog, '[ExchangeRatesWP]'), 'Shared translated disclaimer retains marker' );
 
 	$current = array();
 	foreach ( render_version_cases() as $name => $html ) {

@@ -7,7 +7,7 @@ let credentials;
 let seeded = false;
 function fixture(mode) {
   try {
-    return JSON.parse(execFileSync('docker', ['compose', '--env-file', 'wordpress/.env', 'run', '--rm', '--no-deps',
+    return JSON.parse(execFileSync('docker', ['compose', '--env-file', process.env.WP_TEST_ENV_FILE || 'wordpress/.env', 'run', '--rm', '--no-deps',
       'cli', 'eval-file', '/opt/tests/browser-empty-update.php', mode],
     { cwd: path.resolve(__dirname, '../..'), timeout: 30000, stdio: ['ignore', 'pipe', 'pipe'] }).toString());
   } catch {

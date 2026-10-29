@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Installed package — native browser checks</title><style>body{font:14px/1.5 system-ui;margin:20px;color:#26313b}button,select{font:inherit;padding:8px;margin:4px}iframe{display:block;border:1px solid #ddd;height:900px;width:390px}pre{white-space:pre-wrap}#progress{font-weight:600}</style><h1>Installed package — native browser checks</h1><p id="native-browser"></p><p id="saved">Results are saved only to the isolated lab.</p><p>Real themes and plugin rendering. Synthetic, isolated rate data. No publication.</p><button id="quick">Run three widgets</button><button id="full">Run theme matrix</button><button id="changed">Run changed cases</button><p id="progress">Ready</p><pre id="summary"></pre><iframe id="subject" title="Isolated WordPress test"></iframe><details><summary>Full results</summary><pre id="results"></pre></details><script>
+'use strict';
+const themes=['twentytwentyfive','astra','kadence','generatepress','blocksy','hello-elementor'];
+const surfaces=['table','converter','badge'];
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const progress=document.getElementById('progress');
+let frame=document.getElementById('subject');
+async function load(c,baseline=false){
+ const old=frame; frame=document.createElement('iframe');frame.id='subject';frame.title='Isolated WordPress test';frame.style.width=c.width+'px';old.replaceWith(frame);
+ const params=new URLSearchParams({theme:c.theme,surface:c.surface,cb:'1',er_view:baseline?'baseline':'candidate',count:c.count||'3',source:c.source||'eu-ecb',page_id:'4'});
+ for(const key of ['native','multi','base','amount','inverse','names','static','direction','nojs','history','narrow'])if(c[key]!==undefined)params.set(key,c[key]);
+ if(c.mode)params.set('dialog_test',c.mode);
+ await new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(new Error('Load timeout')),18000);frame.onload=()=>{if(!frame.contentDocument.querySelector('#lab-fixture'))return;clearTimeout(timeout);resolve()};frame.src='/?'+params;});
+ await frame.contentDocument.fonts.ready;await pause(80);return frame.contentWindow;
+}
+function text(el){if(!el)return null;const clone=el.cloneNode(true);clone.querySelectorAll('.er-a11y-sr-only,img').forEach(n=>n.remove());return clone.textContent.trim();}
+function values(w,root=w.document.querySelector('#lab-fixture')){return [...root.querySelectorAll('td[data-rate],.result,.badge-leaders')].map(text);}
+async function setAmount(w,value){const e=w.document.querySelector('#lab-fixture input');if(e){e.value=value;e.dispatchEvent(new w.Event('input',{bubbles:true}));await pause(400);}return values(w);}
+function visibleBox(w,selector){return [...w.document.querySelectorAll(selector)].map(e=>{const b=e.getBoundingClientRect();return {width:b.width,height:b.height};});}
+async function runCase(c){const failures=[];const check=(condition,name)=>{if(!condition)failures.push(name);};
+
+ const w=await load(c);const d=w.document;const root=d.querySelector('#lab-fixture');const modal=d.querySelector('#exchange-rates-information');
+ check(!!modal&&w.getComputedStyle(modal).display==='none'&&modal.getBoundingClientRect().height===0,'closed dialog must be absent from layout');
+ const originalValues=values(w);check(root.querySelector('[data-exchange-rates-version="1.5.0"]'),'installed version is 1.5.0');
+ const buttons=[...root.querySelectorAll('[data-er-info]')];
+ check(buttons.length>0,'date controls exist');
+ if(c.mode||c.nojs){for(const b of buttons)b.click();await pause(50);check(w.getComputedStyle(modal).display==='none'&&!modal.hasAttribute('open'),'unsupported dialog remains hidden');return {...c,failures,pass:!failures.length};}
+ check(originalValues.length > 0 && originalValues.every(value => value.length > 0),'numeric displays exist');
+ check([...root.querySelectorAll('footer a')].every(a=>!a.rel.split(/\s+/).includes('nofollow')),'visible service links retain agreed rel');
+ check([...root.querySelectorAll('footer a')].every(a=>(a.getAttribute('aria-label')||a.textContent).includes('opens in a new tab')),'external links have accessible notice');
+ const owned=[...root.querySelectorAll('[id]'),modal,...modal.querySelectorAll('[id]')];
+ check(owned.every(el=>[...d.querySelectorAll('[id]')].filter(n=>n.id===el.id).length===1),'plugin IDs are unique');
+ for(const el of root.querySelectorAll('[aria-describedby],[aria-labelledby],[aria-controls]'))for(const attr of ['aria-describedby','aria-labelledby','aria-controls'])for(const id of (el.getAttribute(attr)||'').split(/\s+/).filter(Boolean))check(!!d.getElementById(id),'ARIA reference exists: '+id);
+ const two=await setAmount(w,'2');check(two.length === originalValues.length,'amount update preserves all results');
+ const zero=await setAmount(w,'0');if (root.querySelector('input')) { const owner=root.querySelector('input').closest('[data-exchange-rates-version]'); check(values(w,owner).every(value => /0/.test(value) && !/[1-9]/.test(value)), 'edited widget zero result remains zero'); const peers=[...root.querySelectorAll('[data-exchange-rates-version]')].filter(node=>node!==owner); check(peers.every(node=>values(w,node).every(value=>originalValues.includes(value))), 'unrelated widget values remain unchanged'); }
+ const input=root.querySelector('input');
+ if(input){check(!!input.id&&!!input.getAttribute('aria-label'),'amount has ID and name');await setAmount(w,'abc');check(input.getAttribute('aria-invalid')==='true','invalid input marked');check(!!input.getAttribute('aria-describedby')&&d.getElementById(input.getAttribute('aria-describedby')).textContent.includes('Enter a valid amount'),'error is associated');check([...root.querySelectorAll('[role=status]')].some(el=>el.textContent.includes('Unable to calculate')),'error announcement');await setAmount(w,'2');check(!input.hasAttribute('aria-invalid'),'valid-input recovery');check([...root.querySelectorAll('[role=status]')].some(el=>el.textContent.includes(c.base||'USD')),'result includes currency context');}
+ for(const badge of root.querySelectorAll('.shortcode-exchange-rates-badge')){const rows=[...badge.querySelectorAll('.badge-leaders')];check(!!badge.querySelector('[role=list]'),'badge has list semantics');for(const row of rows){const desc=row.querySelector('.er-a11y-sr-only');check(row.getAttribute('role')==='listitem'&&!row.hasAttribute('aria-label')&&!!desc&&desc.textContent.includes(' equals '),'badge has real accessible text');check(row.querySelectorAll('.er-a11y-sr-only').length===1,'badge description is not duplicated');check(desc&&desc.getBoundingClientRect().width===1,'badge description stays visually hidden');} }
+
+ check([...root.querySelectorAll('footer')].every(el=>el.scrollWidth<=el.clientWidth+1),'footer has no horizontal overflow');
+ for(const b of buttons){check(b.querySelector('time').dateTime.endsWith('Z'),'UTC instant preserved');check((b.getAttribute('aria-label')||'').includes('('),'caption names visitor timezone');b.focus();b.click();await pause(30);check(modal.matches(':modal'),'dialog uses top layer');check(d.activeElement===modal.querySelector('h2'),'dialog initially focuses heading');check(modal.querySelector('[data-er-modal-source-name]').textContent===b.dataset.sourceName,'correct instance source');check(modal.querySelector('[data-er-modal-date]').dateTime===new Date(b.querySelector('time').dateTime).toISOString(),'source timestamp preserved');check(modal.querySelector('[data-er-modal-recorded]').dateTime===new Date(b.dataset.recordedAt).toISOString(),'saved timestamp preserved');check([...modal.querySelectorAll('dt')].map(el=>el.textContent).join('|')==='Source|Check:|Latest change:','date labels match published 1.4.2 wording');check([...modal.querySelectorAll('a')].every(a=>a.rel.includes('nofollow')),'modal links have nofollow');check(modal.textContent.includes('[ExchangeRatesWP]'),'search marker retained');const box=modal.getBoundingClientRect();check(box.top>=0&&box.bottom<=w.innerHeight+1&&box.left>=0&&box.right<=w.innerWidth+1,'dialog fits viewport');d.activeElement.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true}));check(!!d.activeElement.closest('.er-dialog-api'),'reverse tab wraps to API');d.activeElement.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));check(d.activeElement===modal.querySelector('.er-dialog-close'),'forward tab wraps to close');modal.querySelector('.er-dialog-close').click();await pause(30);check(d.activeElement===b,'focus returns to originating instance');}
+ check(!(w.erNativeErrors||[]).length,'no uncaught JavaScript errors');return {...c,initial:originalValues,failures,pass:!failures.length};
+}
+async function run(full){document.querySelectorAll('button').forEach(b=>b.disabled=true);let configs=[];
+ if(full==='changed'){for(const theme of themes)configs.push({theme,surface:'converter',width:390,narrow:'1'});configs.push({theme:'astra',surface:'table',width:390,native:'1'});configs.push({theme:'astra',surface:'table',width:390,native:'1',nojs:'1'});configs.push({theme:'astra',surface:'table',width:390,native:'1',multi:'1'});}
+ else if(full){for(const theme of themes)for(const width of [1280,390,320])for(const surface of surfaces)configs.push({theme,surface,width});
+ for(const surface of surfaces)for(const mode of ['missing-api','no-constructor','throws','nonmodal'])configs.push({theme:'astra',surface,width:390,mode});
+ for(const surface of surfaces){configs.push({theme:'astra',surface,width:390,source:'currencyrate',base:'EUR'});configs.push({theme:'astra',surface,width:390,multi:'1'});configs.push({theme:'astra',surface,width:390,nojs:'1'});}
+ for(const count of ['1','5'])configs.push({theme:'astra',surface:'badge',width:320,count});
+ for(const surface of ['table','badge'])configs.push({theme:'astra',surface,width:390,base:'EUR',inverse:'1',amount:'2',names:'1'});
+ configs.push({theme:'astra',surface:'table',width:390,static:'1',names:'1'});
+ for(const surface of ['table','converter'])configs.push({theme:'astra',surface,width:390,native:'1'});
+ for(const surface of surfaces)configs.push({theme:'astra',surface,width:390,direction:'rtl'});
+ configs.push({theme:'astra',surface:'table',width:390,history:'1'});
+ }else configs=surfaces.map(surface=>({theme:'astra',surface,width:390}));
+ const browserName=navigator.userAgent.includes('Firefox/')?'firefox':(!navigator.userAgent.includes('Chrome/')&&navigator.userAgent.includes('Safari/')?'safari':null);if(!browserName)throw new Error('Run this page in native Safari or Firefox');const report={browser:browserName,version:'1.5.0',run:'integrated-'+browserName+'-'+(full==='changed'?'changed':'full'),started:new Date().toISOString(),userAgent:navigator.userAgent,cases:[]};const started=performance.now();
+ for(const c of configs){try{report.cases.push(await runCase(c));}catch(error){report.cases.push({...c,pass:false,failures:[error.message]});}const n=report.cases.length;progress.textContent=`${n}/${configs.length} · ${Math.round(n/configs.length*100)}% · ${((performance.now()-started)/1000).toFixed(0)} s · ${report.cases.filter(c=>!c.pass).length} failures`;document.getElementById('results').textContent=JSON.stringify(report,null,2);if(n%12===0)await persist(report);}
+ report.finished=new Date().toISOString();document.getElementById('results').textContent=JSON.stringify(report,null,2);document.getElementById('summary').textContent=JSON.stringify({total:report.cases.length,passed:report.cases.filter(c=>c.pass).length,failures:report.cases.filter(c=>!c.pass)},null,2);await persist(report);progress.textContent='Completed · '+progress.textContent;document.querySelectorAll('button').forEach(b=>b.disabled=false);
+}
+async function persist(report){const response=await fetch('/?er-native-acceptance=1',{method:'POST',headers:{'Content-Type':'application/json','X-Acceptance-Nonce':'__ACCEPTANCE_NONCE__'},body:JSON.stringify(report)});if(!response.ok || !(await response.json()).success)throw new Error('Result save failed: '+response.status);document.getElementById('saved').textContent='Saved: '+report.run+' · '+report.cases.length+' cases';}
+document.getElementById('native-browser').textContent=navigator.userAgent;
+document.getElementById('changed').onclick=()=>run('changed');
+document.getElementById('quick').onclick=()=>run(false);document.getElementById('full').onclick=()=>run(true);
+</script></html>

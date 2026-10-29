@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const { rateText } = require('./rate-text');
 
 test.beforeEach(async ({ page, baseURL }) => {
   await page.route('**/*', route => new URL(route.request().url()).origin === new URL(baseURL).origin ? route.continue() : route.abort());
@@ -32,26 +33,26 @@ for (const direction of ['ltr', 'rtl']) {
       await open(page, direction);
       for (const kind of ['shortcode', 'widget']) {
         const compact = page.locator(`#${kind}-compact`);
-        await expect(compact.locator('.exchange-rates-caption')).toHaveCSS('justify-content', 'flex-start');
-        await expect(page.locator(`#${kind}-regions .exchange-rates-caption`)).toHaveCSS('justify-content', 'flex-end');
+        await expect(compact.locator('.er-caption')).toHaveCSS('justify-content', 'space-between');
+        await expect(page.locator(`#${kind}-regions .er-caption`)).toHaveCSS('justify-content', 'space-between');
         const geometry = await compact.evaluate(section => {
           const table = section.querySelector('table').getBoundingClientRect();
           const box = section.querySelector('.table-responsive').getBoundingClientRect();
-          const caption = section.querySelector('.exchange-rates-caption');
+          const caption = section.querySelector('.er-caption');
           const range = document.createRange(); range.selectNodeContents(caption.firstChild);
           const text = range.getBoundingClientRect(), edge = document.dir === 'rtl' ? 'right' : 'left';
           return { gap: Math.abs(text[edge] - box[edge]), tableWidth: table.width, width: box.width };
         });
         expect(geometry.gap).toBeLessThan(8);
         if (width === 900) expect(geometry.tableWidth).toBeLessThan(geometry.width - 40);
-        const caption = compact.locator('.exchange-rates-caption');
+        const caption = compact.locator('.er-caption');
         const href = await caption.locator('a').getAttribute('href');
-        expect(href).toBe('https://currencyconvert.online/usd');
-        const info = compact.locator('.exchange-rates-info-caption');
+        expect(href).toBe('https://currencyconvert.online/exchange-rates');
+        const info = page.locator('#exchange-rates-information');
         await expect(info).toBeHidden();
-        await compact.locator('.exchange-rates-caption-button').click();
+        await compact.locator('[data-er-info]').click();
         await expect(info).toBeVisible();
-        await compact.locator('.exchange-rates-caption-button').click();
+        await info.locator('button').click();
         await expect(info).toBeHidden();
       }
     });
@@ -83,6 +84,7 @@ for (const direction of ['ltr', 'rtl']) {
       for (const kind of ['shortcode', 'widget']) {
         for (const mode of ['full', 'amount']) {
           const section = page.locator(`#${kind}-${mode}`);
+          const adaptive = await section.locator('.exchange-rates-table-reflow').count();
           const rows = await section.locator('tbody th .text-truncate').evaluateAll(labels => labels.map(label => {
             const style = getComputedStyle(label), box = label.getBoundingClientRect();
             const range = document.createRange(); range.selectNodeContents(label); const text = range.getBoundingClientRect();
@@ -90,15 +92,18 @@ for (const direction of ['ltr', 'rtl']) {
               contained: text.left >= box.left - 1 && text.right <= box.right + 1 };
           }));
           for (const row of rows) {
-            expect(row.width).toBeGreaterThanOrEqual(90);
+            if (!adaptive) expect(row.width).toBeGreaterThanOrEqual(90);
+            else expect(row.width).toBeGreaterThan(0);
             expect(row.overflow).toBe('visible');
             expect(row.ellipsis).toBe('clip');
             expect(row.whiteSpace).toBe('normal');
             expect(row.contained).toBeTruthy();
           }
           const size = await section.locator('.table-responsive').evaluate(el => ({ viewport: el.clientWidth, content: el.scrollWidth, table: el.querySelector('table').getBoundingClientRect().width }));
-          if (width === 320) expect(size.content).toBeGreaterThan(size.viewport);
-          else expect(Math.abs(size.table - size.viewport)).toBeLessThanOrEqual(1);
+          if (size.content > size.viewport + 1) {
+            await expect(section.locator('.table-responsive')).toHaveAttribute('tabindex', '0');
+            await expect(section.locator('.exchange-rates-table-scroll-note')).toBeVisible();
+          } else expect(Math.abs(size.table - size.viewport)).toBeLessThanOrEqual(1);
         }
       }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
@@ -118,7 +123,7 @@ for (const direction of ['ltr', 'rtl']) {
         expect(new Set(before.colors).size).toBe(1);
         expect(before.input.width).toBeLessThan(before.table.width / 2);
         await table.locator('input').fill('100');
-        const cells = await table.locator('td[data-change-trend]').allTextContents();
+        const cells = await rateText(table.locator('td[data-change-trend]'));
         expect(cells.map(text => text.replace(/[^\d.]/g, ''))).toEqual(['125', '90', '1', '100']);
         expect(await table.locator('td[data-change]').allTextContents()).toEqual(['4,17%', '10%', '11,1%', '–']);
         const after = await grid(table);

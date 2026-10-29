@@ -1,0 +1,53 @@
+/* Isolated proposal only. Not loaded by the installable plugin. */
+.cr-exchange-rates .er-table-fit-history.er-table-fit-reflow table thead th {
+	white-space: normal;
+	overflow-wrap: normal;
+	word-break: normal;
+	hyphens: none;
+}
+
+.cr-exchange-rates .er-table-fit-history.er-table-fit-reflow .exchange-rates-table-label .d-flex-wrap {
+	min-width: 0;
+}
+
+.cr-exchange-rates .er-table-fit-history.er-table-fit-reflow .exchange-rates-table-stacked {
+	grid-template-columns: auto minmax(0, 1fr);
+}
+
+.cr-exchange-rates .er-table-fit-history.er-table-fit-compact table th,
+.cr-exchange-rates .er-table-fit-history.er-table-fit-compact table td {
+	padding-left: 0.25rem !important;
+	padding-right: 0.25rem !important;
+}
+
+/* Oversized numbers remain intact and reachable rather than truncated. */
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive {
+	scrollbar-width: auto;
+	-ms-overflow-style: auto;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar {
+	display: block;
+	height: 10px;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-thumb {
+	background: #858b93;
+	border-radius: 5px;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-track {
+	background: #edf0f3;
+}
+
+.er-table-fit-scroll-note { font: inherit; font-size: 0.85em; margin: 0 0 8px; }
+.er-table-fit-scroll-note[hidden] { display: none !important; }
+.er-table-fit-history:focus-visible { outline: 2px solid #2452a1; outline-offset: 2px; }
+
+.er-table-fit-history .er-table-fit-short-title { display: none; }
+.er-table-fit-history.er-table-fit-short .er-table-fit-full-title { display: none; }
+.er-table-fit-history.er-table-fit-short .er-table-fit-short-title {
+	display: inline;
+	text-decoration: none;
+	border: 0;
+}

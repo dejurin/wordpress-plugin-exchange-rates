@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase 2 — native browser acceptance</title><style>body{font:15px/1.5 system-ui;margin:24px;color:#243142}button{font:inherit;padding:9px 18px}iframe{display:block;border:1px solid #ccd3dd;height:900px;margin-top:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}#progress{font-weight:600}#result{max-width:1000px}</style></head><body><h1>Phase 2 · public compositions</h1><p id="agent"></p><p>Installed 1.4.2 and 1.5.0 packages. Six sites, desktop and 390 px, frozen data. Local only.</p><button id="run">Run all 12 compositions</button><p id="progress">Ready</p><p id="saved"></p><pre id="result"></pre><iframe id="subject" title="Isolated composition"></iframe><script>
+'use strict';
+const cases = __CASES__;
+const browser = navigator.userAgent.includes('Firefox/') ? 'firefox' : !navigator.userAgent.includes('Chrome/') && navigator.userAgent.includes('Safari/') ? 'safari' : null;
+document.getElementById('agent').textContent = navigator.userAgent;
+let frame = document.getElementById('subject');
+async function load(c, side, mode='') {
+  frame.remove();frame=document.createElement('iframe');frame.id='subject';frame.title='Isolated '+c.id;frame.style.width=c.width+'px';
+  if(mode==='nojs')frame.setAttribute('sandbox','allow-same-origin');
+  document.body.append(frame);
+  const base=side==='baseline'?'http://127.0.0.1:19334':'http://127.0.0.1:19335';
+  const url=new URL(base);url.search=new URLSearchParams({er_public_case:c.id,er_public_size:c.width,er_public_native_case:'1',...(mode&&mode!=='nojs'?{er_public_failure:mode}:{})});
+  return new Promise((resolve,reject)=>{
+    const timeout=setTimeout(()=>{removeEventListener('message',listener);reject(new Error('Fixture timeout'));},18000);
+    function done(result){clearTimeout(timeout);removeEventListener('message',listener);resolve(result);}
+    function listener(event){if(event.origin===base&&event.source===frame.contentWindow&&event.data?.type==='er-public-native'&&event.data.id===c.id&&event.data.width===c.width)done(event.data.result);}
+    addEventListener('message',listener);
+    if(mode==='nojs')frame.onload=()=>{try{const d=frame.contentDocument,m=d.querySelector('#exchange-rates-information');done({pass:Boolean(m)&&!m.open&&frame.contentWindow.getComputedStyle(m).display==='none'});}catch(error){clearTimeout(timeout);reject(error);}};
+    frame.src=url.href;
+  });
+}
+function compare(a,b){
+  const changes=[];
+  if(a.length!==b.length)return [{property:'node-count',before:a.length,after:b.length}];
+  a.forEach((n,i)=>{const next=b[i];for(const key of ['tag','text'])if(n[key]!==next[key])changes.push({i,property:key,before:n[key],after:next[key]});for(const key of Object.keys(n.box))if(Math.abs(n.box[key]-next.box[key])>1)changes.push({i,property:key,before:n.box[key],after:next.box[key]});for(const key of Object.keys(n.computed))if(n.computed[key]!==next.computed[key])changes.push({i,property:key,before:n.computed[key],after:next.computed[key]});});
+  return changes;
+}
+document.getElementById('run').onclick=async()=>{
+  if(!browser){document.getElementById('progress').textContent='Open in real Safari or Firefox';return;}
+  document.getElementById('run').disabled=true;
+  const report={browser,userAgent:navigator.userAgent,startedAt:new Date().toISOString(),cases:[]};const start=performance.now();
+  for(const c of cases){const row={...c};try{
+    row.baseline=await load(c,'baseline');row.candidate=await load(c,'candidate');
+    if(row.baseline.error||row.candidate.error)throw new Error(row.baseline.error||row.candidate.error);
+    if(row.baseline.version!=='1.4.2'||row.candidate.version!=='1.5.0')throw new Error('Wrong installed package');
+    row.changes=compare(row.baseline.body,row.candidate.body);
+    row.review=row.changes.filter(d=>d.property.startsWith('border-')&&String(d.before).includes('rgba(0, 0, 0, 0.05)')&&String(d.after).includes('rgb(133, 139, 147)'));
+    row.unexpected=row.changes.filter(d=>!row.review.includes(d));
+    row.failures=[...row.baseline.checks,...row.candidate.checks].filter(c=>!c.pass).map(c=>c.name);
+    if(row.candidate.bodyOverflow&&!row.baseline.bodyOverflow)row.failures.push('New body overflow');
+    if(row.baseline.input){
+      if(!row.candidate.input)throw new Error('Candidate input was not tested');
+      for(const key of ['twice','zero','recovered'])if(JSON.stringify(row.baseline.input[key])!==JSON.stringify(row.candidate.input[key])){
+        if(c.surface==='table'&&key==='zero'&&JSON.stringify(row.baseline.input.zero)===JSON.stringify(row.baseline.input.initial)&&row.candidate.input.zero.every(value=>/0/.test(value)&&!/[1-9]/.test(value)))row.approvedChange='Previously approved table zero correction';
+        else row.failures.push('Input result differs: '+key);
+      }
+    }
+    row.failureModes={};for(const mode of ['missing','throws','nojs']){const r=await load(c,'candidate',mode);row.failureModes[mode]=mode==='nojs'?r.pass:!r.error&&r.checks.every(c=>c.pass);}
+    if(Object.values(row.failureModes).some(p=>!p))row.failures.push('Modal failure leaked content');
+    row.status=row.failures.length||row.unexpected.length?'FAIL':row.review.length?'DESIGN REVIEW':'PASS';
+  }catch(error){row.status='ERROR';row.error=error.message;}
+  report.cases.push(row);const done=report.cases.length;document.getElementById('progress').textContent=`${done}/${cases.length} · ${Math.round(done/cases.length*100)}% · ${Math.round((performance.now()-start)/1000)}s · ${row.id} ${row.width}: ${row.status}`;}
+  report.finishedAt=new Date().toISOString();report.counts=report.cases.reduce((a,c)=>(a[c.status]=(a[c.status]||0)+1,a),{});
+  document.getElementById('result').textContent=JSON.stringify({counts:report.counts,findings:report.cases.filter(c=>['FAIL','ERROR'].includes(c.status)).map(c=>({id:c.id,width:c.width,error:c.error,failures:c.failures,unexpected:c.unexpected}))},null,2);
+  try{const response=await fetch('/?er_public_native=1',{method:'POST',headers:{'Content-Type':'application/json','X-Acceptance-Nonce':'__NONCE__'},body:JSON.stringify(report)});const saved=await response.json();if(!response.ok||!saved.success)throw new Error('Save failed');document.getElementById('saved').textContent='Saved: '+saved.data.file;}catch(error){document.getElementById('saved').textContent=error.message;}
+  document.getElementById('progress').textContent='Completed · '+document.getElementById('progress').textContent;document.getElementById('run').disabled=false;
+};
+</script></body></html>

@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -562,6 +562,16 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 
 == Changelog ==
 
+= 1.5.0 =
+* New compact attribution footers for exchange-rate tables, converters and badges, with consistent source abbreviations.
+* New shared Data details dialog with source links, separate rate and saved dates, disclaimer and plugin/API attribution.
+* Footer dates use the visitor's time zone; detailed timestamps remain in UTC.
+* Improved keyboard access, accessible control names, result and error announcements, and badge/trend descriptions.
+* Preserve explicit zero amounts, existing saved settings and shortcode/widget configurations.
+* Fit historical columns into narrow tables; keep oversized values accessible through visible, keyboard-operable horizontal scrolling.
+* Keep valid table amounts usable when a currency has no previous rate, including JPY; unavailable history remains marked with a dash.
+* Remove the unused jQuery UI Autocomplete dependency.
+
 = 1.4.2 =
 * Show an unavailable result for malformed or unrepresentable converter and table amounts, and recover normally after valid input.
 * Correct negative and scientific-notation number formatting; honor converter zero precision and formats without thousands separators.
@@ -691,6 +701,9 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Updates widget footers and adds a shared rate-information dialog. Existing widget settings and shortcodes are preserved.
 
 = 1.4.2 =
 Fixes amount validation and number formatting, table and input alignment, narrow-layout wrapping, converter select spacing, and the default converter title. Existing settings, rates, shortcodes, and widgets are preserved; no data migration is required.

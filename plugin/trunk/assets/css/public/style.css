@@ -54,14 +54,24 @@
 
 .cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive {
 	-webkit-overflow-scrolling: touch;
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: auto;
+	scrollbar-width: auto;
 	overflow-x: auto;
 	scroll-behavior: smooth;
 }
 
 .cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar {
-	display: none; /* Safari and Chrome */
+	display: block;
+	height: 10px;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-thumb {
+	background: #858b93;
+	border-radius: 5px;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table.table-responsive::-webkit-scrollbar-track {
+	background: #edf0f3;
 }
 
 .cr-exchange-rates .widget-exchange-rates-currency-table table {
@@ -287,6 +297,53 @@
 	grid-column: 1 / -1;
 }
 
+/* Adapt only overflowing history tables; retain numeric precision and font size. */
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-reflow table thead th {
+	white-space: normal;
+	overflow-wrap: normal;
+	word-break: normal;
+	hyphens: none;
+}
+
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-reflow .exchange-rates-table-label .d-flex-wrap {
+	min-width: 0;
+}
+
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-reflow .exchange-rates-table-stacked {
+	grid-template-columns: auto minmax(0, 1fr);
+}
+
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-compact table th,
+.cr-exchange-rates .exchange-rates-table-history.exchange-rates-table-compact table td {
+	padding-left: 0.25rem !important;
+	padding-right: 0.25rem !important;
+}
+
+.cr-exchange-rates .exchange-rates-table-scroll-note {
+	font: inherit;
+	font-size: 0.85em;
+	margin: 0 0 8px;
+}
+
+.cr-exchange-rates .exchange-rates-table-scroll-note[hidden] {
+	display: none !important;
+}
+
+.cr-exchange-rates .widget-exchange-rates-currency-table:focus-visible {
+	outline: 2px solid #2452a1;
+	outline-offset: 2px;
+}
+
+.cr-exchange-rates .exchange-rates-table-history .exchange-rates-table-short-title,
+.cr-exchange-rates .exchange-rates-table-short .exchange-rates-table-full-title {
+	display: none;
+}
+
+.cr-exchange-rates .exchange-rates-table-short .exchange-rates-table-short-title {
+	display: inline;
+	text-decoration: none;
+	border: 0;
+}
 /* Widget Currency Table - Style end */
 
 /* Caption - Style start */

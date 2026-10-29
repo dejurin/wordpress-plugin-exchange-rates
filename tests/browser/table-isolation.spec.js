@@ -1,3 +1,4 @@
+const { rateText, expectRateText } = require('./rate-text');
 const { test, expect } = require('@playwright/test');
 
 function table(page, name) {
@@ -25,7 +26,7 @@ async function openFixture(page, scenario) {
   expect(response.ok()).toBeTruthy();
   await expect(page.locator('.widget-exchange-rates-currency-converter .result')).toHaveText('1.25');
   await expect(table(page, 'controls').locator('.badge-leaders')).toHaveCount(1);
-  await expect(prices(table(page, 'first'))).toHaveText(['2.5', '2.4']);
+  await expectRateText(prices(table(page, 'first')), ['2.5', '2.4']);
   if (scenario !== 'single') {
     await expect(table(page, 'static').locator('table')).toHaveCount(1);
     await expect(table(page, 'static').locator('input')).toHaveCount(0);
@@ -45,7 +46,7 @@ test('a single table retains rounding, previous rates and trend images', async (
   const beforeImages = await images(first);
   expect(beforeImages.length).toBeGreaterThan(0);
   await first.locator('input').fill('1234.56');
-  await expect(prices(first)).toHaveText(['1,543.2', '1,481.47']);
+  await expectRateText(prices(first), ['1,543.2', '1,481.47']);
   await first.locator('input').blur();
   await expect(first.locator('input')).toHaveValue('1234.56');
   expect(await images(first)).toEqual(beforeImages);
@@ -62,12 +63,12 @@ test('click and blur without editing restore the saved amount', async ({ page })
   expect(await snapshot(first)).toEqual(before);
 });
 
-test('empty, zero and negative input retain the existing amount-one fallback', async ({ page }) => {
+test('empty and negative input retain the existing amount-one fallback', async ({ page }) => {
   await openFixture(page, 'single');
   const first = table(page, 'first');
-  for (const value of ['', '0', '-5']) {
+  for (const value of ['', '-5']) {
     await first.locator('input').fill(value);
-    await expect(prices(first)).toHaveText(['1.25', '1.2']);
+    await expectRateText(prices(first), ['1.25', '1.2']);
     await first.locator('input').blur();
     await expect(first.locator('input')).toHaveValue('1');
   }
@@ -81,7 +82,7 @@ for (const scenario of ['mixed', 'reversed']) {
     const first = table(page, 'first');
     const beforeImages = await images(first);
     await first.locator('input').fill('1234.56');
-    await expect(prices(first)).toHaveText(['1,543.2', '1,481.47']);
+    await expectRateText(prices(first), ['1,543.2', '1,481.47']);
     expect(await Promise.all(untouched.map(name => snapshot(table(page, name))))).toEqual(before);
     expect(await images(first)).toEqual(beforeImages);
   });
@@ -92,11 +93,11 @@ for (const scenario of ['mixed', 'reversed']) {
     const before = await Promise.all(untouched.map(name => snapshot(table(page, name))));
     const second = table(page, 'second');
     // The existing PHP renderer omits the symbol in the previous-close cell.
-    await expect(prices(second)).toHaveText(['15£', '14']);
+    await expectRateText(prices(second), ['15£', '14']);
     const beforeImages = await images(second);
     expect(beforeImages.length).toBeGreaterThan(0);
     await second.locator('input').fill('1234.56');
-    await expect(prices(second)).toHaveText(['1.851,84£', '1.728,384£']);
+    await expectRateText(prices(second), ['1.851,84£', '1.728,384£']);
     await second.locator('input').blur();
     await expect(second.locator('input')).toHaveValue('1234.56');
     expect(await Promise.all(untouched.map(name => snapshot(table(page, name))))).toEqual(before);
@@ -111,11 +112,11 @@ test('alternating edits keep both tables independent over repeated input events'
   const staticBefore = await snapshot(table(page, 'static'));
   await first.locator('input').fill('3');
   await second.locator('input').fill('4');
-  await expect(prices(first)).toHaveText(['3.75', '3.6']);
-  await expect(prices(second)).toHaveText(['6£', '5,6£']);
+  await expectRateText(prices(first), ['3.75', '3.6']);
+  await expectRateText(prices(second), ['6£', '5,6£']);
   await first.locator('input').fill('1000');
-  await expect(prices(first)).toHaveText(['1,250', '1,200']);
-  await expect(prices(second)).toHaveText(['6£', '5,6£']);
+  await expectRateText(prices(first), ['1,250', '1,200']);
+  await expectRateText(prices(second), ['6£', '5,6£']);
   await expect(second.locator('input')).toHaveValue('4');
   expect(await snapshot(table(page, 'static'))).toEqual(staticBefore);
 });

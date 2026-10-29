@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "baseline": "1.3.2",
+  "visual_baseline": "1.4.2",
+  "note": "Registry membership is not a PASS. Add tests and stable entries; never delete history to obtain green.",
+  "regressions": [
+    {
+      "id": "ER-number-formatting",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Keep integer zeros, eight formats, precision, separators and signs.",
+      "tests": [
+        "tests/formatting.php",
+        "tests/formatting-wordpress.php",
+        "tests/browser/rtl-numbers.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-small-values",
+      "recorded_scope": "1.4.2",
+      "contract": "Distinguish missing, zero and nonzero rates below display precision.",
+      "tests": [
+        "tests/small-values.php",
+        "tests/browser/small-values.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-amount-validation",
+      "recorded_scope": "1.4.2",
+      "contract": "Reject partial/non-finite/overflow input; preserve valid conversion, recovery and signs.",
+      "tests": [
+        "tests/browser/amount-input.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-table-instance-isolation",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Editing one table must not alter another widget or stored data.",
+      "tests": [
+        "tests/table-isolation-wordpress.php",
+        "tests/browser/table-isolation.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-explicit-zero",
+      "recorded_scope": "1.5.0 working tree",
+      "contract": "An explicit table zero produces zero while other accepted defaults remain stable.",
+      "tests": [
+        "tests/browser/table-isolation.spec.js",
+        "tests/browser/amount-input.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-percentage-calculation",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Correct percentage formula, nominal units and zero/missing guards.",
+      "tests": [
+        "tests/percentage.php",
+        "tests/percentage-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-change-percentage",
+      "recorded_scope": "1.4.0",
+      "contract": "Protect signed/displayed change percentages and history columns.",
+      "tests": [
+        "tests/change-percentage.php",
+        "tests/browser/change-percentage.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-payload-validation",
+      "recorded_scope": "1.4.0",
+      "contract": "Reject malformed provider data without overwriting valid saved rates.",
+      "tests": [
+        "tests/payload-validation.php",
+        "tests/payload-validation-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-source-directory",
+      "recorded_scope": "1.4.0",
+      "contract": "Reject invalid source directories and preserve cached directory contracts.",
+      "tests": [
+        "tests/source-directory-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-retained-source-identity",
+      "recorded_scope": "1.4.0",
+      "contract": "Failed source change preserves original rate direction and attribution.",
+      "tests": [
+        "tests/source-identity-wordpress.php",
+        "tests/browser/source-identity.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-manual-update",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Protect capability, nonce, cooldown, request isolation and manual update state.",
+      "tests": [
+        "tests/manual-update-wordpress.php",
+        "tests/browser/manual-update-state.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-persistence-failures",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Rejected writes must not masquerade as successful updates.",
+      "tests": [
+        "tests/update-state-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-refresh-interval",
+      "recorded_scope": "1.4.1",
+      "contract": "Preserve 1800-second scheduling and supported upgrades.",
+      "tests": [
+        "tests/refresh-interval-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-background-refresh",
+      "recorded_scope": "1.4.0",
+      "contract": "Keep page rendering free of blocking provider calls; protect retries and backoff.",
+      "tests": [
+        "tests/background-refresh-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-native-cron-retry",
+      "recorded_scope": "1.4.1",
+      "contract": "Protect native cron dispatch including absent/consumed cron storage.",
+      "tests": [
+        "tests/native-cron-retry-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-concurrent-source",
+      "recorded_scope": "1.4.0",
+      "contract": "Do not persist a stale response after the selected source changes.",
+      "tests": [
+        "tests/concurrent-source-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-deactivation-cancellation",
+      "recorded_scope": "1.4.2",
+      "contract": "Cancel in-flight persistence and retry scheduling after deactivation.",
+      "tests": [
+        "tests/deactivation-cancellation-wordpress.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-first-load",
+      "recorded_scope": "1.4.0",
+      "contract": "Missing rates recover through manual/background update and failure paths.",
+      "tests": [
+        "tests/browser/first-load-update.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-settings-labels",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Labels target their controls, source link navigates, settings survive save.",
+      "tests": [
+        "tests/browser/settings-labels.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-admin-global-isolation",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Administrative scripts do not leak/overwrite global variables.",
+      "tests": [
+        "tests/browser/admin-globals.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-converter-controls",
+      "recorded_scope": "1.5.0 working tree",
+      "contract": "Named distinct controls, translated labels, unchanged IDs/contracts and no unused UI dependency.",
+      "tests": [
+        "tests/converter-controls-wordpress.php",
+        "tests/browser/converter-controls.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-converter-box-sizing",
+      "recorded_scope": "1.4.0",
+      "contract": "Theme box-sizing must not push controls outside the widget.",
+      "tests": [
+        "tests/browser/converter-box-sizing.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-table-columns",
+      "recorded_scope": "1.4.0",
+      "contract": "Preserve selected columns, codes, flags and full/compact rows.",
+      "tests": [
+        "tests/browser/table-columns.spec.js",
+        "tests/browser/table-layout.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-visual-alignment",
+      "recorded_scope": "1.4.2",
+      "contract": "Keep cell alignment, amount baseline, caption wrapping, badges and select-arrow space.",
+      "tests": [
+        "tests/browser/visual-regressions.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-css-parity",
+      "recorded_scope": "1.4.0",
+      "contract": "Retain explicit pinned CSS baseline; reject unexplained style/geometry differences.",
+      "tests": [
+        "tests/browser/css-parity.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-rtl-labels",
+      "recorded_scope": "1.4.0",
+      "contract": "Preserve bidi labels, flags, separators and ordering.",
+      "tests": [
+        "tests/browser/rtl-labels.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-flag-hybrid",
+      "recorded_scope": "1.4.0",
+      "contract": "SVG/emoji flag modes retain region and layout behavior.",
+      "tests": [
+        "tests/browser/flag-hybrid.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-trend-arrows",
+      "recorded_scope": "1.4.0",
+      "contract": "Trend direction and assets match actual current/previous data.",
+      "tests": [
+        "tests/browser/trend-arrows.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-version-contract",
+      "recorded_scope": "1.4.2",
+      "contract": "Runtime, markup and asset versions match; saved data stays unchanged.",
+      "tests": [
+        "tests/version.php",
+        "tests/version-wordpress.php",
+        "tests/browser/version.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-localization",
+      "recorded_scope": "1.4.0",
+      "contract": "Maintain placeholder/tag parity and actual WordPress catalog loading.",
+      "tests": [
+        "tests/localization.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-plugin-smoke",
+      "recorded_scope": "1.3.2 baseline",
+      "contract": "Activation, hooks, widgets, shortcodes and public/admin assets load.",
+      "tests": [
+        "tests/smoke.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-native-upgrade",
+      "recorded_scope": "1.5.0 acceptance",
+      "contract": "Direct upgrades from 1.3.2/1.4.0/1.4.1/1.4.2 preserve raw saved state and active plugin; verify rollback.",
+      "tests": [
+        "tests/regressions/native-upgrade.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-candidate-footer-modal",
+      "recorded_scope": "1.5.0 acceptance",
+      "contract": "Approved footer/link contracts, 86 sources, dates, keyboard/live announcements and hidden modal failure.",
+      "tests": [
+        "tests/footer.php",
+        "tests/browser/footer-modal.spec.js",
+        "tests/acceptance/native-runner.php",
+        "tests/acceptance/native-runner.html",
+        "tests/acceptance/date-labels.html"
+      ],
+      "status": "registered",
+      "gap": "Real VoiceOver speech is recorded for the exact f511fa42 candidate. Optional Changes-column redundant percentage speech remains a scoped 1.5.6 refinement; no WCAG/EAA certification is claimed.",
+      "evidence": "docs/reviews/1.5.0-final-recheck.md"
+    },
+    {
+      "id": "ER-stale-assets",
+      "recorded_scope": "1.5.0 acceptance",
+      "contract": "Exercise stale HTML/new assets and new HTML/stale assets; no data loss or inline modal. Invalidate isolated acceptance URLs when any public script or stylesheet changes.",
+      "tests": [
+        "tests/browser/footer-modal.spec.js",
+        "tests/acceptance-asset-revision.php"
+      ],
+      "status": "registered"
+    },
+    {
+      "id": "ER-real-site-compositions",
+      "recorded_scope": "1.5.0 acceptance",
+      "contract": "Locally reproduced public-site compositions remain compatible outside approved footer changes.",
+      "tests": [
+        "tests/acceptance/public-runner.cjs",
+        "tests/acceptance/public-measure.js",
+        "tests/acceptance/public-fixture.php",
+        "tests/acceptance/public-native.php",
+        "tests/acceptance/public-native.html",
+        "tests/acceptance/public-native-case.js"
+      ],
+      "status": "registered",
+      "gap": "Fresh Chromium/Safari/Firefox composition checks are complete for the f511fa42 ZIP. The four converter-border review cases were accepted by the maintainer. Other human visual decisions and full-site optimizer/CDN/inaccessible stylesheet limitations remain separate; Zanzibar is still unreachable.",
+      "evidence": "docs/reviews/1.5.0-final-recheck.md"
+    },
+    {
+      "id": "ER-localwp",
+      "recorded_scope": "1.5.0 acceptance",
+      "contract": "Actual LocalWP installation/update/rollback of the exact candidate.",
+      "tests": [
+        "tests/regressions/native-upgrade.php",
+        "tests/regressions/native-state.php",
+        "tests/regressions/localwp-lifecycle.php",
+        "tests/acceptance/localwp.php",
+        "tests/acceptance/localwp.html"
+      ],
+      "status": "registered",
+      "gap": "Fresh LocalWP technical acceptance passed for the f511fa42 ZIP on WordPress 7.1.3 and pinned 7.2-beta2, including unchanged saved state, rollback, modal, activation and cron. The beta emoji difference was accepted. Live providers, HTTPS, multisite and arbitrary third-party plugin combinations remain outside this run.",
+      "evidence": "docs/reviews/1.5.0-final-recheck.md"
+    },
+    {
+      "id": "ER-150-NARROW-HISTORY",
+      "contract": "Fit default historical columns within narrow containers without changing numeric precision, fonts or fitting layouts; expose keyboard scrolling when content cannot fit. Preserve full accessible and custom headings.",
+      "recorded_scope": "1.5.0 narrow-table acceptance",
+      "status": "registered",
+      "tests": [
+        "tests/browser/table-fit.spec.js"
+      ]
+    },
+    {
+      "id": "ER-150-MISSING-HISTORY-INPUT",
+      "contract": "Unavailable previous JPY rates remain unavailable without invalidating valid amounts, including zero, inverse conversion, recovery and multiple independent instances.",
+      "recorded_scope": "1.5.0 table-fit preview input defect",
+      "status": "registered",
+      "tests": [
+        "tests/browser/table-history-input.spec.js"
+      ]
+    }
+  ],
+  "observational_only": [
+    {
+      "file": "tests/deactivation-inflight-wordpress.php",
+      "reason": "Historical probe expects the old race; current protection is deactivation-cancellation-wordpress.php."
+    }
+  ],
+  "unit_tests": [
+    "tests/formatting.php",
+    "tests/small-values.php",
+    "tests/change-percentage.php",
+    "tests/percentage.php",
+    "tests/payload-validation.php",
+    "tests/version.php",
+    "tests/footer.php",
+    "tests/acceptance-asset-revision.php"
+  ],
+  "wordpress_steps": [
+    [
+      "tests/smoke.php"
+    ],
+    [
+      "tests/percentage-wordpress.php"
+    ],
+    [
+      "tests/version-wordpress.php"
+    ],
+    [
+      "tests/converter-controls-wordpress.php"
+    ],
+    [
+      "tests/payload-validation-wordpress.php"
+    ],
+    [
+      "tests/source-directory-wordpress.php"
+    ],
+    [
+      "tests/source-identity-wordpress.php"
+    ],
+    [
+      "tests/manual-update-wordpress.php"
+    ],
+    [
+      "tests/update-state-wordpress.php"
+    ],
+    [
+      "tests/refresh-interval-wordpress.php"
+    ],
+    [
+      "tests/background-refresh-wordpress.php"
+    ],
+    [
+      "tests/native-cron-retry-wordpress.php"
+    ],
+    [
+      "tests/concurrent-source-wordpress.php"
+    ],
+    [
+      "tests/deactivation-cancellation-wordpress.php"
+    ],
+    [
+      "tests/formatting-wordpress.php",
+      "seed"
+    ],
+    [
+      "tests/formatting-wordpress.php",
+      "verify"
+    ]
+  ]
+}

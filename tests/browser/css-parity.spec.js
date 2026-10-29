@@ -84,12 +84,15 @@ async function capture(page) {
   // Finish transitions before collecting pixel and computed-style evidence.
   const options = { fullPage: true, animations: 'disabled', caret: 'hide' };
   const pixels = await page.screenshot(options);
-  const elements = await page.locator('.cr-exchange-rates, .cr-exchange-rates *').evaluateAll(nodes => nodes.map(node => {
+  const elements = await page.locator('.cr-exchange-rates, .cr-exchange-rates *').evaluateAll(nodes => nodes.filter(node => !node.closest('.er-a11y-sr-only')).map(node => {
     const style = getComputedStyle(node);
     const bounds = node.getBoundingClientRect();
+    // Debounced speech is verified separately; it is not visible CSS output.
+    const visible = node.cloneNode(true);
+    visible.querySelectorAll('.er-a11y-sr-only').forEach(item => item.remove());
     return {
       tag: node.tagName, className: node.getAttribute('class'),
-      text: node.textContent, value: 'value' in node ? node.value : null,
+      text: visible.textContent, value: 'value' in node ? node.value : null,
       bounds: [bounds.x, bounds.y, bounds.width, bounds.height],
       styles: Object.fromEntries(Array.from(style, name => [name, style.getPropertyValue(name)])),
     };

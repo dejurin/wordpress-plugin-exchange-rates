@@ -1,3 +1,4 @@
+const { rateText, expectRateText } = require('./rate-text');
 const { test, expect } = require('@playwright/test');
 
 async function renderedText(page) {
@@ -30,7 +31,7 @@ for (const direction of ['ltr', 'rtl']) {
             const table = page.locator(`#${id} table`);
             await expect(table.locator('td[data-rate]').first()).toHaveAttribute('data-rate', String(rate));
             await table.locator('input').fill('10');
-            await expect(table.locator('td[data-rate]').first()).toHaveText(String(rate * 10));
+            await expectRateText(table.locator('td[data-rate]').first(), String(rate * 10));
           }
           await expect(page.locator('#table-inverse td[data-rate]').first()).toHaveAttribute('data-rate', String(1 / rate));
           for (const id of ['converter', 'converter-widget']) {
@@ -43,8 +44,9 @@ for (const direction of ['ltr', 'rtl']) {
             await expect(widget.locator('.result')).toHaveText(String(10 / rate));
           }
           for (const id of ['table-normal', 'table-inverse', 'table-widget', 'converter', 'converter-widget', 'badge-normal', 'badge-inverse']) {
-            await expect(page.locator(`#${id} .exchange-rates-caption`)).toContainText(caption);
-            await expect(page.locator(`#${id} .exchange-rates-caption`)).toContainText('02 Jan');
+            await expect(page.locator(`#${id} .er-footer-slot`)).toContainText(source === 'currencyrate' && id.startsWith('table') ? 'FX Source' : caption);
+            await expect(page.locator(`#${id} [data-er-info]`)).toHaveAttribute('data-source-name', source === 'currencyrate' ? 'CurrencyRate.Today' : 'European Central Bank');
+            await expect(page.locator(`#${id} .er-footer-slot`)).toContainText('02 Jan');
           }
           expect(errors).toEqual([]);
         });
