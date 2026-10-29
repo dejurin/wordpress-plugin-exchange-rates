@@ -181,7 +181,7 @@ class Badge
                 $img_template,
                 $w,
                 $h,
-                esc_url(sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$currency['flag']]))),
+                esc_url(sprintf(plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/emoji/%1$s.svg', strtolower($emoji[$currency['flag']]))),
                 esc_attr($currency['flag'])
             );
         } elseif ('none' !== $flag_type) {
@@ -267,6 +267,13 @@ class Badge
                         }
 
                         $template = '<div class="badge-leaders"><span style="background-color:%1$s!important;color:%2$s!important">%3$s'.esc_html($base_currency).'%4$s</span><span style="background-color:%1$s!important;color:%2$s!important">%5$s%6$s%7$s</span></div>';
+                        $from = $parameters['inverse'] ? $code : $parameters['base_currency'];
+                        $to = $parameters['inverse'] ? $parameters['base_currency'] : $code;
+                        /* translators: 1: amount, 2: source currency, 3: result, 4: target currency. */
+                        $description = sprintf(__('%1$s %2$s equals %3$s %4$s', 'exchange-rates'), $currency->get_amount(), $from, html_entity_decode($currency->get_rate_format(0, true, true), ENT_QUOTES, 'UTF-8'), $to);
+                        $template = str_replace('<div class="badge-leaders">', '<div class="badge-leaders" role="listitem">', $template);
+                        $template = str_replace('<span style=', '<span aria-hidden="true" style=', $template);
+                        $template = str_replace('</div>', '<span class="er-a11y-sr-only">%8$s</span></div>', $template);
                         $result .= sprintf(
                                 $template,
                             esc_attr($parameters['color']),
@@ -275,7 +282,8 @@ class Badge
                                 ($parameters['code'] ? esc_html($code) : esc_html($get_currency['name'])),
                                 esc_html($pre),
                                 esc_html($currency->get_rate_format(0, true, true)),
-                                esc_html($after)
+                                esc_html($after),
+                                esc_html($description)
                             );
                         $err = false;
                     }
@@ -299,6 +307,10 @@ class Badge
         if ($err) {
             return '<b data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'">'.Plugin::NAME.'</b> '.esc_html__('Error: Check parameters of widget or shortcode. Probably you changed the source of currency rates, where there was not the desired currency that you selected before.', 'exchange-rates');
         }
+
+        /* translators: %s: ISO currency code. */
+        $list_label = sprintf(!empty($parameters['inverse']) ? __('Exchange rates in %s', 'exchange-rates') : __('Exchange rates for %s', 'exchange-rates'), $parameters['base_currency']);
+        $result = '<div role="list" aria-label="'.esc_attr($list_label).'">'.$result.'</div>';
 
         return '<div class="cr-'.Plugin::PLUGIN_SLUG.' shortcode-'.Plugin::PLUGIN_SLUG.'-badge" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'">'.$result.$caption.'</div>';
     }

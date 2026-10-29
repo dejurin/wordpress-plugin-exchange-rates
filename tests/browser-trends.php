@@ -20,10 +20,18 @@ add_action( 'init', function () {
                 array( 'rates' => array( 'USD' => 1, 'EUR' => 1.2, 'GBP' => 1, 'AUD' => 1.234, 'JPY' => 0.009, 'BRL' => 1, 'CHF' => 1000000 ) ),
             ) );
         }
-		return array( 'source' => 'currencyrate', 'base' => 'USD', 'data' => array(
+		$rates = array( 'source' => 'currencyrate', 'base' => 'USD', 'data' => array(
 			array( 'local_time' => '2026-01-02 12:00:00', 'put_time' => '2026-01-02 12:01:00', 'rates' => array( 'USD' => 1, 'EUR' => 1.25, 'GBP' => 1.5, 'AUD' => 0.75, 'BRL' => 0.2, 'JPY' => 0.01 ) ),
 			array( 'local_time' => '2026-01-01 12:00:00', 'put_time' => '2026-01-01 12:01:00', 'rates' => array( 'USD' => 1, 'EUR' => 1, 'GBP' => 2, 'AUD' => 0.75, 'BRL' => 0.25 ) ),
 		) );
+		if ( isset( $_GET['axis'] ) ) {
+			$rates['data'][0]['rates']['AUD'] = 0.75001;
+			$rates['data'][1]['rates']['BRL'] = 0.2;
+			if ( isset( $_GET['axis-no-trends'] ) ) {
+				$rates['data'][1]['rates'] = $rates['data'][0]['rates'];
+			}
+		}
+		return $rates;
 	} );
 }, 0 );
 
@@ -40,8 +48,15 @@ add_action( 'template_redirect', function () {
 	echo '<style>body{margin:16px;font-family:Arial,sans-serif;font-size:15px}section{max-width:640px;margin-bottom:24px}img{max-width:100%;height:auto;width:32px}td img{margin:0}</style></head><body>';
 	echo '<h1>Trend arrow regression fixture</h1><p>Local synthetic rates: growth, decline, unchanged and missing previous data.</p>';
 	foreach ( array( true, false ) as $full_width ) {
+		$amount_modes = isset( $_GET['axis'] ) ? array( 'static' => false, 'editable' => true ) : array( '' => true );
+		foreach ( $amount_modes as $amount_mode => $amount_active ) {
 		$attributes = array( 'amount' => 1, 'base_currency' => 'USD', 'currency_list' => isset( $_GET['changes'] ) ? 'EUR,GBP,AUD,JPY,BRL,CAD,CHF' : 'EUR,GBP,AUD,BRL,JPY', 'base_show' => true, 'amount_active' => true, 'code' => true, 'flag_type' => 'rectangular', 'flag_size' => 16, 'full_width' => $full_width, 'inverse' => $inverse, 'table_headers_previous_close_show' => true, 'table_headers_changes_show' => isset( $_GET['changes'] ) );
+		$attributes['amount_active'] = $amount_active;
+		if ( isset( $_GET['axis'], $_GET['axis-long-header'] ) ) {
+			$attributes['table_headers_mid'] = 'Saved current exchange rate';
+		}
 		$suffix = $full_width ? 'full' : 'compact';
+		if ( '' !== $amount_mode ) { $suffix .= '-' . $amount_mode; }
 		$shortcode = '[exchange-rates_currency-table';
 		foreach ( $attributes as $name => $value ) {
 			$shortcode .= ' ' . $name . '="' . esc_attr( is_bool( $value ) ? ( $value ? 'true' : 'false' ) : $value ) . '"';
@@ -49,10 +64,11 @@ add_action( 'template_redirect', function () {
 		echo '<section id="shortcode-' . $suffix . '"><h2>Shortcode: ' . $suffix . '</h2>' . do_shortcode( $shortcode . ']' ) . '</section>';
 		echo '<section id="widget-' . $suffix . '"><h2>Native widget: ' . $suffix . '</h2>';
 		$attributes['currency_list'] = explode( ',', $attributes['currency_list'] );
-		$attributes['symbol'] = true;
+		$attributes['symbol'] = ! isset( $_GET['axis'] );
 		$attributes['after'] = $after;
 		the_widget( '\Dejurin\ExchangeRates\Widgets\Table', $attributes );
 		echo '</section>';
+		}
 	}
 	wp_footer();
 	echo '</body></html>';

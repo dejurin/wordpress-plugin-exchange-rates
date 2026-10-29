@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Requires at least: 5.6
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -238,9 +238,13 @@ A rate request identifies the selected source. By default, the WordPress HTTP AP
 
 Amounts entered into the converter are calculated in the visitor's browser; they are not sent to the exchange-rate API.
 
-When emoji flags are selected, the visitor's browser loads flag images from s.w.org, which receives the visitor's IP address and the browser's request headers. Other flag styles are included with the plugin.
+All flag styles, including emoji, are included with the plugin and served from your site. Selecting emoji flags does not send image requests to an external service.
 
 For information about the data provider, see [CurrencyRate.Today](https://currencyrate.today/), its [Privacy Policy](https://currencyrate.today/page/privacy), and its [Legal Disclaimer](https://currencyrate.today/page/disclaimer).
+
+= Emoji artwork attribution =
+
+The bundled emoji artwork is an unmodified subset of Twemoji by Twitter, Inc. and other contributors, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Source: [Twemoji v14.0.2](https://github.com/twitter/twemoji/tree/7a3dad4a4da30497093dab22eafba135f02308e1). The original graphics license and attribution are included in assets/flags/emoji/. Other bundled libraries retain their own licenses.
 
 = Which data sources are included? =
 
@@ -562,6 +566,17 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 
 == Changelog ==
 
+= 1.5.0 =
+* New compact attribution footers for exchange-rate tables, converters and badges, with consistent source abbreviations.
+* New shared Data details dialog with source links, separate rate and saved dates, disclaimer and plugin/API attribution.
+* Footer dates use the visitor's time zone; detailed timestamps remain in UTC.
+* Improved keyboard access, accessible control names, result and error announcements, and badge/trend descriptions.
+* Preserve explicit zero amounts, existing saved settings and shortcode/widget configurations.
+* Fit historical columns into narrow tables; keep oversized values accessible through visible, keyboard-operable horizontal scrolling.
+* Keep valid table amounts usable when a currency has no previous rate, including JPY; unavailable history remains marked with a dash.
+* Remove the unused jQuery UI Autocomplete dependency.
+* Bundle the existing emoji flag artwork locally, removing external image requests without changing the icons or their dimensions.
+
 = 1.4.2 =
 * Show an unavailable result for malformed or unrepresentable converter and table amounts, and recover normally after valid input.
 * Correct negative and scientific-notation number formatting; honor converter zero precision and formats without thousands separators.
@@ -691,6 +706,9 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Updates widget footers and adds a shared rate-information dialog. Existing widget settings and shortcodes are preserved.
 
 = 1.4.2 =
 Fixes amount validation and number formatting, table and input alignment, narrow-layout wrapping, converter select spacing, and the default converter title. Existing settings, rates, shortcodes, and widgets are preserved; no data migration is required.

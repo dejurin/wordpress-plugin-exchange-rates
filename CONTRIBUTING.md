@@ -29,6 +29,8 @@ The plugin is already in production, with approximately 800 active users reporte
 - Prefer backward-compatible, additive storage changes. Any necessary migration must be repeatable, tested against existing data and accompanied by a verified recovery procedure. Check whether the previous plugin version can read the resulting data; a code revert alone is not a data rollback.
 - Record regression, upgrade and compatibility results against the exact reviewed revision. Before a release is considered ready, validate the packaged ZIP on both a fresh installation and an upgrade from the released version, including rollback in the isolated environment. Missing, failing or unverified required checks block readiness; explicitly report coverage gaps and residual risks instead of claiming that regressions are impossible.
 
+The [three-phase release acceptance contract](docs/acceptance/release-gates.md) is mandatory: accumulated regressions and native upgrade/rollback, strict existing-site visual compatibility, and an actual LocalWP check. Keep evidence tied to the reviewed artifact; unresolved required gates block readiness.
+
 ## WordPress conventions and maintainability
 
 Use the [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/) for new first-party PHP, JavaScript, CSS and HTML. Apply them to changed code without mass-formatting untouched imported files. Preserve existing class names, paths and public APIs where a mechanical naming change would break compatibility. The imported baseline is not certified as fully WPCS-compliant.

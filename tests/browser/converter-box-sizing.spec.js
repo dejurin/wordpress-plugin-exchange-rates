@@ -114,8 +114,8 @@ for (const direction of ['ltr', 'rtl']) {
       for (const id of ['shortcode-converter', 'widget-converter']) {
         const section = page.locator('#' + id);
         const converter = section.locator('.widget-exchange-rates-currency-converter');
-        const caption = await section.locator('.exchange-rates-caption').innerText();
-        const link = await section.locator('.exchange-rates-caption a').getAttribute('href');
+        const caption = await section.locator('.er-footer-slot').innerText();
+        const link = await section.locator('.er-footer-slot a').getAttribute('href');
         const other = page.locator(`#${id === 'shortcode-converter' ? 'widget-converter' : 'shortcode-converter'} .result`);
         const otherValue = await other.innerText();
         await converter.locator('input').fill('10');
@@ -130,8 +130,8 @@ for (const direction of ['ltr', 'rtl']) {
         await converter.locator('input').fill('0');
         await expect(converter.locator('.result')).toHaveText('€0');
         await expect(other).toHaveText(otherValue);
-        await expect(section.locator('.exchange-rates-caption')).toHaveText(caption);
-        await expect(section.locator('.exchange-rates-caption a')).toHaveAttribute('href', link);
+        await expect(section.locator('.er-footer-slot')).toHaveText(caption);
+        await expect(section.locator('.er-footer-slot a')).toHaveAttribute('href', link);
       }
       expect(await page.locator('#badges .badge-leaders,#shortcode-table table,#widget-table table').evaluateAll(nodes => nodes.map(node => node.outerHTML))).toEqual(untouched);
       expect(errors).toEqual([]);

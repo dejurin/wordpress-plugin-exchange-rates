@@ -6,7 +6,7 @@ const settingsPath = '/wp-admin/options-general.php?page=exchange-rates-general'
 function prepareAdministrator(baseURL) {
   try {
     return JSON.parse(execFileSync('docker', [
-      'compose', '--env-file', 'wordpress/.env', 'run', '--rm', '--no-deps',
+      'compose', '--env-file', process.env.WP_TEST_ENV_FILE || 'wordpress/.env', 'run', '--rm', '--no-deps',
       'cli', 'eval-file', '/opt/tests/browser-admin.php', baseURL,
     ], { cwd: path.resolve(__dirname, '../../..'), timeout: 30000, stdio: ['ignore', 'pipe', 'pipe'] }).toString());
   } catch {

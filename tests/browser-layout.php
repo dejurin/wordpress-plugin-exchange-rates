@@ -54,6 +54,13 @@ add_action( 'template_redirect', function () {
 			$cases[ 'grid-' . $mask ] = array( 'code' => (bool) ( $mask & 8 ), 'table_headers_show' => (bool) ( $mask & 16 ), 'table_headers_code_show' => (bool) ( $mask & 1 ), 'table_headers_previous_close_show' => (bool) ( $mask & 2 ), 'table_headers_changes_show' => (bool) ( $mask & 4 ), 'amount_active' => true, 'flag_type' => 'none' );
 		}
 	}
+	if ( isset( $_GET['fit'] ) ) {
+		$cases = array( 'fit' => array( 'currency_list' => 'EUR,GBP,JPY', 'code' => true, 'flag_type' => 'none', 'amount_active' => true, 'table_headers_previous_close_show' => true, 'table_headers_changes_show' => true ) );
+		if ( isset( $_GET['custom'] ) ) {
+			$cases['fit']['table_headers_previous_close'] = 'Saved previous rate';
+			$cases['fit']['table_headers_changes'] = 'Saved movement';
+		}
+	}
 	header( 'Content-Type: text/html; charset=UTF-8' );
 	echo '<!doctype html><html lang="en" dir="' . ( is_rtl() ? 'rtl' : 'ltr' ) . '"><head><meta name="viewport" content="width=device-width,initial-scale=1">';
 	wp_head();

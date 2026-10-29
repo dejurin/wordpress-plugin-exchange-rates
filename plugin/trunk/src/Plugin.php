@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * @version 1.4.2
+ * @version 1.5.0
  */
 
 use Dejurin\ExchangeRates\Admin\Notices;
@@ -15,7 +15,7 @@ use Dejurin\ExchangeRates\Admin\Notices;
 
 class Plugin
 {
-    const VERSION = '1.4.2';
+    const VERSION = '1.5.0';
     const NAME = 'Exchange Rates';
     const PLUGIN_SLUG = 'exchange-rates';
     public $plugin_path = '';
@@ -69,12 +69,45 @@ class Plugin
         wp_register_script(
             'plugin-'.Plugin::PLUGIN_SLUG.'-widgets',
             plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/js/public/common.js',
-            ['jquery-ui-autocomplete'],
+            ['jquery'],
             self::VERSION,
             true
         );
         wp_enqueue_style('plugin-'.Plugin::PLUGIN_SLUG.'-widgets');
         wp_enqueue_script('plugin-'.Plugin::PLUGIN_SLUG.'-widgets');
+        $asset_url = plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path) . 'assets/';
+        wp_enqueue_style('plugin-exchange-rates-footer', $asset_url . 'css/public/footer.css', array('plugin-exchange-rates-widgets', 'dashicons'), self::VERSION);
+        wp_enqueue_script('plugin-exchange-rates-footer', $asset_url . 'js/public/footer.js', array('plugin-exchange-rates-widgets'), self::VERSION, true);
+        add_action('wp_print_footer_scripts', array(__CLASS__, 'localize_public_messages'), 0);
+    }
+
+    /** Resolve translations after the page has selected its locale. */
+    public static function localize_public_messages()
+    {
+        wp_localize_script('plugin-exchange-rates-widgets', 'exchangeRatesMessages', array(
+            'invalidAmount' => __('Enter a valid amount using a dot for decimals.', 'exchange-rates'),
+            'unable' => __('Unable to calculate. Enter a valid amount.', 'exchange-rates'),
+            'unavailable' => __('unavailable', 'exchange-rates'),
+            'notAvailable' => __('Not available', 'exchange-rates'),
+            'unknownSource' => __('Unknown source', 'exchange-rates'),
+            'details' => __('Data details and disclaimer', 'exchange-rates'),
+            'rateDate' => __('Rate date', 'exchange-rates'),
+            /* translators: %s: ISO currency code. */
+            'amountIn' => __('Amount in %s', 'exchange-rates'),
+            'inverseAmount' => __('Amount in each listed currency', 'exchange-rates'),
+            /* translators: %s: ISO currency code. */
+            'ratesIn' => __('Exchange rates in %s', 'exchange-rates'),
+            /* translators: %s: ISO currency code. */
+            'ratesFor' => __('Exchange rates for %s', 'exchange-rates'),
+            /* translators: 1: amount, 2: ISO currency code. */
+            'ratesAmount' => __('Rates for %1$s %2$s.', 'exchange-rates'),
+            /* translators: %s: ISO currency code. */
+            'previousClose' => __('%s previous close', 'exchange-rates'),
+            'tableScrollHint' => __('Scroll horizontally to see all columns.', 'exchange-rates'),
+            'tableScrollRegion' => __('Exchange rates, horizontally scrollable', 'exchange-rates'),
+            /* translators: 1: amount, 2: source currency, 3: result, 4: target currency. */
+            'result' => __('%1$s %2$s equals %3$s %4$s', 'exchange-rates'),
+        ));
     }
 
     public function register_admin_script_style($hook)

@@ -21,6 +21,16 @@ class CurrencyTable
     public $settings;
     public $table;
     const WIDGET_SLUG = 'widget-'.Plugin::PLUGIN_SLUG.'-currency-table';
+	/** Abbreviate only default headings; preserve saved custom labels. */
+	private function history_heading( $label, $default, $short ) {
+		$heading = array( 'data' => $label, 'class' => 'text-right' );
+		if ( $label === $default ) {
+			$heading['aria-label'] = esc_attr( $label );
+			$heading['data'] = '<span class="exchange-rates-table-full-title">' . esc_html( $label ) . '</span>'
+				. '<abbr class="exchange-rates-table-short-title" title="' . esc_attr( $label ) . '" aria-hidden="true">' . esc_html( $short ) . '</abbr>';
+		}
+		return $heading;
+	}
 
 	/** Render regular and base-currency labels with the same size-dependent layout. */
 	private function render_label( $title, $region, $flag ) {
@@ -39,7 +49,7 @@ class CurrencyTable
 		if ( 'none' !== $type ) {
 			if ( 'emoji' === $type ) {
 				$emoji = Emoji::get_list();
-				$src = 'https://s.w.org/images/core/emoji/14.0.0/svg/' . strtolower( $emoji[ $flag ] ) . '.svg';
+				$src = plugin_dir_url( $GLOBALS['dejurin_exchange_rates']->plugin_path ) . 'assets/flags/emoji/' . strtolower( $emoji[ $flag ] ) . '.svg';
 			} else {
 				$src = plugin_dir_url( $GLOBALS['dejurin_exchange_rates']->plugin_path ) . 'assets/flags/' . rawurlencode( $type ) . '/' . rawurlencode( strtolower( $flag ) ) . '.svg';
 			}
@@ -68,6 +78,7 @@ class CurrencyTable
         // Retained rates keep their own source, even after a failed selection change.
         $source_id = RatesData::get_source($rates, $this->settings['source_id']);
         $last_currency = null;
+        $has_trend = false;
 
         $flag_types = ['none', 'rectangular', 'square', 'circular', 'emoji'];
         if (!isset($this->parameters['flag_type']) || !in_array($this->parameters['flag_type'], $flag_types, true)) {
@@ -86,16 +97,14 @@ class CurrencyTable
             }
 
             $heading[2]['data'] = $this->parameters['table_headers_mid']; // .($this->parameters['inverse'] ? '' : ' ('.$this->parameters['base_currency'].')')
-            $heading[2]['class'] = 'text-right';
+            $heading[2]['class'] = 'text-right exchange-rates-table-price';
 
             if ($show_previous_close) {
-                $heading[3]['data'] = $this->parameters['table_headers_previous_close'];
-                $heading[3]['class'] = 'text-right';
+                $heading[3] = $this->history_heading( $this->parameters['table_headers_previous_close'], __( 'Previous Close', 'exchange-rates' ), __( 'Prev.', 'exchange-rates' ) );
             }
 
             if ($show_changes) {
-                $heading[4]['data'] = $this->parameters['table_headers_changes'];
-                $heading[4]['class'] = 'text-right';
+                $heading[4] = $this->history_heading( $this->parameters['table_headers_changes'], __( 'Changes', 'exchange-rates' ), __( 'Δ %', 'exchange-rates' ) );
             }
 
             $this->table->set_heading($heading);
@@ -124,6 +133,7 @@ class CurrencyTable
                 $currency_title = $this->parameters['code'] ? $currency_code : $currency_name;
 
                 $trend = $currency->get_trend();
+                $has_trend = $has_trend || (bool) $trend;
                 $change_visible = $trend && $currency->get_rate_format(0, true) !== $currency->get_rate_format(1, true);
                 $percentage = $currency->get_change_percentage();
                 $percentage_text = html_entity_decode($percentage, ENT_QUOTES, 'UTF-8');
@@ -163,7 +173,7 @@ class CurrencyTable
                     'data' => $pre.$currency->get_rate_format(0, true).$after.$svg_trend,
                     'data-rate' => $currency->get_rate(0),
                     'data-symbol' => $symbol,
-                    'class' => 'text-right',
+                    'class' => 'text-right exchange-rates-table-price',
                     'data-previous-rate' => $currency->has_previous_rate() ? esc_attr($currency->get_rate(1)) : '',
                     'data-change-trend' => (int) $trend,
                     'data-change-percent' => esc_attr($percentage_text),
@@ -173,14 +183,19 @@ class CurrencyTable
                     'title' => esc_attr($visible_label),
                 ];
 
+                $output_data[2]['data-currency'] = esc_attr($currency_code);
+
                 if ($show_previous_close) {
                     $output_data[3] = [
                         'data' => $currency->has_previous_rate() ? $currency->get_rate_format(1, true) : '&ndash;',
                         'data-rate' => $currency->get_rate(1),
+                        'data-currency' => esc_attr($currency_code),
+                        'data-rate-period' => 'previous',
                         'data-symbol' => $symbol,
                         'class' => 'text-right',
                     ];
                 }
+
 
                 if ($show_changes) {
                     $output_data[4] = [
@@ -221,11 +236,11 @@ class CurrencyTable
                 ];
             }
 
-            $amount_template = $this->parameters['amount_active'] ? '<input value="%1$s" />' : '%1$s';
+            $amount_template = $this->parameters['amount_active'] ? '<input id="'.esc_attr(wp_unique_id('exchange-rates-table-amount-')).'" aria-label="'.esc_attr__('Amount', 'exchange-rates').'" value="%1$s" />' : '%1$s';
 
             $output_data[2] = [
                 'data' => sprintf($amount_template, $last_currency->get_amount()),
-                'class' => 'text-right active',
+                'class' => 'text-right active exchange-rates-table-price',
             ];
 
             // Complete only the visible history columns; the label mode does not change the grid.
@@ -246,14 +261,16 @@ class CurrencyTable
         $fmt = Currency::get_fmt($this->settings['currency_format']);
 
         $class = $this->parameters['full_width'] ? 'exchange-rates-table-full' : '';
+        $class .= $has_trend ? ' exchange-rates-table-trends' : '';
         $class .= ($this->parameters['border'] ? ' table-border' : '');
         $class .= ($this->parameters['border_hori'] ? ' table-border-hori' : '');
         $class .= ($this->parameters['border_vert'] ? ' table-border-vert' : '');
 
         $template = [
             'heading_cell_start' => '<th scope="col">',
-            'table_open' => '<div class="cr-'.Plugin::PLUGIN_SLUG.'" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'"><div class="table-responsive '.self::WIDGET_SLUG.'"><table '
+            'table_open' => '<div class="cr-'.Plugin::PLUGIN_SLUG.'" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'"><div class="table-responsive '.self::WIDGET_SLUG.( ( $show_previous_close || $show_changes ) ? ' exchange-rates-table-history' : '' ).'"><table '
                             .'class="'.esc_attr(trim($class)).'" '
+                            .'data-base-currency="'.esc_attr($this->parameters['base_currency']).'" data-inverse="'.(!empty($this->parameters['inverse']) ? 'true' : 'false').'" data-amount="'.esc_attr($this->parameters['amount']).'" '
                             .'data-decimals="'.esc_attr($this->settings['decimals']).'" '
                             .'data-decimal-point="'.esc_attr($fmt['decimal_point']).'" '
                             .'data-thousands-sep="'.esc_attr($fmt['thousands_sep']).'" '

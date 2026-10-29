@@ -1,5 +1,46 @@
 jQuery(document).ready(function() {
+    var messages = window.exchangeRatesMessages || {};
+    function message(key, fallback, values) {
+        return (messages[key] || fallback).replace(/%(\d+)\$s|%s/g, function(token, position) {
+            return values ? values[position ? Number(position) - 1 : 0] : token;
+        });
+    }
     var unavailable = '\u2013';
+    var controlSequence = 0;
+
+    // Avoid collisions across converters and host-page controls.
+    function controlId(role) {
+        var id;
+        do {
+            controlSequence += 1;
+            id = 'exchange-rates-' + role + '-' + controlSequence;
+        } while (document.getElementById(id));
+        return id;
+    }
+
+    function accessibleStatus(container) {
+        var node = jQuery('<p>').attr({
+            'class': 'er-a11y-sr-only', 'role': 'status',
+            'aria-live': 'polite', 'aria-atomic': 'true'
+        }).appendTo(container);
+        var timer;
+        return function(message, immediate) {
+            clearTimeout(timer);
+            if (immediate) { node.text(message); }
+            else { timer = setTimeout(function() { node.text(message); }, 350); }
+        };
+    }
+
+    function amountError(container, input) {
+        var error = jQuery('<p>').attr({
+            id: controlId('error'), 'class': 'er-a11y-error', hidden: true
+        }).text(message('invalidAmount', 'Enter a valid amount using a dot for decimals.')).appendTo(container);
+        input.attr({ inputmode: 'decimal', autocomplete: 'off' });
+        return function(invalid) {
+            error.prop('hidden', !invalid);
+            input.attr('aria-describedby', invalid ? error.attr('id') : null);
+        };
+    }
 
     function readAmount(value) {
         value = String(value).trim();
@@ -72,11 +113,18 @@ jQuery(document).ready(function() {
                 alt: trend > 0 ? 'up' : 'down', src: cell.attr('data-trend-src')
             }).appendTo(cell);
         }
-        cell.attr('title', label);
+        // A title repeats the hidden trend text in VoiceOver. Keep one description.
+        cell.removeAttr('title');
+        cell.find('.er-a11y-trend').remove();
+        cell.find('img.exchange-rates-trend').attr({ alt: '', 'aria-hidden': 'true' });
+        if (!invalid) {
+            jQuery('<span>').attr('class', 'er-a11y-sr-only er-a11y-trend')
+                .text('; ' + label).appendTo(cell);
+        }
         var change = cell.closest('tr').find('td[data-change]');
         change.text(visible ? cell.attr('data-change-percent') : '\u2013')
             .removeClass('table-success table-danger')
-            .attr({ 'aria-label': label, title: label });
+            .attr('aria-label', label).removeAttr('title');
         if (visible) change.addClass(trend > 0 ? 'table-success' : 'table-danger');
     }
 
@@ -96,6 +144,24 @@ jQuery(document).ready(function() {
     /* Caption - end */
 
     /* Currency Table - start */
+    jQuery('.widget-exchange-rates-currency-table table').each(function() {
+        var table = jQuery(this);
+        var input = table.find('input');
+        var base = table.attr('data-base-currency');
+        var inverse = table.attr('data-inverse') === 'true';
+        if (!base) { return; } // Cached legacy HTML has no accessibility metadata.
+        table.attr('aria-label', message(inverse ? 'ratesIn' : 'ratesFor', inverse ? 'Exchange rates in %s' : 'Exchange rates for %s', [base]));
+        input.attr('aria-label', inverse ? message('inverseAmount', 'Amount in each listed currency') : message('amountIn', 'Amount in %s', [base]));
+        table.data('erA11y', {
+            base: base, inverse: inverse, ready: false,
+            announce: accessibleStatus(table.parent()),
+            error: amountError(table.parent(), input)
+        });
+        input.data('amount', input.val());
+        table.find('td[data-rate]').each(function() {
+            updateChange(jQuery(this), Number(table.attr('data-amount')), table);
+        });
+    });
     jQuery('.widget-exchange-rates-currency-table input').on('click', function(event) {
         var amount = jQuery(this).val();
         jQuery(this).data('amount', amount).val('');
@@ -109,9 +175,13 @@ jQuery(document).ready(function() {
         var amount = readAmount(rawAmount);
         var settings = jQuery(this).closest('table');
         var invalid = amount === null;
+        var accessibility = settings.data('erA11y');
+        var spokenRates = [];
 
-        // Keep the table's existing empty/zero/negative amount-one policy.
-        if (amount !== null && amount <= 0) amount = 1;
+        // Preserve empty/negative defaults while allowing explicit zero amounts.
+		if ( amount !== null && ( amount < 0 || String( rawAmount ).trim() === '' ) ) {
+			amount = 1;
+		}
 
         jQuery(this).data('amount', amount === null ? rawAmount : amount);
         settings.find('tbody td[data-rate]').each(function(index, value) {
@@ -126,7 +196,9 @@ jQuery(document).ready(function() {
 
             var formatted = formatNumber(rate, amount, settings.data('decimals'), settings.data('thousands-sep'), settings.data('decimal-point'));
             var img = jQuery(value).find('img').clone();
-            invalid = invalid || formatted === null;
+            // The server uses zero for unavailable history, not an invalid amount.
+            var missingHistory = jQuery(value).attr('data-rate-period') === 'previous' && Number(rate) === 0;
+            invalid = invalid || (formatted === null && !missingHistory);
             jQuery(value).text(formatted === null ? unavailable : pre + formatted + after);
             // Cached legacy cells lack trend metadata; retain their image for recovery.
             img.each(function() {
@@ -135,8 +207,47 @@ jQuery(document).ready(function() {
             });
             img.appendTo(value);
             updateChange(jQuery(value), amount, settings);
+            var quote = jQuery(value).attr('data-currency');
+            if (!quote || !accessibility) { return; }
+            if (jQuery(value).attr('data-rate-period') === 'previous') { quote = message('previousClose', '%s previous close', [quote]); }
+            spokenRates.push(accessibility.inverse ? message('result', '%1$s %2$s equals %3$s %4$s', [amount, quote, formatted === null ? message('unavailable', 'unavailable') : formatted, accessibility.base]) : quote + ': ' + (formatted === null ? message('unavailable', 'unavailable') : formatted));
         });
         jQuery(this).attr('aria-invalid', invalid ? 'true' : null);
+        if (!accessibility) { return; }
+        accessibility.error(invalid);
+        accessibility.announce(invalid ? message('unable', 'Unable to calculate. Enter a valid amount.') :
+            (accessibility.inverse ? spokenRates.join('; ') : message('ratesAmount', 'Rates for %1$s %2$s.', [amount, accessibility.base]) + ' ' + spokenRates.join('; ')), !accessibility.ready);
+        accessibility.ready = true;
+    });
+    // Preserve server-formatted initial amounts; only user input triggers recalculation.
+
+    jQuery('.widget-exchange-rates-currency-table.table-responsive').each(function() {
+        var wrapper = this;
+        var history = wrapper.classList.contains('exchange-rates-table-history');
+        var note = jQuery('<p>').attr({ 'class': 'exchange-rates-table-scroll-note', hidden: true })
+            .text(message('tableScrollHint', 'Scroll horizontally to see all columns.')).insertAfter(wrapper);
+        function fitTable() {
+            if (history) {
+                // Measure the original layout first so wider tables keep their geometry.
+                wrapper.classList.remove('exchange-rates-table-reflow', 'exchange-rates-table-compact', 'exchange-rates-table-short');
+                var needsFit = wrapper.scrollWidth > wrapper.clientWidth + 1;
+                wrapper.classList.toggle('exchange-rates-table-reflow', needsFit);
+                wrapper.classList.toggle('exchange-rates-table-compact', needsFit && wrapper.clientWidth < 320);
+                wrapper.classList.toggle('exchange-rates-table-short', wrapper.scrollWidth > wrapper.clientWidth + 1);
+            }
+            var overflow = wrapper.scrollWidth > wrapper.clientWidth + 1;
+            note.prop('hidden', !overflow);
+            if (overflow) {
+                jQuery(wrapper).attr({ tabindex: '0', role: 'region', 'aria-label': message('tableScrollRegion', 'Exchange rates, horizontally scrollable') });
+            } else {
+                jQuery(wrapper).removeAttr('tabindex role aria-label');
+            }
+        }
+        fitTable();
+        if (window.ResizeObserver) { new ResizeObserver(fitTable).observe(wrapper); }
+        window.addEventListener('resize', fitTable);
+        wrapper.addEventListener('input', function() { requestAnimationFrame(fitTable); });
+        if (document.fonts) { document.fonts.ready.then(fitTable); }
     });
     /* Currency Table - end */
 
@@ -145,16 +256,27 @@ jQuery(document).ready(function() {
         var el = jQuery(this).html('');
         var rates = el.data('currencies');
 
-        jQuery('<b>').text(el.data('title')).appendTo(el);
+        jQuery('<h2>').attr('class', 'er-a11y-widget-title').text(el.data('title')).appendTo(el);
 
         var div = jQuery('<div>').attr('class', 'd-flex amount').appendTo(el);
-        var input = jQuery('<input>').attr('value', el.data('amount')).appendTo(div);
-        var swap = jQuery('<button>').attr('class', 'swap').html('<svg xmlns="http://www.w3.org/2000/svg">' +
+		var input = jQuery( '<input>' ).attr( {
+			id: controlId( 'amount' ),
+			value: el.data( 'amount' ),
+			'aria-label': el.attr( 'data-label-amount' )
+		} ).appendTo( div );
+		var swap = jQuery( '<button>' ).attr( {
+			'class': 'swap',
+			'type': 'button',
+			'aria-label': el.attr( 'data-label-swap' )
+		} ).html('<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">' +
             '<path d="M8 13V5.825L5.425 8.4L4 7L9 2L14 7L12.575 8.4L10 5.825V13ZM15 22 10 17 11.425 15.6 14 18.175V11H16V18.175L18.575 15.6L20 17Z"/>' +
             '</svg>').appendTo(div);
 
         jQuery.each([el.data('from'), el.data('to')], function(_i, s) {
-            var sel = jQuery('<select>');
+			var sel = jQuery( '<select>' ).attr( {
+				id: controlId( _i === 0 ? 'from' : 'to' ),
+				'aria-label': el.attr( _i === 0 ? 'data-label-from' : 'data-label-to' )
+			} );
             sel.appendTo(el);
             jQuery.each(el.data('currencies'), function(code, data) {
                 var obj = {
@@ -177,6 +299,10 @@ jQuery(document).ready(function() {
             to.val(_from).change();
             input.trigger("input");
         });
+
+        var announceResult = accessibleStatus(el);
+        var showError = amountError(el, input);
+        var initialResult = true;
 
         jQuery(input).on('input', function() {
             var amount = readAmount(jQuery(this).val());
@@ -202,9 +328,14 @@ jQuery(document).ready(function() {
             );
             input.attr('aria-invalid', formatted === null ? 'true' : null);
             result.text(formatted === null ? unavailable : pre + formatted + after);
+            input.attr('aria-label', message('amountIn', 'Amount in %s', [from]));
+            showError(formatted === null);
+            announceResult(formatted === null ? message('unable', 'Unable to calculate. Enter a valid amount.') :
+                message('result', '%1$s %2$s equals %3$s %4$s', [amount, from, formatted, to]), initialResult);
+            initialResult = false;
         });
 
-        var result = jQuery('<div>').attr('class', 'result').text(0).appendTo(el);
+        var result = jQuery('<div>').attr({ 'class': 'result', 'aria-hidden': 'true' }).text(0).appendTo(el);
 
         jQuery.each(el.find('select'), function(h, o) {
             jQuery(o).on('change', function(h, o) {

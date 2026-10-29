@@ -59,6 +59,16 @@ class CurrencyConverter
             }
         }
 
+		$labels = array(
+			'amount' => __( 'Amount', 'exchange-rates' ),
+			'from'   => __( 'From currency', 'exchange-rates' ),
+			'to'     => __( 'To currency', 'exchange-rates' ),
+			'swap'   => __( 'Swap currencies', 'exchange-rates' ),
+		);
+		foreach ( $labels as $key => $label ) {
+			$data_attr .= 'data-label-' . esc_attr( $key ) . '="' . esc_attr( $label ) . '" ';
+		}
+
         $html = '<div class="cr-'.Plugin::PLUGIN_SLUG.'" data-exchange-rates-version="'.esc_attr( Plugin::VERSION ).'"><div '
                 .'class="'.self::WIDGET_SLUG.($this->parameters['border'] ? ' border' : '').'" '
                 .'id="'.esc_attr(self::WIDGET_SLUG.$widget_number).'" '

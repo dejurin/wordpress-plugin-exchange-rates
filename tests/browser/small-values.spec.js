@@ -1,3 +1,4 @@
+const { rateText, expectRateText } = require('./rate-text');
 const { test, expect } = require('@playwright/test');
 
 async function verify(page, baseURL, options) {
@@ -15,12 +16,12 @@ async function verify(page, baseURL, options) {
     const input = table.locator('input');
     // The table shortcode has no symbol attribute; native widgets do.
     const tableValue = value => host === 'widget' ? decorate(value) : value;
-    await expect(cell).toHaveText(tableValue('<' + limit));
+    await expectRateText(cell, tableValue('<' + limit));
     const raw = await cell.getAttribute('data-rate');
     for (const amount of ['2', '1', '16', '1']) {
       await input.fill(amount);
       await input.blur();
-      await expect(cell).toHaveText(tableValue(amount === '16' ? limit.replace('1', '2') : '<' + limit));
+      await expectRateText(cell, tableValue(amount === '16' ? limit.replace('1', '2') : '<' + limit));
       await expect(input).not.toHaveAttribute('aria-invalid', 'true');
       expect(await cell.getAttribute('data-rate')).toBe(raw);
     }

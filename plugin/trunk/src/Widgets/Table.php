@@ -75,7 +75,7 @@ class Table extends \WP_Widget
                         'table_headers_previous_close_show' => (bool) sanitize_text_field($instance['table_headers_previous_close_show']),
                         'table_headers_changes_show' => (bool) sanitize_text_field($instance['table_headers_changes_show']),
                     ];
-                echo wp_kses($object->get_html_widget($this->number), array_merge(wp_kses_allowed_html('post'), array('input' => array('value' => true,'type' => true,'name' => true))));
+                echo wp_kses($object->get_html_widget($this->number), \Dejurin\ExchangeRates\Models\Dev::allowed_widget_html());
             }
         }
 

@@ -19,7 +19,9 @@ async function change(table, index, text, trend, label) {
   await expect(row.change.locator('img,svg')).toHaveCount(0);
   await expect(row.price.locator('img')).toHaveCount(trend ? 1 : 0);
   if (trend) {
-    await expect(row.price.locator('img')).toHaveAttribute('alt', trend);
+    await expect(row.price.locator('img')).toHaveAttribute('alt', '');
+    await expect(row.price.locator('img')).toHaveAttribute('aria-hidden', 'true');
+    await expect(row.price.locator('.er-a11y-trend')).toHaveText('; ' + label);
     await expect(row.price.locator('img')).toHaveCSS('width', '14px');
     await expect(row.change).toHaveClass(new RegExp(trend === 'up' ? 'table-success' : 'table-danger'));
   } else {

@@ -22,26 +22,20 @@ for (const direction of ['ltr', 'rtl']) {
         const section = page.locator('#' + id);
         await expect(section.locator(selector)).toHaveCount(1);
         await expect(section.locator(selector)).toHaveAttribute('data-exchange-rates-version', version);
-        const link = section.locator('.exchange-rates-info-caption a[href="https://wordpress.org/plugins/exchange-rates/"]');
-        await expect(link).toHaveText('Exchange Rates');
-        expect(await link.evaluate(node => node.nextSibling.textContent)).toBe(' ' + version);
-        expect(await link.evaluate(node => {
-          const row = node.parentElement.parentElement.cloneNode(true);
-          // WordPress may replace emoji text with images after page load.
-          row.querySelectorAll('img[alt]').forEach(image => image.replaceWith(image.alt));
-          return row.textContent;
-        })).toContain(version + ' 🚀');
+        await expect(section.locator('[data-er-info]')).toHaveAttribute('aria-controls', 'exchange-rates-information');
       }
+      const info = page.locator('#exchange-rates-information');
+      await expect(info).toHaveCount(1);
+      await expect(info.locator('.er-dialog-version')).toContainText(version);
       for (const id of ['shortcode-table', 'widget-table']) {
         const section = page.locator('#' + id);
-        const info = section.locator('.exchange-rates-info-caption');
         await expect(info).toBeHidden();
-        await section.locator('.exchange-rates-caption-button').click();
+        await section.locator('[data-er-info]').click();
         await expect(info).toBeVisible();
-        await expect(info.locator('small').last()).toContainText(version);
-        await section.locator('input').fill('10');
-        await section.locator('.exchange-rates-caption-button').click();
+        await expect(info.locator('.er-dialog-version')).toContainText(version);
+        await info.locator('button').click();
         await expect(info).toBeHidden();
+        await section.locator('input').fill('10');
       }
       for (const id of ['shortcode-converter', 'widget-converter']) {
         const converter = page.locator('#' + id + ' .widget-exchange-rates-currency-converter');

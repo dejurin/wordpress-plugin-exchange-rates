@@ -92,7 +92,41 @@ add_action( 'template_redirect', function () {
 		the_widget( '\Dejurin\ExchangeRates\Widgets\Table', $attributes );
 		echo '</section>';
 	}
+	if ( isset( $_GET['emoji-assets'] ) ) {
+		echo '<section id="emoji-badges"><h2>Badge emoji assets</h2>';
+		echo do_shortcode( '[exchange-rates_badge currency_list="EUR,BRL" base_currency="USD" base_show="true" flag_type="emoji" code="true"]' );
+		echo '</section>';
+	}
 	wp_footer();
+	if ( isset( $_GET['emoji-assets'] ) ) {
+		echo '<p id="emoji-assets-status" role="status">Local emoji assets: checking images…</p>';
+		?>
+		<script>
+		(function () {
+			var status = document.getElementById('emoji-assets-status');
+			var images = Array.prototype.slice.call(document.querySelectorAll('#shortcode-full tbody th img, #widget-full tbody th img, #shortcode-compact tbody th img, #widget-compact tbody th img, #emoji-badges img'));
+			var local = images.length === 14 && images.every(function (image) {
+				var url = new URL(image.src);
+				return url.origin === location.origin && /\/assets\/flags\/emoji\/[a-f0-9-]+\.svg$/.test(url.pathname);
+			});
+			if (!local) {
+				status.textContent = 'Local emoji assets: FAIL — expected 14 plugin-local emoji images.';
+				return;
+			}
+			Promise.all(images.map(function (image) {
+				image.loading = 'eager';
+				return image.decode().then(function () {
+					if (!image.naturalWidth || !image.naturalHeight) { throw new Error('Empty image'); }
+				});
+			})).then(function () {
+				status.textContent = 'Local emoji assets: PASS — 14/14 decoded; 4 tables and 2 badges; all flag URLs are same-origin.';
+			}, function () {
+				status.textContent = 'Local emoji assets: FAIL — a bundled flag could not be decoded.';
+			});
+		}());
+		</script>
+		<?php
+	}
 	echo '</body></html>';
 	exit;
 }, 9 );

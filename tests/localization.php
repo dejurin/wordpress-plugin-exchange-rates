@@ -51,14 +51,15 @@ $required = array(
 	'No change.', 'Previous rate unavailable.', 'Increase: %s', 'Decrease: %s',
 	'Change is below display precision.', 'Invalid source directory response.',
 	'Showing the last valid source directory.',
+	'From currency', 'To currency', 'Swap currencies',
 );
 foreach ( $required as $message ) {
 	er_catalog_check( isset( $pot->entries[ $message ] ), 'POT includes ' . $message );
 }
 $expected = array(
-	'en_US' => array( 'Increase: %s' => 'Increase: %s', 'Decrease: %s' => 'Decrease: %s' ),
-	'uk' => array( 'Increase: %s' => 'Зростання: %s', 'Decrease: %s' => 'Зниження: %s', 'Formatting' => 'Форматування' ),
-	'bg_BG' => array( 'Increase: %s' => 'Повишение: %s', 'Decrease: %s' => 'Понижение: %s', 'Force Data Update' => 'Принудително обновяване на данните' ),
+	'en_US' => array( 'Increase: %s' => 'Increase: %s', 'Decrease: %s' => 'Decrease: %s', 'Swap currencies' => 'Swap currencies' ),
+	'uk' => array( 'Increase: %s' => 'Зростання: %s', 'Decrease: %s' => 'Зниження: %s', 'Formatting' => 'Форматування', 'Swap currencies' => 'Поміняти валюти місцями' ),
+	'bg_BG' => array( 'Increase: %s' => 'Повишение: %s', 'Decrease: %s' => 'Понижение: %s', 'Force Data Update' => 'Принудително обновяване на данните', 'Swap currencies' => 'Размяна на валутите' ),
 );
 foreach ( $expected as $locale => $samples ) {
 	$path = $root . '/languages/exchange-rates-' . $locale;

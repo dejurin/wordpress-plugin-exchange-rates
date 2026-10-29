@@ -6,14 +6,15 @@ const sections = ['shortcode-full', 'widget-full', 'shortcode-compact', 'widget-
 test.beforeEach(async ({ page, baseURL }) => {
   await page.route('**/*', route => {
     const url = new URL(route.request().url());
-    if (url.origin === 'https://s.w.org' && url.pathname.startsWith('/images/core/emoji/')) {
-      return route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="16" height="16" fill="#246"/></svg>' });
-    }
     return url.origin === new URL(baseURL).origin ? route.continue() : route.abort();
   });
 });
 
 async function checkRows(page, { size, flag, region, direction }) {
+  await page.locator('.cr-exchange-rates tbody th img').evaluateAll(async images => {
+    // Force lazy rows into the request set, then require real bundled artwork.
+    await Promise.all(images.map(image => { image.loading = 'eager'; return image.decode(); }));
+  });
   for (const id of sections) {
     const rows = await page.locator(`#${id} tbody th`).evaluateAll(cells => cells.map(cell => {
       const rect = node => {

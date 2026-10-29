@@ -30,9 +30,9 @@ add_action( 'template_redirect', function () {
 	$font = isset( $_GET['font'] ) && '22' === $_GET['font'] ? 22 : 16;
 	$size = isset( $_GET['size'] ) ? max( 16, min( 64, (int) $_GET['size'] ) ) : 32;
 	$flag = isset( $_GET['no-flag'] ) ? 'none' : 'circular';
-	if ( isset( $_GET['language'] ) && 'uk' === $_GET['language'] ) {
+	if ( isset( $_GET['language'] ) && in_array( $_GET['language'], array( 'uk', 'bg_BG' ), true ) ) {
 		unload_textdomain( 'exchange-rates' );
-		load_textdomain( 'exchange-rates', WP_PLUGIN_DIR . '/exchange-rates/languages/exchange-rates-uk.mo' );
+		load_textdomain( 'exchange-rates', WP_PLUGIN_DIR . '/exchange-rates/languages/exchange-rates-' . $_GET['language'] . '.mo' );
 		// Construct after loading the catalog, as WordPress does for a new request.
 		$shortcode = new \Dejurin\ExchangeRates\Shortcodes\CurrencyConverter();
 	}

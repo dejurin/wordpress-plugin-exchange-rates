@@ -23,10 +23,15 @@ async function expectSemantics(table, inverse) {
     const cells = rows.nth(index).locator('td');
     const icon = cells.nth(0).locator('img');
     await expect(icon).toHaveCount(trends[index] ? 1 : 0);
-    if (trends[index]) await expect(icon).toHaveAttribute('alt', trends[index]);
+    if (trends[index]) {
+      await expect(icon).toHaveAttribute('alt', '');
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon).toHaveAttribute('src', new RegExp('/' + trends[index] + '\\.svg$'));
+      await expect(cells.nth(0).locator('.er-a11y-trend')).toHaveCount(1);
+    }
     if (index < values.length) {
       const symbol = await cells.nth(0).getAttribute('data-symbol');
-      expect((await cells.nth(0).textContent()).replace(symbol || '\0', '')).toBe(values[index]);
+      expect((await cells.nth(0).evaluate(node => { const copy = node.cloneNode(true); copy.querySelectorAll('.er-a11y-sr-only').forEach(n => n.remove()); return copy.textContent; })).replace(symbol || '\0', '')).toBe(values[index]);
     }
   }
   await expect(rows.nth(4).locator('td').nth(1)).toHaveText('–');
@@ -91,7 +96,7 @@ for (const direction of directions) {
             const original = await icons.evaluateAll(images => images.map(img => img.outerHTML));
             for (const icon of await icons.all()) {
               const src = await icon.getAttribute('src');
-              const trend = await icon.getAttribute('alt');
+              const trend = (await icon.getAttribute('src')).match(/\/(up|down)\.svg$/)[1];
               expect(new URL(src).origin).toBe(new URL(baseURL).origin);
               expect(src).toMatch(new RegExp(`/assets/img/${trend}\\.svg$`));
               const response = await page.request.get(src);

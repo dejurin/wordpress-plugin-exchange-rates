@@ -48,7 +48,7 @@ class Converter extends \WP_Widget
         ];
 
         echo wp_kses_post($args['before_widget']);
-        echo wp_kses($object->get_html_widget($this->number), array_merge(wp_kses_allowed_html('post'), array('input' => array('value' => true,'type' => true,'name' => true))));
+        echo wp_kses($object->get_html_widget($this->number), \Dejurin\ExchangeRates\Models\Dev::allowed_widget_html());
         echo wp_kses_post($args['after_widget']);
     }
 
