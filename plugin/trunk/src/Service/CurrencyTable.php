@@ -49,7 +49,7 @@ class CurrencyTable
 		if ( 'none' !== $type ) {
 			if ( 'emoji' === $type ) {
 				$emoji = Emoji::get_list();
-				$src = 'https://s.w.org/images/core/emoji/14.0.0/svg/' . strtolower( $emoji[ $flag ] ) . '.svg';
+				$src = plugin_dir_url( $GLOBALS['dejurin_exchange_rates']->plugin_path ) . 'assets/flags/emoji/' . strtolower( $emoji[ $flag ] ) . '.svg';
 			} else {
 				$src = plugin_dir_url( $GLOBALS['dejurin_exchange_rates']->plugin_path ) . 'assets/flags/' . rawurlencode( $type ) . '/' . rawurlencode( strtolower( $flag ) ) . '.svg';
 			}

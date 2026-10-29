@@ -48,11 +48,6 @@ for (const direction of ['ltr', 'rtl']) {
         await page.setViewportSize({ width, height: 900 });
         await page.route('**/*', route => {
           const url = new URL(route.request().url());
-          // Emoji flags are external in the plugin. Supply a deterministic local
-          // image only in tests; preserve the production img attributes and size.
-          if (url.origin === 'https://s.w.org' && url.pathname.startsWith('/images/core/emoji/')) {
-            return route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="16" height="16" fill="#246"/></svg>' });
-          }
           return url.origin === new URL(baseURL).origin ? route.continue() : route.abort();
         });
         const errors = [];
@@ -61,6 +56,9 @@ for (const direction of ['ltr', 'rtl']) {
         const response = await page.goto(`/?${query}`);
         expect(response.ok()).toBeTruthy();
         await expect(page.locator('html')).toHaveAttribute('dir', direction);
+        await page.locator('.cr-exchange-rates tbody th img').evaluateAll(async images => {
+          await Promise.all(images.map(image => { image.loading = 'eager'; return image.decode(); }));
+        });
         for (const id of ['shortcode-full', 'widget-full', 'shortcode-compact', 'widget-compact']) {
           const table = page.locator(`#${id} table`);
           await expect(table).toHaveCSS('direction', direction);

@@ -238,9 +238,13 @@ A rate request identifies the selected source. By default, the WordPress HTTP AP
 
 Amounts entered into the converter are calculated in the visitor's browser; they are not sent to the exchange-rate API.
 
-When emoji flags are selected, the visitor's browser loads flag images from s.w.org, which receives the visitor's IP address and the browser's request headers. Other flag styles are included with the plugin.
+All flag styles, including emoji, are included with the plugin and served from your site. Selecting emoji flags does not send image requests to an external service.
 
 For information about the data provider, see [CurrencyRate.Today](https://currencyrate.today/), its [Privacy Policy](https://currencyrate.today/page/privacy), and its [Legal Disclaimer](https://currencyrate.today/page/disclaimer).
+
+= Emoji artwork attribution =
+
+The bundled emoji artwork is an unmodified subset of Twemoji by Twitter, Inc. and other contributors, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Source: [Twemoji v14.0.2](https://github.com/twitter/twemoji/tree/7a3dad4a4da30497093dab22eafba135f02308e1). The original graphics license and attribution are included in assets/flags/emoji/. Other bundled libraries retain their own licenses.
 
 = Which data sources are included? =
 
@@ -571,6 +575,7 @@ Alternative market rates, such as Argentina's dollar blue, are selected through 
 * Fit historical columns into narrow tables; keep oversized values accessible through visible, keyboard-operable horizontal scrolling.
 * Keep valid table amounts usable when a currency has no previous rate, including JPY; unavailable history remains marked with a dash.
 * Remove the unused jQuery UI Autocomplete dependency.
+* Bundle the existing emoji flag artwork locally, removing external image requests without changing the icons or their dimensions.
 
 = 1.4.2 =
 * Show an unavailable result for malformed or unrepresentable converter and table amounts, and recover normally after valid input.

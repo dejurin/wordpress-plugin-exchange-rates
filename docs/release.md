@@ -20,18 +20,22 @@ only four POT/PO source catalogs, with all runtime files and compiled translatio
 unchanged; its [catalog refresh receipt](reviews/1.5.0-release-docs.md) remains
 historical evidence for that package.
 
-The current ZIP is `5a812edadb81e9947e6eeefd0efcdb07496f3369d5a7e56fccf5f46d66e365c7`
-(937 files). It restores the published 1.4.2 modal labels and order, **Check:**
-(`put_time`) then **Latest change:** (`local_time`), without changing timestamp
-values, explanatory titles, API or storage. Its eight-file difference from the
-intermediate package consists of `Footer.php` and the seven gettext catalogs.
-Keep the [date-label restoration receipt](reviews/1.5.0-date-labels.md) and
-[October 29 verification](reviews/1.5.0-final-gates.md) separate from the previous
-full matrix. Native Safari/Firefox passed the focused labels matrix; both
-LocalWP sites passed native updates, preserved-state checks and Safari/Firefox
-runs. VoiceOver was explicitly excluded from this rerun and has no new result.
-Do not describe earlier rollback, lifecycle or VoiceOver runs as new executions
-of the current ZIP.
+The current ZIP is `e34b2ce0a26200e8d75f54bb25f771dd0599d64bb9c98c64ca913d71fab77a2e`
+(1,198 files). The [local emoji receipt](reviews/1.5.0-local-emoji.md) records 259
+bundled SVGs, two notices and the table/badge path change. Local source and Docker
+installation/state checks passed. Plugin Check confirms both offloaded-asset
+findings are resolved. Focused Chromium, real desktop Safari/Firefox/Chrome and
+both LocalWP checks passed within the new receipt's scope; new CI and its exact
+artifact must still be confirmed on the reviewed head.
+
+The prior `5a812eda…65c7` ZIP (937 files) retained the published Check:/Latest
+change: labels and passed [CI run 40843663026](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40843663026)
+on `546b070…`: five jobs and 531 Chromium cases. Artifact `12884285591` was
+byte-identical to that prior ZIP. Its [date-label receipt](reviews/1.5.0-date-labels.md)
+and [focused acceptance](reviews/1.5.0-final-gates.md) remain separate from the
+new emoji payload and earlier full matrix. VoiceOver was explicitly excluded
+from the rerun. Do not transfer prior native, rollback, lifecycle, VoiceOver or
+CI results to a different ZIP.
 
 ```sh
 python3 scripts/plugin.py check
@@ -85,14 +89,16 @@ PCP results supplement manual review and browser/accessibility acceptance; they
 do not establish WCAG/EAA certification or authorize publication. The current
 release's execution status is tracked in [release status](release-status.md).
 
-For this 1.5.0 ZIP, [Plugin Check 2.1.0 was executed](reviews/1.5.0-plugin-check.md)
+For the prior `5a812eda…65c7` ZIP, [Plugin Check 2.1.0 was executed](reviews/1.5.0-plugin-check.md)
 in both static and runtime modes: each reported 9 errors and 22 warnings,
 compared with 4 errors and 22 warnings in the released 1.4.2 baseline. Five new
 footer escaping reports and two inherited SQL reports have documented analyzer
 limitations; 22 inherited warnings have recorded dispositions. Two real external
-emoji SVG findings remain open. Exit code zero did not mean a clean result; no
-finding suppressions were added. Close those findings before marking this gate
-complete, and preserve the new ZIP identity if their resolution changes code.
+emoji SVG findings required a fix. Static and runtime checks on the new local
+SVG ZIP each report seven errors and 22 warnings: both OffloadedContent errors
+are absent, with the remaining groups/counts unchanged. This resolves the two
+real findings but is not a clean raw checker result. No suppressions were added;
+retain both package identities and raw reports with their manual dispositions.
 
 ## Imported 1.3.2 baseline
 
@@ -133,7 +139,7 @@ Always pass an explicit `docker compose -p <dedicated-test-project>` for release
 
 ### Rollback
 
-For the reviewed 1.5.0 package, the isolated native matrix verified direct
+For the historical `f511fa42…48f4` 1.5.0 package, the isolated native matrix verified direct
 upgrade and rollback from 1.3.2, 1.4.0, 1.4.1 and 1.4.2 on both the minimum and
 current runtimes. LocalWP additionally verified 1.4.2 → 1.5.0 → 1.4.2 → 1.5.0
 on WordPress 7.1.3 and pinned 7.2 Beta 2 without database reseeding or migration.

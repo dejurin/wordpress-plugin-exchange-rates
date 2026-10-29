@@ -42,6 +42,7 @@ jobs:
       - run: php -l tests/percentage-wordpress.php
       - run: php tests/version.php
       - run: php tests/footer.php
+      - run: php tests/emoji-flags.php
       - run: php tests/acceptance-asset-revision.php
       - run: php -l tests/version-wordpress.php
       - run: php -l tests/converter-controls-wordpress.php
@@ -72,6 +73,7 @@ jobs:
         run: |
           python3 scripts/regressions.py check
           python3 -m unittest discover -s tests/regressions -p 'test_*.py'
+          python3 scripts/vendor-emoji.py
       - run: python3 scripts/plugin.py package
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

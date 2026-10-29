@@ -181,7 +181,7 @@ class Badge
                 $img_template,
                 $w,
                 $h,
-                esc_url(sprintf('https://s.w.org/images/core/emoji/14.0.0/svg/%1$s.svg', strtolower($emoji[$currency['flag']]))),
+                esc_url(sprintf(plugin_dir_url($GLOBALS['dejurin_exchange_rates']->plugin_path).'assets/flags/emoji/%1$s.svg', strtolower($emoji[$currency['flag']]))),
                 esc_attr($currency['flag'])
             );
         } elseif ('none' !== $flag_type) {

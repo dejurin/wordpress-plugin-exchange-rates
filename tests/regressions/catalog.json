@@ -260,6 +260,16 @@
       "status": "registered"
     },
     {
+      "id": "ER-local-emoji-assets",
+      "recorded_scope": "1.5.0",
+      "contract": "Every mapped emoji is bundled as inert SVG; tables and badges load it locally without changing artwork, dimensions or saved flag modes.",
+      "tests": [
+        "tests/emoji-flags.php",
+        "tests/browser/emoji-local-assets.spec.js"
+      ],
+      "status": "registered"
+    },
+    {
       "id": "ER-trend-arrows",
       "recorded_scope": "1.4.0",
       "contract": "Trend direction and assets match actual current/previous data.",
@@ -395,6 +405,7 @@
     "tests/payload-validation.php",
     "tests/version.php",
     "tests/footer.php",
+    "tests/emoji-flags.php",
     "tests/acceptance-asset-revision.php"
   ],
   "wordpress_steps": [
