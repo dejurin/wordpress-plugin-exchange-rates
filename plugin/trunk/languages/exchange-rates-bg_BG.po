@@ -195,7 +195,7 @@ msgid "Color badge"
 msgstr "Цветна бадж"
 
 #: src/Admin/Settings/General/Page.php:134 src/Service/CurrencyConverter.php:63
-#: src/Service/CurrencyTable.php:237
+#: src/Service/CurrencyTable.php:239
 msgid "Amount"
 msgstr "Сума"
 
@@ -2045,49 +2045,49 @@ msgstr "Размяна на валутите"
 msgid "Loading..."
 msgstr "Зареждане..."
 
-#: src/Service/CurrencyTable.php:102 src/Shortcodes/CurrencyTable.php:51
+#: src/Service/CurrencyTable.php:103 src/Shortcodes/CurrencyTable.php:51
 #: src/Widgets/Table.php:314
 msgid "Previous Close"
 msgstr "Предишно Затваряне"
 
-#: src/Service/CurrencyTable.php:102
+#: src/Service/CurrencyTable.php:103
 msgid "Prev."
 msgstr "Предх."
 
-#: src/Service/CurrencyTable.php:106 src/Shortcodes/CurrencyTable.php:52
+#: src/Service/CurrencyTable.php:107 src/Shortcodes/CurrencyTable.php:52
 #: src/Widgets/Table.php:315
 msgid "Changes"
 msgstr "Промени"
 
-#: src/Service/CurrencyTable.php:106
+#: src/Service/CurrencyTable.php:107
 msgid "Δ %"
 msgstr "Δ %"
 
-#: src/Service/CurrencyTable.php:138
+#: src/Service/CurrencyTable.php:140
 msgid "No change."
 msgstr "Без промяна."
 
-#: src/Service/CurrencyTable.php:138
+#: src/Service/CurrencyTable.php:140
 msgid "Previous rate unavailable."
 msgstr "Предишният курс не е наличен."
 
 #. translators: %s: Unsigned, localized percentage.
-#: src/Service/CurrencyTable.php:141
+#: src/Service/CurrencyTable.php:143
 #, php-format
 msgid "Increase: %s"
 msgstr "Повишение: %s"
 
 #. translators: %s: Unsigned, localized percentage.
-#: src/Service/CurrencyTable.php:141
+#: src/Service/CurrencyTable.php:143
 #, php-format
 msgid "Decrease: %s"
 msgstr "Понижение: %s"
 
-#: src/Service/CurrencyTable.php:143
+#: src/Service/CurrencyTable.php:145
 msgid "Change is below display precision."
 msgstr "Промяната е твърде малка за избраната точност на показване."
 
-#: src/Service/CurrencyTable.php:213 src/Shortcodes/Badge.php:308
+#: src/Service/CurrencyTable.php:215 src/Shortcodes/Badge.php:308
 msgid ""
 "Error: Check parameters of widget or shortcode. Probably you changed the "
 "source of currency rates, where there was not the desired currency that you "

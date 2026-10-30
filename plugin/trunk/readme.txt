@@ -196,9 +196,9 @@ Changing the amount in one table recalculates that table only.
 
 = How should visitors enter amounts in an editable table? =
 
-Enter positive numbers without thousands separators or currency symbols. Use a period for decimals, for example 1000 or 1000.50.
+Enter zero or a positive number without thousands separators or currency symbols. Use a period for decimals, for example 1000 or 1000.50.
 
-Table inputs do not correctly parse locale-formatted amounts such as 1,000 or 1 000; these can be read as 1. Number-format settings control the displayed results, not the accepted input format.
+Table inputs reject locale-formatted amounts such as 1,000 or 1 000. Enter 1000 instead. Number-format settings control the displayed results, not the accepted input format.
 
 = Does this change my store's checkout currency or product prices? =
 

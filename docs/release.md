@@ -20,7 +20,9 @@ only four POT/PO source catalogs, with all runtime files and compiled translatio
 unchanged; its [catalog refresh receipt](reviews/1.5.0-release-docs.md) remains
 historical evidence for that package.
 
-The current ZIP is `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`
+The current ZIP and its checks are identified in [release status](release-status.md)
+and the [catalog/readme correction receipt](reviews/1.5.0-catalog-readme-ci.md).
+The earlier verified ZIP is `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`
 (1,198 files). The maintainer accepted the numeric-axis correction, including
 right alignment in RTL. The [final candidate receipt](reviews/1.5.0-rc.md)
 records fresh native package round trips on the declared minimum/current

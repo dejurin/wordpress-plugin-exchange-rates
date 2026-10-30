@@ -1,6 +1,24 @@
 # Release preparation: 1.5.0
 
-## October 30 working candidate: footer refinement
+## Current working candidate: readme and catalog corrections
+
+The [catalog/readme receipt](reviews/1.5.0-catalog-readme-ci.md) records the
+correction of the two documentation findings from the full local regression.
+
+- ZIP: `dist/exchange-rates.1.5.0.zip`, preserved as
+  `dist/catalog-readme-ci-20261030/candidate.zip`; 1,198 files, 1,761,283 bytes.
+- SHA-256: `f8da0df6f0f14339bf8a0bd9208e9128a2dd9e4b31fe7eff7c10af929ce37ad1`.
+- Exactly five packaged files changed from `8e7b629c…c6dac`: readme, POT and
+  three PO files. All other 1,193 files, including PHP/JS/CSS/MO, are identical.
+- Readme now documents zero and positive input and rejection of comma/space
+  grouping. All 44 stale source coordinates are corrected; keys, translations,
+  headers and order remain unchanged. All three compiled MO files reproduce.
+- Metadata, 58 PHP syntax checks, deterministic packaging and 8,024 standalone
+  localization assertions passed. Fresh installed-ZIP checks, official Plugin
+  Check and GitHub CI are being recorded for this exact candidate separately.
+- No merge, WordPress.org publication or customer-site update is authorized.
+
+## Previous working candidate: October 30 footer refinement
 
 The maintainer approved date-only visible captions, a reference-only disclaimer
 and placing `[WP_ExchangeRates]` below the modal heading. The
