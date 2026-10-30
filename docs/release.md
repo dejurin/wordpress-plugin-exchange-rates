@@ -14,7 +14,7 @@ Dependency upgrades and introducing a lock file require a separate change and co
 
 Before packaging an already reviewed version, preserve its ZIP and checksum in
 an ignored evidence/archive directory. `package` replaces the canonical ZIP;
-never relabel an earlier receipt with the new checksum. For 1.5.0 the completed
+never relabel an earlier receipt with the new checksum. An earlier 1.5.0
 matrix belongs to `f511fa42…48f4`. The intermediate `bfc05332…ba91` ZIP changed
 only four POT/PO source catalogs, with all runtime files and compiled translations
 unchanged; its [catalog refresh receipt](reviews/1.5.0-release-docs.md) remains
@@ -168,7 +168,7 @@ Always pass an explicit `docker compose -p <dedicated-test-project>` for release
 
 ### Rollback
 
-The current `c4f8f597…26a8` candidate completed the same eight native
+The preceding `c4f8f597…26a8` candidate completed the same eight native
 upgrade/rollback paths and both LocalWP round trips again; these results are
 recorded in the [final candidate receipt](reviews/1.5.0-rc.md). The exact
 released 1.4.2 ZIP and hashes are listed in the

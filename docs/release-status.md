@@ -38,8 +38,7 @@ and placing `[WP_ExchangeRates]` below the modal heading. The
 [focused receipt](reviews/1.5.0-footer-refinement.md) records the new package,
 regressions and in-place update of the existing side-by-side preview.
 
-- Current ZIP: `dist/exchange-rates.1.5.0.zip`, preserved as
-  `dist/marker-heading-20261030/candidate.zip`; 1,198 files.
+- Previous ZIP: `dist/marker-heading-20261030/candidate.zip`; 1,198 files.
 - SHA-256: `8e7b629cd6c85134722e27afe8d3f956f2d024c0d7dcb5b8cfcb6102d41c6dac`.
 - The unchanged released 1.4.2 remains on the left at port 19345; the updated
   candidate remains on the right at port 19344, using the existing comparison
@@ -356,7 +355,10 @@ redundant percentage speech in the optional Changes column, remain assigned to
 [1.5.6](roadmaps/1.5.6.md); Gutenberg remains assigned to [1.6.0](roadmaps/1.6.0.md).
 No WCAG/EAA certification is claimed.
 
-## Preparation complete; publication deferred
+## Previous preparation checkpoint: October 29
+
+This checkpoint describes `c4f8f597…26a8`. The current corrected candidate,
+its new CI and separate integration boundary are listed at the top of this page.
 
 The source identity, runtime CI, matching artifact and final independent review
 are recorded above. Documentation-only preparation does not change the plugin
@@ -364,12 +366,13 @@ payload. GitHub integration is tracked in [PR #41](https://github.com/dejurin/wo
 its final head must retain the reviewed plugin subtree and pass its required
 checks. These are integration checks, not missing runtime acceptance results.
 
-The current-ZIP phase-one, phase-two and LocalWP rows are complete. Do not
+That ZIP's phase-one, phase-two and LocalWP rows are complete. Do not
 transfer earlier ZIP results or reopen the already accepted numeric alignment,
 converter borders or emoji differences. Official Plugin Check has been executed
 on this ZIP with the unchanged documented findings listed above.
 
-The remaining release action is a separate publication instruction. Until then,
+At that checkpoint, the remaining release action was a separate publication
+instruction. Until separately authorized,
 WordPress.org SVN remains read-only; no release tag, GitHub Release, production
 update or WordPress.org write is part of preparation. The
 [publication handoff](releases/1.5.0-preparation.md#publication-handoff)
@@ -391,16 +394,16 @@ reuse old receipt hashes after source changes.
 
 ```sh
 set -euo pipefail
-shasum -a 256 dist/archive/1.5.0/f511fa424a18d61b06f23800992d2ea2cf55a2c41e752cbebbbf241862cd48f4/exchange-rates.1.5.0.zip
+shasum -a 256 dist/archive/1.5.0/f8da0df6f0f14339bf8a0bd9208e9128a2dd9e4b31fe7eff7c10af929ce37ad1/exchange-rates.1.5.0.zip
 python3 scripts/plugin.py check
 python3 scripts/plugin.py lint
 python3 scripts/plugin.py package
 shasum -a 256 dist/exchange-rates.1.5.0.zip
 ```
 
-The first checksum must equal the reviewed `f511fa42…48f4` identity. The last
-checksum must equal `c4f8f597…26a8` for the current recorded source; investigate
-any difference before reusing this receipt. Packaging verifies entry-by-entry
+Both checksums must equal `f8da0df6…37ad1` for the current recorded source;
+investigate any difference before reusing this receipt. Earlier archived ZIPs
+and their historical checksums remain preserved. Packaging verifies entry-by-entry
 source equality, but does not itself complete runtime or visual acceptance.
 
 ## Historical release records
