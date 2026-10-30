@@ -153,7 +153,7 @@ function formatCaptionTime(value, locale = 'en-GB', timeZone) {
     const parts = {};
     formatter.formatToParts(new Date(value)).forEach(part => { parts[part.type] = part.value; });
     return {
-        compact: `${parts.day} ${parts.month} ${parts.hour}:${parts.minute}`,
+        compact: `${parts.day} ${parts.month}`,
         full: `${parts.day} ${parts.month} ${parts.year} ${parts.hour}:${parts.minute}`,
         timeZone: formatter.resolvedOptions().timeZone
     };

@@ -1946,9 +1946,9 @@ msgid "unavailable"
 msgstr ""
 
 #: src/Plugin.php:91
-#: src/Service/Footer.php:48
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:49
 #: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Not available"
 msgstr ""
 
@@ -2084,7 +2084,7 @@ msgid "Error: Check parameters of widget or shortcode. Probably you changed the 
 msgstr ""
 
 #: src/Service/Footer.php:28
-#: src/Service/Footer.php:75
+#: src/Service/Footer.php:76
 msgid "(opens in a new tab)"
 msgstr ""
 
@@ -2092,46 +2092,44 @@ msgstr ""
 msgid "Source of displayed rates"
 msgstr ""
 
-#: src/Service/Footer.php:52
+#: src/Service/Footer.php:53
 msgid "Exchange rate information"
 msgstr ""
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Data details"
 msgstr ""
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Close information"
 msgstr ""
 
-#: src/Service/Footer.php:75
+#: src/Service/Footer.php:76
 msgid "Source"
 msgstr ""
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "When the data service saved this entry; the rates may be unchanged"
 msgstr ""
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "Check:"
 msgstr ""
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Date of the source data"
 msgstr ""
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Latest change:"
 msgstr ""
 
-#: src/Service/Footer.php:79
+#: src/Service/Footer.php:80
 msgid "Disclaimer"
 msgstr ""
 
-#. translators: %s: fixed plugin search marker.
-#: src/Service/Footer.php:81
-#, php-format
-msgid "This %s widget displays exchange rates for informational purposes only. This plugin and the website displaying it cannot guarantee their accuracy or timeliness. Rates may differ from those offered by your bank or payment provider. Confirm the applicable rate before making a transaction."
+#: src/Service/Footer.php:80
+msgid "Exchange rates are provided for reference only and may be delayed. Displayed rates may differ from those available for actual transactions. Confirm the final rate and applicable fees with your bank, exchange service or payment provider before making a transaction."
 msgstr ""
 
 #: src/Shortcodes/CurrencyConverter.php:72

@@ -1,5 +1,39 @@
 # Release preparation: 1.5.0
 
+## October 30 working candidate: footer refinement
+
+The maintainer approved date-only visible captions, a reference-only disclaimer
+and placing `[WP_ExchangeRates]` below the modal heading. The
+[focused receipt](reviews/1.5.0-footer-refinement.md) records the new package,
+regressions and in-place update of the existing side-by-side preview.
+
+- Current ZIP: `dist/exchange-rates.1.5.0.zip`, preserved as
+  `dist/marker-heading-20261030/candidate.zip`; 1,198 files.
+- SHA-256: `8e7b629cd6c85134722e27afe8d3f956f2d024c0d7dcb5b8cfcb6102d41c6dac`.
+- The unchanged released 1.4.2 remains on the left at port 19345; the updated
+  candidate remains on the right at port 19344, using the existing comparison
+  URL. No production update or publication occurred.
+- The [full local regression](reviews/1.5.0-full-regression-20261030.md) now
+  supersedes the focused checkpoint: 556/556 Chromium, 190/190 native
+  Safari/Firefox technical cases, 264 LocalWP cases / 3,872 assertions,
+  16 WordPress integration stages, eight direct historical update/rollback
+  round trips and two fresh installations passed. Saved state, core/config,
+  cron and exact installed hashes were verified after the browser runs.
+- Backlinks: 2,064 differential combinations and 258 real WordPress source-URL
+  checks passed. Fresh POT/loading checks passed 8,038 assertions; all three
+  MO files reproduce. Syntax/unit checks include PHP 5.6, 8.3 and 8.4 locally.
+- All three browsers retain four PASS/eight DESIGN REVIEW composition labels,
+  with no unexpected difference or functional failure. Previously accepted
+  border/numeric-axis decisions and raw human-review status remain visible.
+- Open nonruntime findings: inaccurate packaged-readme input wording and 44
+  stale POT/PO source-line references. Plugin Check static/runtime each retain
+  seven reviewed errors and 22 warnings, with zero new semantic findings.
+- Current-payload GitHub CI was not run; the older CI below belongs to another
+  ZIP. VoiceOver remains excluded. The plugin/test source and ZIP were not
+  changed during this run. No publication, push or merge occurred.
+
+## Previous fully verified package: October 29
+
 Updated October 29, 2026. The maintainer accepted the numeric-axis correction.
 Final verification uses one frozen ZIP across the three release phases and
 official Plugin Check. Native package round trips, general Safari/Firefox,
@@ -8,9 +42,9 @@ completed with no unexplained regression. Final source/CI/artifact comparison
 and independent review passed. The maintainer authorized documentation and
 GitHub integration; publication is deferred to a separate explicit instruction.
 
-## Current package: final candidate verification
+### Final candidate verification
 
-- ZIP: `dist/exchange-rates.1.5.0.zip`, also preserved as
+- ZIP: `dist/rc-1.5.0-20261029/candidate.zip`, also preserved as
   `dist/numeric-axis-20261029/candidate.zip`; 1,198 files, 1,761,628 bytes.
 - SHA-256: `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`.
 - Archive: `dist/archive/1.5.0/c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8/exchange-rates.1.5.0.zip`.

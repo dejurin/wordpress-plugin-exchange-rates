@@ -1964,8 +1964,8 @@ msgstr "Изчислението е невъзможно. Въведете ва�
 msgid "unavailable"
 msgstr "няма данни"
 
-#: src/Plugin.php:91 src/Service/Footer.php:48 src/Service/Footer.php:76
-#: src/Service/Footer.php:77
+#: src/Plugin.php:91 src/Service/Footer.php:49 src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Not available"
 msgstr "Няма данни"
 
@@ -2097,7 +2097,7 @@ msgstr ""
 "променили източника на валутните курсове, където не е имало желаната валута, "
 "която сте избрали преди."
 
-#: src/Service/Footer.php:28 src/Service/Footer.php:75
+#: src/Service/Footer.php:28 src/Service/Footer.php:76
 msgid "(opens in a new tab)"
 msgstr "(отваря се в нов раздел)"
 
@@ -2105,58 +2105,56 @@ msgstr "(отваря се в нов раздел)"
 msgid "Source of displayed rates"
 msgstr "Източник на показаните курсове"
 
-#: src/Service/Footer.php:52
+#: src/Service/Footer.php:53
 msgid "Exchange rate information"
 msgstr "Информация за валутния курс"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Data details"
 msgstr "Подробности за данните"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Close information"
 msgstr "Затваряне на информацията"
 
-#: src/Service/Footer.php:75
+#: src/Service/Footer.php:76
 msgid "Source"
 msgstr "Източник"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "When the data service saved this entry; the rates may be unchanged"
 msgstr ""
 "Кога услугата за данни е записала този запис; курсовете може да са "
 "непроменени"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "Check:"
 msgstr "Проверка:"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Date of the source data"
 msgstr "Дата на данните от източника"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Latest change:"
 msgstr "Последна промяна:"
 
-#: src/Service/Footer.php:79
+#: src/Service/Footer.php:80
 msgid "Disclaimer"
 msgstr "Отказ от отговорност"
 
-#. translators: %s: fixed plugin search marker.
-#: src/Service/Footer.php:81
-#, php-format
+#: src/Service/Footer.php:80
 msgid ""
-"This %s widget displays exchange rates for informational purposes only. This "
-"plugin and the website displaying it cannot guarantee their accuracy or "
-"timeliness. Rates may differ from those offered by your bank or payment "
-"provider. Confirm the applicable rate before making a transaction."
+"Exchange rates are provided for reference only and may be delayed. Displayed "
+"rates may differ from those available for actual transactions. Confirm the "
+"final rate and applicable fees with your bank, exchange service or payment "
+"provider before making a transaction."
 msgstr ""
-"Тази джаджа %s показва валутни курсове само с информационна цел. Този плъгин "
-"и уебсайтът, на който е показан, не могат да гарантират тяхната точност или "
-"актуалност. Курсовете може да се различават от тези, предлагани от вашата "
-"банка или доставчик на платежни услуги. Потвърдете приложимия курс, преди да "
-"извършите трансакция."
+"Валутните курсове са само за справка и може да се обновяват със закъснение. "
+"Показаните курсове може да се различават от тези, по които реално се "
+"извършват трансакции. Преди да извършите трансакция, потвърдете крайния курс "
+"и приложимите такси във вашата банка, обменно бюро или при доставчика на "
+"платежни услуги."
 
 #: src/Shortcodes/CurrencyConverter.php:72 src/Widgets/Converter.php:195
 msgid "Currency Converter"

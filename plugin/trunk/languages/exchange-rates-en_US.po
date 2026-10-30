@@ -1959,8 +1959,8 @@ msgstr "Unable to calculate. Enter a valid amount."
 msgid "unavailable"
 msgstr "unavailable"
 
-#: src/Plugin.php:91 src/Service/Footer.php:48 src/Service/Footer.php:76
-#: src/Service/Footer.php:77
+#: src/Plugin.php:91 src/Service/Footer.php:49 src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Not available"
 msgstr "Not available"
 
@@ -2092,7 +2092,7 @@ msgstr ""
 "source of currency rates, where there was not the desired currency that you "
 "selected before."
 
-#: src/Service/Footer.php:28 src/Service/Footer.php:75
+#: src/Service/Footer.php:28 src/Service/Footer.php:76
 msgid "(opens in a new tab)"
 msgstr "(opens in a new tab)"
 
@@ -2100,55 +2100,53 @@ msgstr "(opens in a new tab)"
 msgid "Source of displayed rates"
 msgstr "Source of displayed rates"
 
-#: src/Service/Footer.php:52
+#: src/Service/Footer.php:53
 msgid "Exchange rate information"
 msgstr "Exchange rate information"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Data details"
 msgstr "Data details"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Close information"
 msgstr "Close information"
 
-#: src/Service/Footer.php:75
+#: src/Service/Footer.php:76
 msgid "Source"
 msgstr "Source"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "When the data service saved this entry; the rates may be unchanged"
 msgstr "When the data service saved this entry; the rates may be unchanged"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "Check:"
 msgstr "Check:"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Date of the source data"
 msgstr "Date of the source data"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Latest change:"
 msgstr "Latest change:"
 
-#: src/Service/Footer.php:79
+#: src/Service/Footer.php:80
 msgid "Disclaimer"
 msgstr "Disclaimer"
 
-#. translators: %s: fixed plugin search marker.
-#: src/Service/Footer.php:81
-#, php-format
+#: src/Service/Footer.php:80
 msgid ""
-"This %s widget displays exchange rates for informational purposes only. This "
-"plugin and the website displaying it cannot guarantee their accuracy or "
-"timeliness. Rates may differ from those offered by your bank or payment "
-"provider. Confirm the applicable rate before making a transaction."
+"Exchange rates are provided for reference only and may be delayed. Displayed "
+"rates may differ from those available for actual transactions. Confirm the "
+"final rate and applicable fees with your bank, exchange service or payment "
+"provider before making a transaction."
 msgstr ""
-"This %s widget displays exchange rates for informational purposes only. This "
-"plugin and the website displaying it cannot guarantee their accuracy or "
-"timeliness. Rates may differ from those offered by your bank or payment "
-"provider. Confirm the applicable rate before making a transaction."
+"Exchange rates are provided for reference only and may be delayed. Displayed "
+"rates may differ from those available for actual transactions. Confirm the "
+"final rate and applicable fees with your bank, exchange service or payment "
+"provider before making a transaction."
 
 #: src/Shortcodes/CurrencyConverter.php:72 src/Widgets/Converter.php:195
 msgid "Currency Converter"
