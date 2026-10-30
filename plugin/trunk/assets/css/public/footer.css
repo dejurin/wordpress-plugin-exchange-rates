@@ -66,8 +66,10 @@
 #exchange-rates-information[open]{display:block!important}
 #exchange-rates-information{box-sizing:border-box;position:fixed;inset:0;margin:auto;min-width:0;max-width:none;height:fit-content;min-height:0;overflow:auto;width:min(520px,calc(100% - 32px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);padding:24px;border:1px solid rgba(0,0,0,.12);border-radius:var(--radius,.4rem);background:#fff;color:#2f3237;font:inherit;box-shadow:0 12px 44px rgba(0,0,0,.12)}
 #exchange-rates-information::backdrop{background:rgba(0,0,0,.32)}
-#exchange-rates-information .er-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+#exchange-rates-information .er-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+#exchange-rates-information .er-dialog-heading{min-width:0}
 #exchange-rates-information .er-dialog-head h2{margin:0;color:inherit;font-family:inherit;font-size:18px;font-weight:600;line-height:1.4}
+#exchange-rates-information .er-dialog-search-marker{margin:4px 0 0;color:#687078;font:inherit;font-size:12px;font-weight:400;line-height:1.4;overflow-wrap:anywhere}
 #exchange-rates-information .er-dialog-close{display:flex;align-items:center;justify-content:center;flex:0 0 36px;width:36px;height:36px;margin:-6px -6px -6px 0;padding:0;border:0;border-radius:3px;background:transparent;color:inherit;cursor:pointer}
 #exchange-rates-information .er-dialog-close .dashicons{font-size:20px;width:20px;height:20px;line-height:1}
 #exchange-rates-information .er-dialog-close:hover{background:rgba(0,0,0,.045)}

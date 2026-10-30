@@ -329,7 +329,7 @@
     {
       "id": "ER-candidate-footer-modal",
       "recorded_scope": "1.5.0 acceptance",
-      "contract": "Approved footer/link contracts, 86 sources, dates, keyboard/live announcements and hidden modal failure.",
+      "contract": "Approved unchanged footer/link attributes across 86 sources; compact day/month captions preserve full source/date tooltips and UTC instants, localized timezone boundaries, reference disclaimer, one identity search marker, keyboard/live announcements and hidden modal failure.",
       "tests": [
         "tests/footer.php",
         "tests/browser/footer-modal.spec.js",

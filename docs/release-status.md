@@ -1,5 +1,69 @@
 # Release preparation: 1.5.0
 
+## Current working candidate: readme and catalog corrections
+
+The [catalog/readme receipt](reviews/1.5.0-catalog-readme-ci.md) records the
+correction of the two documentation findings from the full local regression.
+
+- ZIP: `dist/exchange-rates.1.5.0.zip`, preserved as
+  `dist/catalog-readme-ci-20261030/candidate.zip`; 1,198 files, 1,761,283 bytes.
+- SHA-256: `f8da0df6f0f14339bf8a0bd9208e9128a2dd9e4b31fe7eff7c10af929ce37ad1`.
+- Exactly five packaged files changed from `8e7b629c…c6dac`: readme, POT and
+  three PO files. All other 1,193 files, including PHP/JS/CSS/MO, are identical.
+- Readme now documents zero and positive input and rejection of comma/space
+  grouping. All 44 stale source coordinates are corrected; keys, translations,
+  headers and order remain unchanged. All three compiled MO files reproduce.
+- Metadata, 58 PHP syntax checks, deterministic packaging and 8,024 standalone
+  localization assertions passed. The installed ZIP completed native
+  update/rollback/restore with state and all 1,198 file hashes preserved;
+  fresh WordPress gettext passed 8,038 assertions.
+- Official Plugin Check static/runtime each retain seven errors and 22 warnings,
+  with no added or removed finding. This remains a reviewed-findings result,
+  not a clean raw checker pass.
+- [CI run 41037376933](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/41037376933)
+  passed all five jobs and 556/556 Chromium tests on source commit
+  `ac0b9677035569e8dea61fbfa2bf491f46104efc`. Downloaded artifact `12969180073`
+  contains the byte-identical ZIP, with all 1,198 file hashes matching.
+  CI PHP syntax/unit runtimes were 5.6.40, 8.3.36 and 8.4.27; WordPress gettext
+  ran on PHP 8.3.35. Post-browser state, HTTP/assets and CI cleanup passed.
+- Subsequent report-only updates preserve plugin subtree
+  `540f9e6f69e1a29dfc24e273b5643cea70e0a57b`; CI remains attributed to its
+  tested source commit above. The correction receipt retains the raw evidence.
+- No merge, WordPress.org publication or customer-site update is authorized.
+
+## Previous working candidate: October 30 footer refinement
+
+The maintainer approved date-only visible captions, a reference-only disclaimer
+and placing `[WP_ExchangeRates]` below the modal heading. The
+[focused receipt](reviews/1.5.0-footer-refinement.md) records the new package,
+regressions and in-place update of the existing side-by-side preview.
+
+- Previous ZIP: `dist/marker-heading-20261030/candidate.zip`; 1,198 files.
+- SHA-256: `8e7b629cd6c85134722e27afe8d3f956f2d024c0d7dcb5b8cfcb6102d41c6dac`.
+- The unchanged released 1.4.2 remains on the left at port 19345; the updated
+  candidate remains on the right at port 19344, using the existing comparison
+  URL. No production update or publication occurred.
+- The [full local regression](reviews/1.5.0-full-regression-20261030.md) now
+  supersedes the focused checkpoint: 556/556 Chromium, 190/190 native
+  Safari/Firefox technical cases, 264 LocalWP cases / 3,872 assertions,
+  16 WordPress integration stages, eight direct historical update/rollback
+  round trips and two fresh installations passed. Saved state, core/config,
+  cron and exact installed hashes were verified after the browser runs.
+- Backlinks: 2,064 differential combinations and 258 real WordPress source-URL
+  checks passed. Fresh POT/loading checks passed 8,038 assertions; all three
+  MO files reproduce. Syntax/unit checks include PHP 5.6, 8.3 and 8.4 locally.
+- All three browsers retain four PASS/eight DESIGN REVIEW composition labels,
+  with no unexpected difference or functional failure. Previously accepted
+  border/numeric-axis decisions and raw human-review status remain visible.
+- Open nonruntime findings: inaccurate packaged-readme input wording and 44
+  stale POT/PO source-line references. Plugin Check static/runtime each retain
+  seven reviewed errors and 22 warnings, with zero new semantic findings.
+- Current-payload GitHub CI was not run; the older CI below belongs to another
+  ZIP. VoiceOver remains excluded. The plugin/test source and ZIP were not
+  changed during this run. No publication, push or merge occurred.
+
+## Previous fully verified package: October 29
+
 Updated October 29, 2026. The maintainer accepted the numeric-axis correction.
 Final verification uses one frozen ZIP across the three release phases and
 official Plugin Check. Native package round trips, general Safari/Firefox,
@@ -8,9 +72,9 @@ completed with no unexplained regression. Final source/CI/artifact comparison
 and independent review passed. The maintainer authorized documentation and
 GitHub integration; publication is deferred to a separate explicit instruction.
 
-## Current package: final candidate verification
+### Final candidate verification
 
-- ZIP: `dist/exchange-rates.1.5.0.zip`, also preserved as
+- ZIP: `dist/rc-1.5.0-20261029/candidate.zip`, also preserved as
   `dist/numeric-axis-20261029/candidate.zip`; 1,198 files, 1,761,628 bytes.
 - SHA-256: `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`.
 - Archive: `dist/archive/1.5.0/c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8/exchange-rates.1.5.0.zip`.
@@ -291,7 +355,10 @@ redundant percentage speech in the optional Changes column, remain assigned to
 [1.5.6](roadmaps/1.5.6.md); Gutenberg remains assigned to [1.6.0](roadmaps/1.6.0.md).
 No WCAG/EAA certification is claimed.
 
-## Preparation complete; publication deferred
+## Previous preparation checkpoint: October 29
+
+This checkpoint describes `c4f8f597…26a8`. The current corrected candidate,
+its new CI and separate integration boundary are listed at the top of this page.
 
 The source identity, runtime CI, matching artifact and final independent review
 are recorded above. Documentation-only preparation does not change the plugin
@@ -299,12 +366,13 @@ payload. GitHub integration is tracked in [PR #41](https://github.com/dejurin/wo
 its final head must retain the reviewed plugin subtree and pass its required
 checks. These are integration checks, not missing runtime acceptance results.
 
-The current-ZIP phase-one, phase-two and LocalWP rows are complete. Do not
+That ZIP's phase-one, phase-two and LocalWP rows are complete. Do not
 transfer earlier ZIP results or reopen the already accepted numeric alignment,
 converter borders or emoji differences. Official Plugin Check has been executed
 on this ZIP with the unchanged documented findings listed above.
 
-The remaining release action is a separate publication instruction. Until then,
+At that checkpoint, the remaining release action was a separate publication
+instruction. Until separately authorized,
 WordPress.org SVN remains read-only; no release tag, GitHub Release, production
 update or WordPress.org write is part of preparation. The
 [publication handoff](releases/1.5.0-preparation.md#publication-handoff)
@@ -326,16 +394,16 @@ reuse old receipt hashes after source changes.
 
 ```sh
 set -euo pipefail
-shasum -a 256 dist/archive/1.5.0/f511fa424a18d61b06f23800992d2ea2cf55a2c41e752cbebbbf241862cd48f4/exchange-rates.1.5.0.zip
+shasum -a 256 dist/archive/1.5.0/f8da0df6f0f14339bf8a0bd9208e9128a2dd9e4b31fe7eff7c10af929ce37ad1/exchange-rates.1.5.0.zip
 python3 scripts/plugin.py check
 python3 scripts/plugin.py lint
 python3 scripts/plugin.py package
 shasum -a 256 dist/exchange-rates.1.5.0.zip
 ```
 
-The first checksum must equal the reviewed `f511fa42…48f4` identity. The last
-checksum must equal `c4f8f597…26a8` for the current recorded source; investigate
-any difference before reusing this receipt. Packaging verifies entry-by-entry
+Both checksums must equal `f8da0df6…37ad1` for the current recorded source;
+investigate any difference before reusing this receipt. Earlier archived ZIPs
+and their historical checksums remain preserved. Packaging verifies entry-by-entry
 source equality, but does not itself complete runtime or visual acceptance.
 
 ## Historical release records

@@ -84,7 +84,12 @@ try {
     $dialog_xpath = rendered_version_xpath($dialog);
     check_rendered_version( 1, $dialog_xpath->query('//a[@href="https://wordpress.org/plugins/exchange-rates/" and contains(@rel,"nofollow")]')->length, 'Shared plugin link retains rel' );
     check_rendered_version( true, false !== strpos($dialog, Plugin::VERSION), 'Shared dialog displays runtime version' );
-    check_rendered_version( true, false !== strpos($dialog, '[ExchangeRatesWP]'), 'Shared translated disclaimer retains marker' );
+    check_rendered_version( 1, substr_count( $dialog, '[WP_ExchangeRates]' ), 'Shared dialog retains one search marker' );
+    check_rendered_version( false, false !== strpos( $dialog, '[ExchangeRatesWP]' ), 'Previous search marker is absent from current footer output' );
+    check_rendered_version( 1, $dialog_xpath->query( '//*[contains(concat(" ", normalize-space(@class), " "), " er-dialog-head ")]//*[contains(concat(" ", normalize-space(@class), " "), " er-dialog-heading ")]//*[contains(concat(" ", normalize-space(@class), " "), " er-dialog-search-marker ") and .="[WP_ExchangeRates]"]' )->length, 'Search marker belongs to dialog heading group' );
+    check_rendered_version( 1, $dialog_xpath->query( '//h2[@id="exchange-rates-information-title"]/following-sibling::*[contains(concat(" ", normalize-space(@class), " "), " er-dialog-search-marker ")]' )->length, 'Search marker follows the modal title as a separate element' );
+    check_rendered_version( 0, $dialog_xpath->query( '//h2[contains(., "[WP_ExchangeRates]")] | //footer[contains(., "[WP_ExchangeRates]")] | //a[contains(., "[WP_ExchangeRates]")]' )->length, 'Search marker stays outside title text, footer and backlink anchors' );
+    check_rendered_version( 0, $dialog_xpath->query( '//*[contains(concat(" ", normalize-space(@class), " "), " er-dialog-disclaimer ") and contains(., "[WP_ExchangeRates]")]' )->length, 'Search marker stays outside translated disclaimer' );
 
 	$current = array();
 	foreach ( render_version_cases() as $name => $html ) {

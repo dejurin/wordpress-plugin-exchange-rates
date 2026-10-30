@@ -192,7 +192,7 @@ msgid "Color badge"
 msgstr "Колір для баджа"
 
 #: src/Admin/Settings/General/Page.php:134 src/Service/CurrencyConverter.php:63
-#: src/Service/CurrencyTable.php:237
+#: src/Service/CurrencyTable.php:239
 msgid "Amount"
 msgstr "Кількість"
 
@@ -1959,8 +1959,8 @@ msgstr "Не вдалося виконати розрахунок. Введіт�
 msgid "unavailable"
 msgstr "недоступно"
 
-#: src/Plugin.php:91 src/Service/Footer.php:48 src/Service/Footer.php:76
-#: src/Service/Footer.php:77
+#: src/Plugin.php:91 src/Service/Footer.php:49 src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Not available"
 msgstr "Немає даних"
 
@@ -2040,49 +2040,49 @@ msgstr "Поміняти валюти місцями"
 msgid "Loading..."
 msgstr "Завантаження..."
 
-#: src/Service/CurrencyTable.php:102 src/Shortcodes/CurrencyTable.php:51
+#: src/Service/CurrencyTable.php:103 src/Shortcodes/CurrencyTable.php:51
 #: src/Widgets/Table.php:314
 msgid "Previous Close"
 msgstr "Попереднє закриття"
 
-#: src/Service/CurrencyTable.php:102
+#: src/Service/CurrencyTable.php:103
 msgid "Prev."
 msgstr "Попер."
 
-#: src/Service/CurrencyTable.php:106 src/Shortcodes/CurrencyTable.php:52
+#: src/Service/CurrencyTable.php:107 src/Shortcodes/CurrencyTable.php:52
 #: src/Widgets/Table.php:315
 msgid "Changes"
 msgstr "Зміни"
 
-#: src/Service/CurrencyTable.php:106
+#: src/Service/CurrencyTable.php:107
 msgid "Δ %"
 msgstr "Δ %"
 
-#: src/Service/CurrencyTable.php:138
+#: src/Service/CurrencyTable.php:140
 msgid "No change."
 msgstr "Без змін."
 
-#: src/Service/CurrencyTable.php:138
+#: src/Service/CurrencyTable.php:140
 msgid "Previous rate unavailable."
 msgstr "Попередній курс недоступний."
 
 #. translators: %s: Unsigned, localized percentage.
-#: src/Service/CurrencyTable.php:141
+#: src/Service/CurrencyTable.php:143
 #, php-format
 msgid "Increase: %s"
 msgstr "Зростання: %s"
 
 #. translators: %s: Unsigned, localized percentage.
-#: src/Service/CurrencyTable.php:141
+#: src/Service/CurrencyTable.php:143
 #, php-format
 msgid "Decrease: %s"
 msgstr "Зниження: %s"
 
-#: src/Service/CurrencyTable.php:143
+#: src/Service/CurrencyTable.php:145
 msgid "Change is below display precision."
 msgstr "Зміна надто мала для вибраної точності відображення."
 
-#: src/Service/CurrencyTable.php:213 src/Shortcodes/Badge.php:308
+#: src/Service/CurrencyTable.php:215 src/Shortcodes/Badge.php:308
 msgid ""
 "Error: Check parameters of widget or shortcode. Probably you changed the "
 "source of currency rates, where there was not the desired currency that you "
@@ -2092,7 +2092,7 @@ msgstr ""
 "змінили джерело курсів валют, де не було потрібної валюти, яку ви вибрали "
 "раніше."
 
-#: src/Service/Footer.php:28 src/Service/Footer.php:75
+#: src/Service/Footer.php:28 src/Service/Footer.php:76
 msgid "(opens in a new tab)"
 msgstr "(відкривається в новій вкладці)"
 
@@ -2100,56 +2100,54 @@ msgstr "(відкривається в новій вкладці)"
 msgid "Source of displayed rates"
 msgstr "Джерело відображених курсів"
 
-#: src/Service/Footer.php:52
+#: src/Service/Footer.php:53
 msgid "Exchange rate information"
 msgstr "Інформація про курс валют"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Data details"
 msgstr "Відомості про дані"
 
-#: src/Service/Footer.php:73
+#: src/Service/Footer.php:74
 msgid "Close information"
 msgstr "Закрити інформацію"
 
-#: src/Service/Footer.php:75
+#: src/Service/Footer.php:76
 msgid "Source"
 msgstr "Джерело"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "When the data service saved this entry; the rates may be unchanged"
 msgstr "Коли сервіс даних зберіг цей запис; курси могли не змінитися"
 
-#: src/Service/Footer.php:76
+#: src/Service/Footer.php:77
 msgid "Check:"
 msgstr "Перевірка:"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Date of the source data"
 msgstr "Дата даних джерела"
 
-#: src/Service/Footer.php:77
+#: src/Service/Footer.php:78
 msgid "Latest change:"
 msgstr "Останні зміни:"
 
-#: src/Service/Footer.php:79
+#: src/Service/Footer.php:80
 msgid "Disclaimer"
 msgstr "Застереження"
 
-#. translators: %s: fixed plugin search marker.
-#: src/Service/Footer.php:81
-#, php-format
+#: src/Service/Footer.php:80
 msgid ""
-"This %s widget displays exchange rates for informational purposes only. This "
-"plugin and the website displaying it cannot guarantee their accuracy or "
-"timeliness. Rates may differ from those offered by your bank or payment "
-"provider. Confirm the applicable rate before making a transaction."
+"Exchange rates are provided for reference only and may be delayed. Displayed "
+"rates may differ from those available for actual transactions. Confirm the "
+"final rate and applicable fees with your bank, exchange service or payment "
+"provider before making a transaction."
 msgstr ""
-"Цей віджет %s відображає курси валют лише з інформаційною метою. Цей плагін "
-"і сайт, на якому його розміщено, не можуть гарантувати їхню точність або "
-"актуальність. Курси можуть відрізнятися від тих, які пропонує ваш банк або "
-"платіжний провайдер. Перед здійсненням операції уточніть курс, який буде "
-"застосовано."
+"Курси валют наведено лише для довідки, і вони можуть оновлюватися із "
+"затримкою. Відображені курси можуть відрізнятися від тих, за якими фактично "
+"здійснюються операції. Перед здійсненням операції уточніть остаточний курс і "
+"відповідні комісії у своєму банку, сервісі обміну валют або у платіжного "
+"провайдера."
 
 #: src/Shortcodes/CurrencyConverter.php:72 src/Widgets/Converter.php:195
 msgid "Currency Converter"
