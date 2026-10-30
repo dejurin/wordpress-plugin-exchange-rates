@@ -14,8 +14,21 @@ correction of the two documentation findings from the full local regression.
   grouping. All 44 stale source coordinates are corrected; keys, translations,
   headers and order remain unchanged. All three compiled MO files reproduce.
 - Metadata, 58 PHP syntax checks, deterministic packaging and 8,024 standalone
-  localization assertions passed. Fresh installed-ZIP checks, official Plugin
-  Check and GitHub CI are being recorded for this exact candidate separately.
+  localization assertions passed. The installed ZIP completed native
+  update/rollback/restore with state and all 1,198 file hashes preserved;
+  fresh WordPress gettext passed 8,038 assertions.
+- Official Plugin Check static/runtime each retain seven errors and 22 warnings,
+  with no added or removed finding. This remains a reviewed-findings result,
+  not a clean raw checker pass.
+- [CI run 41037376933](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/41037376933)
+  passed all five jobs and 556/556 Chromium tests on source commit
+  `ac0b9677035569e8dea61fbfa2bf491f46104efc`. Downloaded artifact `12969180073`
+  contains the byte-identical ZIP, with all 1,198 file hashes matching.
+  CI PHP syntax/unit runtimes were 5.6.40, 8.3.36 and 8.4.27; WordPress gettext
+  ran on PHP 8.3.35. Post-browser state, HTTP/assets and CI cleanup passed.
+- Subsequent report-only updates preserve plugin subtree
+  `540f9e6f69e1a29dfc24e273b5643cea70e0a57b`; CI remains attributed to its
+  tested source commit above. The correction receipt retains the raw evidence.
 - No merge, WordPress.org publication or customer-site update is authorized.
 
 ## Previous working candidate: October 30 footer refinement
