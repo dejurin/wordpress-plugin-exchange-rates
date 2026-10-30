@@ -1,12 +1,15 @@
 # Release preparation: 1.5.0
 
-## Current working candidate: readme and catalog corrections
+## Current merged candidate: package frozen, publication deferred
 
-The [catalog/readme receipt](reviews/1.5.0-catalog-readme-ci.md) records the
-correction of the two documentation findings from the full local regression.
+The [current release handoff](releases/1.5.0-handoff.md) is the publication
+reference. [PR #42](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/42)
+is merged into `main` at `0cd1eb3075ca0013d7266b35b4f5dc5dce4157b1`, with plugin
+subtree `540f9e6f69e1a29dfc24e273b5643cea70e0a57b`.
 
 - ZIP: `dist/exchange-rates.1.5.0.zip`, preserved as
-  `dist/catalog-readme-ci-20261030/candidate.zip`; 1,198 files, 1,761,283 bytes.
+  `dist/pr-42-merge-20261030/ci-41090544732/artifact/exchange-rates.1.5.0.zip`;
+  1,198 files, 1,761,283 bytes.
 - SHA-256: `f8da0df6f0f14339bf8a0bd9208e9128a2dd9e4b31fe7eff7c10af929ce37ad1`.
 - Exactly five packaged files changed from `8e7b629c…c6dac`: readme, POT and
   three PO files. All other 1,193 files, including PHP/JS/CSS/MO, are identical.
@@ -15,21 +18,28 @@ correction of the two documentation findings from the full local regression.
   headers and order remain unchanged. All three compiled MO files reproduce.
 - Metadata, 58 PHP syntax checks, deterministic packaging and 8,024 standalone
   localization assertions passed. The installed ZIP completed native
-  update/rollback/restore with state and all 1,198 file hashes preserved;
+  update/rollback/restore with state preserved and all 1,198 file hashes matching
+  each selected ZIP;
   fresh WordPress gettext passed 8,038 assertions.
 - Official Plugin Check static/runtime each retain seven errors and 22 warnings,
   with no added or removed finding. This remains a reviewed-findings result,
   not a clean raw checker pass.
-- [CI run 41037376933](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/41037376933)
-  passed all five jobs and 556/556 Chromium tests on source commit
-  `ac0b9677035569e8dea61fbfa2bf491f46104efc`. Downloaded artifact `12969180073`
-  contains the byte-identical ZIP, with all 1,198 file hashes matching.
+- [Main CI 41090544732](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/41090544732)
+  passed all five jobs and 556/556 Chromium tests on that exact merge commit;
+  all five job checkout SHAs were verified. Downloaded artifact `12994530692`
+  contains the byte-identical inner ZIP, with all 1,198 file hashes matching.
   CI PHP syntax/unit runtimes were 5.6.40, 8.3.36 and 8.4.27; WordPress gettext
-  ran on PHP 8.3.35. Post-browser state, HTTP/assets and CI cleanup passed.
-- Subsequent report-only updates preserve plugin subtree
-  `540f9e6f69e1a29dfc24e273b5643cea70e0a57b`; CI remains attributed to its
-  tested source commit above. The correction receipt retains the raw evidence.
-- No merge, WordPress.org publication or customer-site update is authorized.
+  passed 8,038 assertions on PHP 8.3.35. Post-browser state, HTTP/assets and CI
+  cleanup passed.
+- Full native/LocalWP acceptance remains tied to the preceding `8e7b629c…c6dac`
+  ZIP. Its runtime and compiled MO files are byte-identical to this payload;
+  fresh current-ZIP checks are retained in the
+  [catalog/readme receipt](reviews/1.5.0-catalog-readme-ci.md). The handoff records
+  these distinct scopes and the original CI identities.
+- Documentation-only handoff updates preserve the frozen payload; main CI
+  remains attributed to `0cd1eb3`, rather than a later documentation commit.
+- Merge is complete. WordPress.org publication, release/tag creation and
+  customer-site updates require separate authorization; SVN remains read-only.
 
 ## Previous working candidate: October 30 footer refinement
 

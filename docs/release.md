@@ -2,7 +2,7 @@
 
 Read the [development contract](../CONTRIBUTING.md) before preparing changes or a release.
 
-The current development target is **1.5.0**. The [release status](release-status.md) identifies the last fully tested package, later source revisions and remaining release gates. The [1.4.2 candidate receipt](releases/1.4.2-final-candidate.md) is preserved separately. Older acceptance reports retain their historical versions and checksums.
+The current target is **1.5.0**. The [current release handoff](releases/1.5.0-handoff.md) pins the merged source, frozen ZIP, successful main CI, publication allowlist and rollback references. The [release status](release-status.md) separates current and historical checks. The [1.4.2 candidate receipt](releases/1.4.2-final-candidate.md) is preserved separately. Older acceptance reports retain their historical versions and checksums.
 
 ## Source and dependencies
 
@@ -20,8 +20,14 @@ only four POT/PO source catalogs, with all runtime files and compiled translatio
 unchanged; its [catalog refresh receipt](reviews/1.5.0-release-docs.md) remains
 historical evidence for that package.
 
-The current ZIP and its checks are identified in [release status](release-status.md)
-and the [catalog/readme correction receipt](reviews/1.5.0-catalog-readme-ci.md).
+The current `f8da0df6…37ad1` ZIP is frozen after PR #42 and main CI. Its exact
+source/package identity, current-ZIP checks and earlier runtime-equivalent
+native/LocalWP matrix are separated in the [current handoff](releases/1.5.0-handoff.md)
+and [release status](release-status.md). Preserve this package rather than
+rebuilding it for a documentation-only change.
+
+### Earlier 1.5.0 candidate evidence
+
 The earlier verified ZIP is `c4f8f597c89c330269392ca3650cb9f0cbbfcd789a993a1a7959375d8b9e26a8`
 (1,198 files). The maintainer accepted the numeric-axis correction, including
 right alignment in RTL. The [final candidate receipt](reviews/1.5.0-rc.md)
@@ -33,16 +39,18 @@ verified after the browser runs. Official Plugin Check static/runtime
 each retain seven errors and 22 warnings, with no added findings. These reviewed
 analyzer reports remain visible; there is no clean raw checker claim.
 
-Final runtime verification is recorded on source commit
+For that earlier ZIP, final runtime verification is recorded on source commit
 `78d7a47fa962e955230044d36588f541b5225565`, plugin subtree
 `e8ec51ecf2ccdc47e810d2561ff68925eb55f44c`.
 [CI run 40872883274](https://github.com/dejurin/wordpress-plugin-exchange-rates/actions/runs/40872883274)
 passed all five jobs and 553/553 Chromium tests; artifact `12895534953` matches
 the frozen ZIP byte-for-byte. Final independent review found no actionable
 P1/P2 issue. Subsequent documentation-only preparation keeps this plugin tree;
-confirm its integration state through [PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41)
-and its current checks. See the [preparation record](releases/1.5.0-preparation.md)
-for the publication handoff. VoiceOver remains excluded from this rerun.
+its historical integration is recorded in
+[PR #41](https://github.com/dejurin/wordpress-plugin-exchange-rates/pull/41).
+The [October 29 preparation record](releases/1.5.0-preparation.md) retains that
+payload; use the [current handoff](releases/1.5.0-handoff.md) for publication.
+VoiceOver remains excluded from this rerun.
 
 The previous `e34b2ce0…7a2e` ZIP bundled 259 SVGs with two notices and changed the
 table/badge image paths. Its [local emoji receipt](reviews/1.5.0-local-emoji.md)
@@ -110,7 +118,8 @@ a new package identity and checks appropriate to the affected behavior.
 
 PCP results supplement manual review and browser/accessibility acceptance; they
 do not establish WCAG/EAA certification or authorize publication. The current
-release's execution status is tracked in [release status](release-status.md).
+release's execution status and exact current-ZIP findings are tracked in the
+[current handoff](releases/1.5.0-handoff.md) and [release status](release-status.md).
 
 For the prior `5a812eda…65c7` ZIP, [Plugin Check 2.1.0 was executed](reviews/1.5.0-plugin-check.md)
 in both static and runtime modes: each reported 9 errors and 22 warnings,
@@ -167,6 +176,11 @@ The isolated 1.4.0 acceptance reproduced the old table behavior when a page cach
 Always pass an explicit `docker compose -p <dedicated-test-project>` for release tests. An env-file may define `COMPOSE_PROJECT_NAME` and override a Compose file's `name`. Before starting a new environment, inspect the resolved project, port, mounts and named volumes without printing credentials. Never reuse ordinary development site/database volumes for release fixtures. Preserve full debug logs and sanitized receipts before deleting only the disposable test resources.
 
 ### Rollback
+
+The [current handoff](releases/1.5.0-handoff.md#rollback-references) records the
+frozen `f8da0df6…37ad1` package's verified round trip to `8e7b629c…c6dac`, the
+published 1.4.2 baseline and repository merge-revert identity. The following
+receipts retain their earlier package scopes.
 
 The preceding `c4f8f597…26a8` candidate completed the same eight native
 upgrade/rollback paths and both LocalWP round trips again; these results are
